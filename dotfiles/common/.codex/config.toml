@@ -22,9 +22,6 @@ trust_level = "trusted"
 [projects."/Users/khrore/ai"]
 trust_level = "trusted"
 
-[projects."/Users/khrore/learn"]
-trust_level = "trusted"
-
 [projects."/Users/khrore/.codex"]
 trust_level = "trusted"
 
