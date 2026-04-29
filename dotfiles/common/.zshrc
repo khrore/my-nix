@@ -93,4 +93,6 @@ export ATUIN_NOBIND="true"
 bindkey '^R' atuin-search-viins -i atuin
 bindkey '^R' atuin-search-vicmd -i atuin
 
-. "$HOME/.atuin/bin/env"
+export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:/Applications/LibreOffice.app/Contents/MacOS:$PATH"
+
+[ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.

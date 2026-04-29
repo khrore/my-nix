@@ -47,9 +47,11 @@ function y() {
   rm -f -- "$tmp"
 }
 
-export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:$PATH"
+export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:/Applications/LibreOffice.app/Contents/MacOS:$PATH"
 
 export EDITOR="nvim"
 
 # Add this line at the end of .bashrc:
 [[ ! ${BLE_VERSION-} ]] || ble-attach
+
+[ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.

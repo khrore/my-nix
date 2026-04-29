@@ -7,149 +7,35 @@ model_verbosity = "high"
 check_for_update_on_startup = false
 web_search = "live"
 
-[agents.researcher]
-description = "Read-only research helper for bounded discovery and comparison work."
-config_file = "./roles/researcher.toml"
-
-[agents.reviewer]
-description = "Read-only review helper for bounded correctness and risk inspection."
-config_file = "./roles/reviewer.toml"
-
-[agents.tester]
-description = "Read-only validation helper for bounded verification and failure classification."
-config_file = "./roles/tester.toml"
-
-[projects."/Users/khrore/work/db-ci-cd-template"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-web-server"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-image-storage"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-client-admin"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-web-api"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/learn/solana"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/nixos"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-architecture"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/ai/tg-bob"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/ai/tg-bop"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/ai/bot"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/learn/mojo/dlp"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/.docker"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-auth"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/.codex"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-object-storage"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/platform-client"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/work/services-architecture"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/services-architecture"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/architecture"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/annotator"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/code"]
-trust_level = "trusted"
-
 [projects."/Users/khrore/platform"]
 trust_level = "trusted"
 
-[projects."/Users/khrore/platform/auth-client"]
+[projects."/Users/khrore/projects"]
 trust_level = "trusted"
 
-[projects."/Users/khrore/platform/web-api"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/object-storage"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/docs"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/docs/platform-api"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/learn/rust/axum"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform/client-admin"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/nix-config"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/projects/dlp"]
+[projects."/Users/khrore/github"]
 trust_level = "trusted"
 
 [projects."/Users/khrore/learn"]
 trust_level = "trusted"
 
-[projects."/Users/khrore/platform/web-server"]
+[projects."/Users/khrore/ai"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/learn"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/.codex"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/docs"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/nix-config"]
 trust_level = "trusted"
 
 [projects."/Users/khrore/nixrets"]
 trust_level = "trusted"
-
-[projects."/Users/khrore/platform/server-api"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/notes"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/projects/mojo-ml"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/projects/mojo-explore"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/platform-extenal/architecture"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/projects/pres"]
-trust_level = "trusted"
-
-[projects."/Users/khrore/.codex/skills"]
-trust_level = "trusted"
-
-[notice.model_migrations]
-"gpt-5.3-codex" = "gpt-5.4"
 
 [memories]
 generate_memories = true
@@ -162,12 +48,12 @@ network_access = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-04-27T10:00:44Z"
+last_updated = "2026-04-28T11:41:40Z"
 source_type = "local"
 source = "/Users/khrore/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-04-27T10:47:08Z"
+last_updated = "2026-04-28T14:06:06Z"
 source_type = "local"
 source = "/Users/khrore/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -185,3 +71,32 @@ enabled = true
 
 [features]
 multi_agent = true
+
+# Profiles — switch with `codex -p <name>`
+[profiles.strict]
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+web_search = "cached"
+
+[profiles.yolo]
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+web_search = "live"
+
+[agents]
+# Multi-agent role limits and local role definitions.
+# These map to `.codex/agents/*.toml` and mirror the repo's explorer/reviewer/docs workflow.
+max_threads = 6
+max_depth = 1
+
+[agents.explorer]
+description = "Read-only codebase explorer for gathering evidence before changes are proposed."
+config_file = "agents/explorer.toml"
+
+[agents.reviewer]
+description = "PR reviewer focused on correctness, security, and missing tests."
+config_file = "agents/reviewer.toml"
+
+[agents.docs_researcher]
+description = "Documentation specialist that verifies APIs, framework behavior, and release notes."
+config_file = "agents/docs-researcher.toml"
