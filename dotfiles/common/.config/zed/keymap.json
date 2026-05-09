@@ -1,50 +1,19 @@
-// LazyVim-style keymap for Zed Editor with Yazi-inspired Project Panel
-// For information on binding keys, see: https://zed.dev/docs/key-bindings
-// To see the default key bindings run `zed: open default keymap`
-//
 [
-  // Global Vim normal mode: buffer navigation, window management, pane navigation, panel toggles
   {
     "context": "(VimControl && vim_mode == normal) || KeyContextView || GitPanel",
     "bindings": {
       "shift-h": "pane::ActivatePreviousItem",
       "shift-l": "pane::ActivateNextItem",
-
-      "[ b": "pane::ActivatePreviousItem",
-      "] b": "pane::ActivateNextItem",
-
-      "ctrl-w o": "pane::JoinAll",
-      "ctrl-w ctrl-o": "pane::JoinAll",
-      "ctrl-w f": "workspace::ActivatePreviousPane",
-      "ctrl-w ctrl-f": "workspace::ActivatePreviousPane",
-      "ctrl-w b": "pane::CloseOtherItems",
-      "ctrl-w ctrl-b": "pane::CloseOtherItems",
-      "ctrl-w l": "pane::SplitAndMoveRight",
-      "ctrl-w h": "pane::SplitAndMoveLeft",
-      "ctrl-w j": "pane::SplitAndMoveDown",
-      "ctrl-w k": "pane::SplitAndMoveUp",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-j": "workspace::ActivatePaneDown",
       "ctrl-k": "workspace::ActivatePaneUp",
-
-      "space space": "file_finder::Toggle",
-      "space /": "pane::DeploySearch",
-
-      "space b d": "pane::CloseActiveItem",
-      "space b o": "pane::CloseOtherItems",
-      "space b O": "pane::CloseCleanItems",
-
-      "space b a": "pane::AlternateFile",
-      "space f n": "workspace::NewFile",
-
       "space x": "diagnostics::Deploy",
       "space e": "project_panel::ToggleFocus",
       "space o": "outline_panel::ToggleFocus",
       "space g": "git_panel::ToggleFocus",
       "space d": "debug_panel::ToggleFocus",
       "space a": "agent::ToggleFocus",
-      "space p": "notification_panel::ToggleFocus",
       "space c": "collab_panel::ToggleFocus",
       "space t": "terminal_panel::ToggleFocus",
     },
@@ -64,36 +33,11 @@
       "cmd-0": "pane::ActivateLastItem",
     },
   },
-  // Dock/panel specific: close dock or return focus to editor
   {
     "context": "Dock > (VimControl && vim_mode == normal)",
     "bindings": {
       "q": "workspace::CloseActiveDock",
       "shift-q": "editor::ToggleFocus",
-    },
-  },
-  // Editor specific: code actions, LSP navigation, formatting, git integration
-  {
-    "context": "Editor && (VimControl && vim_mode == normal)",
-    "bindings": {
-      "space c a": "editor::ToggleCodeActions",
-      "space c f": "editor::Format",
-      "space c r": "editor::Rename",
-      "g t d": "editor::GoToTypeDefinition",
-      "g c c": "editor::ToggleComments",
-      "shift-k": "editor::Hover",
-      "space c d": "editor::GoToDiagnostic",
-      "space s": "diagnostics::Deploy",
-      "space shift-s": "project_symbols::Toggle",
-      "alt-j": "editor::MoveLineDown",
-      "alt-k": "editor::MoveLineUp",
-      "space h": "editor::ToggleSelectedDiffHunks",
-
-      "] d": "project_panel::SelectNextDiagnostic",
-      "[ d": "project_panel::SelectPrevDiagnostic",
-
-      "space -": "project_panel::OpenSplitHorizontal",
-      "space |": "project_panel::OpenSplitVertical",
     },
   },
   {
@@ -103,53 +47,15 @@
       "cmd-k": "editor::MoveLineUp",
     },
   },
-  {
-    "context": "Editor && (VimControl && vim_mode == visual)",
-    "bindings": {
-      "space m": "editor::SelectAllMatches",
-    },
-  },
-  // AI agent diff view: accept/reject suggestions
-  {
-    "context": "Editor && editor_agent_diff",
-    "bindings": {
-      "space y": "agent::Keep",
-      "space n": "agent::Reject",
-      "space shift-y": "agent::KeepAll",
-      "space shift-n": "agent::RejectAll",
-      "space shift-r": "agent::OpenAgentDiff",
-    },
-  },
-  // AI agent message editor: thread management, settings, permissions
-  {
-    "context": "MessageEditor > (VimControl && vim_mode == normal)",
-    "bindings": {
-      "space t t": "agent::ToggleNewThreadMenu",
-      "space t s": "agent::ToggleProfileSelector",
-      "space t n": "agent::ToggleNavigationMenu",
-      "space t o": "agent::ToggleOptionsMenu",
-      "space ,": "agent::OpenSettings",
-      "space l": "agent::OpenRulesLibrary",
-      "space f": "agent::Follow",
-      "space enter": "agent::ContinueThread",
-      "space y": "agent::AllowOnce",
-      "space shift-y": "agent::AllowAlways",
-      "space n": "agent::RejectOnce",
-    },
-  },
   // Agent panel navigation menu: Vim-style j/k movement
-  {
-    "context": "AgentPanel > NavigationMenu",
-    "use_key_equivalents": true,
-    "bindings": {
-      "j": "menu::SelectNext",
-      "k": "menu::SelectPrevious",
-    },
-  },
-  {
-    "context": "GitPannel && vim_mode == normal",
-    "bindings": {},
-  },
+  // {
+  //   "context": "AgentPanel > NavigationMenu",
+  //   "use_key_equivalents": true,
+  //   "bindings": {
+  //     "j": "menu::SelectNext",
+  //     "k": "menu::SelectPrevious",
+  //   },
+  // },
   // Project panel: Yazi-style file operations (copy, paste, delete, rename, etc.)
   {
     "context": "ProjectPanel && not_editing",
@@ -169,16 +75,6 @@
       "c r": "workspace::CopyRelativePath",
       "shift-j": "menu::SelectNext",
       "shift-k": "menu::SelectPrevious",
-    },
-  },
-  // Terminal: page scrolling with ctrl-u/d
-  {
-    "context": "Terminal",
-    "use_key_equivalents": true,
-    "bindings": {
-      "q": "terminal_panel::Toggle",
-      "ctrl-u": "terminal::ScrollPageUp",
-      "ctrl-d": "terminal::ScrollPageDown",
     },
   },
 ]

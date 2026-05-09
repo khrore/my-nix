@@ -24,6 +24,7 @@
       "zen@twilight"
       "docker-desktop"
       "codex"
+      "claude-code"
       "zed"
       "ghostty"
       "anydesk"
