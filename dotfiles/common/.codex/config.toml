@@ -46,6 +46,15 @@ trust_level = "trusted"
 [projects."/Users/khrore/notes"]
 trust_level = "trusted"
 
+[projects."/Users/khrore/projects/inference"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/vlad/olnisa_buyers_service"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/platform/cluster-manager"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
@@ -57,12 +66,12 @@ network_access = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-09T08:03:36Z"
+last_updated = "2026-05-18T21:27:42Z"
 source_type = "local"
 source = "/Users/khrore/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-08T09:47:27Z"
+last_updated = "2026-05-16T19:47:25Z"
 source_type = "local"
 source = "/Users/khrore/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -75,7 +84,7 @@ enabled = true
 [plugins."presentations@openai-primary-runtime"]
 enabled = true
 
-[plugins."browser-use@openai-bundled"]
+[plugins."browser@openai-bundled"]
 enabled = true
 
 [features]
@@ -111,4 +120,4 @@ description = "Documentation specialist that verifies APIs, framework behavior, 
 config_file = "agents/docs-researcher.toml"
 
 [tui.model_availability_nux]
-"gpt-5.5" = 1
+"gpt-5.5" = 3
