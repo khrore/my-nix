@@ -72,7 +72,7 @@
 
       # Configuration for user settings
       terminalEditor = "nvim";
-      shell = "bash";
+      shell = "zsh";
 
       configurationLimit = 10;
 
