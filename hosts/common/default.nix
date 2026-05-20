@@ -47,7 +47,7 @@ in
     path = "${userHome}/.local/share/atuin/shared_key";
   };
 
-  services.openssh.enable = true;
+  services.openssh.enable = lib.mkDefault true;
 
   system.stateVersion =
     if mylib.isDarwin system then

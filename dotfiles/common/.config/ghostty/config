@@ -2,6 +2,7 @@ auto-update = off
 background-opacity = 0.950000
 clipboard-read = allow
 clipboard-write = allow
+macos-option-as-alt = true
 confirm-close-surface = false
 font-family = JetBrainsMono Nerd Font
 font-size = 16
@@ -16,4 +17,3 @@ keybind = super+v=paste_from_clipboard
 keybind = cmd+v=paste_from_clipboard
 keybind = super+r=reload_config
 keybind = cmd+r=reload_config
-keybind = shift+enter=text:\x1b\r

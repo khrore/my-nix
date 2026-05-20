@@ -15,9 +15,9 @@ keybinds clear-defaults=true {
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "locked"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "locked"; }
-        bind "h" { MoveFocus "left"; }
         bind "i" { TogglePanePinned; SwitchToMode "locked"; }
         bind "j" { MoveFocus "down"; }
+        bind "h" { MoveFocus "left"; }
         bind "k" { MoveFocus "up"; }
         bind "l" { MoveFocus "right"; }
         bind "n" { NewPane; SwitchToMode "locked"; }
@@ -90,16 +90,16 @@ keybinds clear-defaults=true {
         bind "tab" { MovePane; }
     }
     scroll {
-        bind "Alt left" { MoveFocusOrTab "left"; SwitchToMode "locked"; }
-        bind "Alt down" { MoveFocus "down"; SwitchToMode "locked"; }
-        bind "Alt up" { MoveFocus "up"; SwitchToMode "locked"; }
-        bind "Alt right" { MoveFocusOrTab "right"; SwitchToMode "locked"; }
+        bind "Super left" { MoveFocusOrTab "left"; SwitchToMode "locked"; }
+        bind "Super down" { MoveFocus "down"; SwitchToMode "locked"; }
+        bind "Super up" { MoveFocus "up"; SwitchToMode "locked"; }
+        bind "Super right" { MoveFocusOrTab "right"; SwitchToMode "locked"; }
         bind "e" { EditScrollback; SwitchToMode "locked"; }
         bind "f" { SwitchToMode "entersearch"; SearchInput 0; }
-        bind "Alt h" { MoveFocusOrTab "left"; SwitchToMode "locked"; }
-        bind "Alt j" { MoveFocus "down"; SwitchToMode "locked"; }
-        bind "Alt k" { MoveFocus "up"; SwitchToMode "locked"; }
-        bind "Alt l" { MoveFocusOrTab "right"; SwitchToMode "locked"; }
+        bind "Super h" { MoveFocusOrTab "left"; SwitchToMode "locked"; }
+        bind "Super j" { MoveFocus "down"; SwitchToMode "locked"; }
+        bind "Super k" { MoveFocus "up"; SwitchToMode "locked"; }
+        bind "Super l" { MoveFocusOrTab "right"; SwitchToMode "locked"; }
         bind "s" { SwitchToMode "normal"; }
     }
     search {
@@ -156,25 +156,37 @@ keybinds clear-defaults=true {
         }
     }
     shared_among "normal" "locked" {
-        bind "Alt left" { MoveFocusOrTab "left"; }
-        bind "Alt down" { MoveFocus "down"; }
-        bind "Alt up" { MoveFocus "up"; }
-        bind "Alt right" { MoveFocusOrTab "right"; }
-        bind "Alt +" { Resize "Increase"; }
-        bind "Alt -" { Resize "Decrease"; }
-        bind "Alt =" { Resize "Increase"; }
-        bind "Alt [" { PreviousSwapLayout; }
-        bind "Alt ]" { NextSwapLayout; }
-        bind "Alt f" { ToggleFloatingPanes; }
-        bind "Alt h" { MoveFocusOrTab "left"; }
-        bind "Alt i" { MoveTab "left"; }
-        bind "Alt j" { MoveFocus "down"; }
-        bind "Alt k" { MoveFocus "up"; }
-        bind "Alt l" { MoveFocusOrTab "right"; }
-        bind "Alt n" { NewPane; }
-        bind "Alt o" { MoveTab "right"; }
-        bind "Alt p" { TogglePaneInGroup; }
-        bind "Alt Shift p" { ToggleGroupMarking; }
+        bind "Super left" { MoveFocusOrTab "left"; }
+        bind "Super down" { MoveFocus "down"; }
+        bind "Super up" { MoveFocus "up"; }
+        bind "Super right" { MoveFocusOrTab "right"; }
+        bind "Super +" { Resize "Increase"; }
+        bind "Super -" { Resize "Decrease"; }
+        bind "Super =" { Resize "Increase"; }
+        bind "Super [" { PreviousSwapLayout; }
+        bind "Super ]" { NextSwapLayout; }
+        bind "Super f" { ToggleFloatingPanes; }
+        bind "Super h" { MoveFocusOrTab "left"; }
+        bind "Super i" { MoveTab "left"; }
+        bind "Super j" { MoveFocus "down"; }
+        bind "Super k" { MoveFocus "up"; }
+        bind "Super l" { MoveFocusOrTab "right"; }
+        bind "Super n" { NewPane; }
+        bind "Super o" { MoveTab "right"; }
+        bind "Super p" { TogglePaneInGroup; }
+        bind "Super Shift p" { ToggleGroupMarking; }
+
+        bind "Super 1" { GoToTab 1; }
+        bind "Super 2" { GoToTab 2; }
+        bind "Super 3" { GoToTab 3; }
+        bind "Super 4" { GoToTab 4; }
+        bind "Super 5" { GoToTab 5; }
+        bind "Super 6" { GoToTab 6; }
+        bind "Super 7" { GoToTab 7; }
+        bind "Super 8" { GoToTab 8; }
+        bind "Super 9" { GoToTab 9; }
+        bind "Super t" { NewTab; }
+        bind "Super w" { CloseTab; }
     }
     shared_except "locked" "renametab" "renamepane" {
         bind "Ctrl g" { SwitchToMode "locked"; }
@@ -366,7 +378,7 @@ default_mode "locked"
 // copy_command "wl-copy"                    // wayland
 // copy_command "pbcopy"                     // osx
 // 
-// copy_command "pbcopy"
+copy_command "pbcopy"
  
 // Choose the destination for copied text
 // Allows using the primary selection buffer (on x11/wayland) instead of the system clipboard.
