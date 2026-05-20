@@ -47,6 +47,7 @@ let
     file
     libnotify
     jq
+    carapace
 
     # Networking
     sing-box

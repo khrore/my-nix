@@ -34,6 +34,7 @@ let
 
       # Browser
       ungoogled-chromium
+      qbittorrent
       tor
       vesktop
     ];
@@ -53,14 +54,11 @@ let
       obsidian
       telegram-desktop
       spotify
-      qbittorrent
-      affine
 
       # DB
       dbeaver-bin
       bruno
       plantuml
-      code-cursor
     ];
 in
 {

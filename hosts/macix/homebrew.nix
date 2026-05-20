@@ -30,6 +30,7 @@
       "anydesk"
       "chatgpt-atlas"
       "ungoogled-chromium"
+      "qbittorrent"
       "nikitabobko/tap/aerospace"
     ];
 
