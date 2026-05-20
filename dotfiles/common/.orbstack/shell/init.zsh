@@ -1,3 +1,3 @@
 export PATH="$PATH":/Users/khrore/.orbstack/bin
 
-fpath+=/nix/store/8xi92aa3pqi2f3savk6q8skf9jyrk81s-orbstack-2.1.1-20026/Applications/OrbStack.app/Contents/MacOS/../Resources/completions/zsh
+fpath+=/nix/store/v342n4hx8mvy65hiais5ldiany6qz01v-orbstack-2.1.3-20115/Applications/OrbStack.app/Contents/MacOS/../Resources/completions/zsh

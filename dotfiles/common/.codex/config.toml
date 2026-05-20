@@ -66,12 +66,12 @@ network_access = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-18T21:27:42Z"
+last_updated = "2026-05-20T10:28:21Z"
 source_type = "local"
 source = "/Users/khrore/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-16T19:47:25Z"
+last_updated = "2026-05-20T10:47:06Z"
 source_type = "local"
 source = "/Users/khrore/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -120,4 +120,4 @@ description = "Documentation specialist that verifies APIs, framework behavior, 
 config_file = "agents/docs-researcher.toml"
 
 [tui.model_availability_nux]
-"gpt-5.5" = 3
+"gpt-5.5" = 4

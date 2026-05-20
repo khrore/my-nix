@@ -48,6 +48,7 @@ let
     libnotify
     jq
     carapace
+    vivid
 
     # Networking
     sing-box
