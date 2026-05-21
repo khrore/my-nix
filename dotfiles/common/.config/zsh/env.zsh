@@ -7,3 +7,4 @@ export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:/Applications/
 export HISTSIZE="10000"
 export SAVEHIST="10000"
 
+export NIX_BUILD_SHELL="zsh"

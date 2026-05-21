@@ -21,6 +21,7 @@
 
   # Disable systemd-resolved
   services.resolved.enable = false;
+  networking.resolvconf.enable = false;
   environment.etc."resolv.conf".source = "/opt/orbstack-guest/etc/resolv.conf";
 
   # Faster DHCP - OrbStack uses SLAAC exclusively
@@ -50,7 +51,8 @@
   systemd.services."systemd-importd".serviceConfig.WatchdogSec = 0;
   systemd.services."systemd-hostnamed".serviceConfig.WatchdogSec = 0;
   systemd.services."systemd-homed".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-networkd".serviceConfig.WatchdogSec = lib.mkIf config.systemd.network.enable 0;
+  systemd.services."systemd-networkd".serviceConfig.WatchdogSec =
+    lib.mkIf config.systemd.network.enable 0;
 
   # ssh config
   programs.ssh.extraConfig = ''

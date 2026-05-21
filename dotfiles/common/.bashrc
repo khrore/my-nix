@@ -50,6 +50,7 @@ function y() {
 export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:/Applications/LibreOffice.app/Contents/MacOS:$PATH"
 
 export EDITOR="nvim"
+export NIX_BUILD_SHELL="zsh"
 
 # Add this line at the end of .bashrc:
 [[ ! ${BLE_VERSION-} ]] || ble-attach
