@@ -13,7 +13,8 @@ mouse-hide-while-typing = true
 theme = Gruvbox Dark
 keybind = clear
 
-keybind = super+v=paste_from_clipboard
-keybind = cmd+v=paste_from_clipboard
+keybind = shift+insert=paste_from_clipboard
 keybind = super+r=reload_config
+
+keybind = cmd+v=paste_from_clipboard
 keybind = cmd+r=reload_config
