@@ -69,7 +69,10 @@ in
       # TypeScript and JavaScript
       vtsls
       vscode-js-debug
+      typescript
+      prettier
       prettierd
+      biome
       nodejs
       bun
 
