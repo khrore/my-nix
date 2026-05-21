@@ -4,7 +4,7 @@
 
 keybinds clear-defaults=true {
     locked {
-        bind "Ctrl g" { SwitchToMode "normal"; }
+        bind "Ctrl l" { SwitchToMode "normal"; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -187,7 +187,7 @@ keybinds clear-defaults=true {
         bind "Super 9" { GoToTab 9; }
         bind "Super t" { NewTab; }
         bind "Super w" { CloseTab; }
-        bind "Super e" { EditScrollback; }
+        bind "Super g" { EditScrollback; }
     }
     shared_except "locked" "renametab" "renamepane" {
         bind "Ctrl g" { SwitchToMode "locked"; }
