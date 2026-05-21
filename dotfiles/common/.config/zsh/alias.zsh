@@ -23,4 +23,6 @@ alias v=nvim
 
 alias nd='nix develop --command "$SHELL" -i'
 
+alias picommit="pi '/commit'"
+
 bindkey '^F' autosuggest-accept

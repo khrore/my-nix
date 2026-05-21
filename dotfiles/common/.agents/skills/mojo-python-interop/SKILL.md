@@ -1,6 +1,7 @@
-______________________________________________________________________
-
-## name: mojo-python-interop description: Aids in writing Mojo code that interoperates with Python using current syntax and conventions. Use this skill in addition to mojo-syntax when writing Mojo code that interacts with Python, calls Python libraries from Mojo, or exposes Mojo types/functions to Python. Also use when the user wants to build Python extension modules in Mojo, wrap Mojo structs for Python consumption, or convert between Python and Mojo types.
+---
+name: mojo-python-interop
+description: Aids in writing Mojo code that interoperates with Python using current syntax and conventions. Use this skill in addition to mojo-syntax when writing Mojo code that interacts with Python, calls Python libraries from Mojo, or exposes Mojo types/functions to Python. Also use when the user wants to build Python extension modules in Mojo, wrap Mojo structs for Python consumption, or convert between Python and Mojo types.
+---
 
 <!-- EDITORIAL GUIDELINES FOR THIS SKILL FILE
 This file is loaded into an agent's context window as a correction layer for
@@ -35,11 +36,11 @@ var b = Bool(py=py_obj)            # Bool is the exception — positional also w
 # Works with numpy types: Int(py=np.int64(1)), Float64(py=np.float64(3.14))
 ```
 
-| WRONG | CORRECT |
+| WRONG                    | CORRECT                      |
 |--------------------------|------------------------------|
-| `Int(py_obj)` | `Int(py=py_obj)` |
-| `Float64(py_obj)` | `Float64(py=py_obj)` |
-| `String(py_obj)` | `String(py=py_obj)` |
+| `Int(py_obj)`            | `Int(py=py_obj)`             |
+| `Float64(py_obj)`        | `Float64(py=py_obj)`         |
+| `String(py_obj)`         | `String(py=py_obj)`          |
 | `from python import ...` | `from std.python import ...` |
 
 ### Mojo → Python conversions
@@ -148,9 +149,9 @@ Mojo can build Python extension modules (`.so` files) via `PythonModuleBuilder`.
 The pattern:
 
 1. Define an `@export def PyInit_<module_name>() -> PythonObject`
-1. Use `PythonModuleBuilder` to register functions, types, and methods
-1. Compile with `mojo build --emit shared-lib`
-1. Import from Python (or use `import mojo.importer` for auto-compilation)
+2. Use `PythonModuleBuilder` to register functions, types, and methods
+3. Compile with `mojo build --emit shared-lib`
+4. Import from Python (or use `import mojo.importer` for auto-compilation)
 
 ### Exporting functions
 
@@ -225,10 +226,10 @@ def PyInit_counter_module() -> PythonObject:
 
 ### Method signatures — two patterns
 
-| Pattern | First parameter | Use when |
+| Pattern         | First parameter                               | Use when                     |
 |-----------------|-----------------------------------------------|------------------------------|
-| Manual downcast | `py_self: PythonObject` | Need raw PythonObject access |
-| Auto downcast | `self_ptr: UnsafePointer[Self, MutAnyOrigin]` | Simpler, direct field access |
+| Manual downcast | `py_self: PythonObject`                       | Need raw PythonObject access |
+| Auto downcast   | `self_ptr: UnsafePointer[Self, MutAnyOrigin]` | Simpler, direct field access |
 
 Both are registered with `.def_method[Type.method]("name")`.
 
@@ -263,7 +264,8 @@ The module name in `PyInit_<name>` must match the `.mojo` filename.
 
 The `.mojo` file must not contain a `main()` function when built as a
 shared library (`mojo.importer` or `--emit shared-lib`). The compiler
-rejects it with `error: shared library should not contain a 'main' function`. Keep test/CLI code in a separate file.
+rejects it with `error: shared library should not contain a 'main'
+function`. Keep test/CLI code in a separate file.
 
 ### Returning Mojo values to Python
 
