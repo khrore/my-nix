@@ -1,0 +1,4 @@
+interface:
+  display_name: "Software Design Principles"
+  short_description: "Language-agnostic design heuristics"
+  default_prompt: "Use $software-design-principles to review this plan or code for coupling, clarity, contracts, and maintainability."

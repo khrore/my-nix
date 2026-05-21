@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nix Repro Env"
+  short_description: "Help with reproducible Nix CLI environments"
+  default_prompt: "Use the Nix Repro Env skill to inspect flake outputs, choose the right Nix CLI entrypoint, and run or explain commands in a reproducible environment."

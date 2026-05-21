@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rust Design"
+  short_description: "Rust design and API guidance"
+  default_prompt: "Use $rust-design to design, review, or refactor this Rust code idiomatically."

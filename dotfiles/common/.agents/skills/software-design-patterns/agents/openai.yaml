@@ -1,0 +1,4 @@
+interface:
+  display_name: "Software Design Patterns"
+  short_description: "Pragmatic implementation patterns"
+  default_prompt: "Use $software-design-patterns to choose a pragmatic implementation pattern for this concrete design problem."
