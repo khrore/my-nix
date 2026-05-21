@@ -22,3 +22,5 @@ alias upd='nh os switch --update'
 alias v=nvim
 
 alias nd='nix develop --command "$SHELL" -i'
+
+bindkey '^F' autosuggest-accept

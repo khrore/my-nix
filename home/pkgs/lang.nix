@@ -71,6 +71,7 @@ in
       vscode-js-debug
       prettierd
       nodejs
+      bun
 
       # CMake
       cmake

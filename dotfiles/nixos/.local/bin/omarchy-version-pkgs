@@ -1,2 +1,0 @@
-#!/bin/bash
-nixos-version 2>/dev/null || echo "managed by flake"

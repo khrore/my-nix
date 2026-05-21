@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-
-# Reinstall the Omarchy configuration directory from the git source.
-
-git clone --depth=1 "https://github.com/basecamp/omarchy.git" ~/.local/share/linux-desktop-new >/dev/null
-mv $HOME/.local/share/linux-desktop ~/.local/share/linux-desktop-old
-mv ~/.local/share/linux-desktop-new $HOME/.local/share/linux-desktop

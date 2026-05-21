@@ -1,2 +1,0 @@
-#!/bin/bash
-git -C "${NIXOS_CONFIG_ROOT:-$HOME/nixos}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "nix-config"
