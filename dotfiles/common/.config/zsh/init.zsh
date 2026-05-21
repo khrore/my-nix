@@ -1,4 +1,4 @@
-_zsh_config_dir=${${(%):-%x}:A:h}
+_zsh_config_dir="$HOME/.config/zsh"
 
 # zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -11,5 +11,6 @@ source "$_zsh_config_dir/alias.zsh"
 source "$_zsh_config_dir/cli.zsh"
 source "$_zsh_config_dir/terminal.zsh"
 source "$_zsh_config_dir/env.zsh"
+source "$_zsh_config_dir/platform.zsh"
 
 unset _zsh_config_dir

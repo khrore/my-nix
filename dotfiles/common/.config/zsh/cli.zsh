@@ -18,9 +18,6 @@ export LS_COLORS=$(vivid generate gruvbox-dark)
 zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 
-zinit light chisui/zsh-nix-shell
-source /home/khrore/.local/share/zinit/plugins/chisui---zsh-nix-shell/nix-shell.plugin.zsh
-
 zinit as"null" wait"3" lucid for \
     Fakerr/git-recall \
     paulirish/git-open \
