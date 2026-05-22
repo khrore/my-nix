@@ -8,6 +8,8 @@ Workflow:
 3. If nothing is staged, inspect unstaged changes with \`git diff\` and stage only files relevant to this commit. Do not stage unrelated changes.
 4. If there are no changes to commit, stop and report that clearly.
 5. Write a concise Conventional Commit message when appropriate.
+   - Do not use the \`feat\` type or the scope \`pi\` in commit subjects (for example, avoid \`feat: ...\` and \`feat(pi): ...\`).
+   - Prefer another accurate type such as \`chore\`, \`fix\`, \`refactor\`, \`docs\`, or \`test\`, with a specific non-agent scope only when genuinely useful.
 6. Run \`git commit -m "<message>"\`.
 7. Report the commit hash and summary.
 
