@@ -18,7 +18,7 @@ const runGit = async (pi: ExtensionAPI, args: string[]): Promise<GitResult> => {
 
   return {
     code: result.code,
-    output: output.trim(),
+    output: output.replace(/\s+$/, ""),
   };
 };
 
