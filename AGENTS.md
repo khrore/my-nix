@@ -29,7 +29,7 @@ Defined hosts:
 
 Core inputs in use:
 
-- `nixpkgs` and `nixpkgs-unstable`: package sources
+- `nixpkgs`, `nixpkgs-unstable`, and `nixpkgs-darwin`: package sources
 - `darwin`: `nix-darwin`
 - `home-manager`: user environment layer
 - `disko`: disk layout modules for Linux hosts
@@ -40,6 +40,7 @@ Core inputs in use:
 Shared `specialArgs` passed into modules:
 
 - `hostName`, `username`, `system`
+- `isCuda`, `isDisplay`
 - `inputs`
 - `stateVersion`, `shell`, `terminalEditor`, `configurationLimit`
 - `mylib`
@@ -50,7 +51,7 @@ Notes:
 
 - `nixpkgsConfig` enables unfree packages and NVIDIA license acceptance.
 - The `secrets` input is a private SSH-backed repository, so evaluation on a new machine depends on SSH access.
-- Username values differ between Linux hosts; treat that as intentional until proven otherwise.
+- `isDisplay` controls desktop/GUI imports and packages; `isCuda` controls CUDA-oriented terminal packages.
 
 ## Module Composition
 
@@ -76,8 +77,9 @@ Linux-specific behavior:
 - `boot.nix`: `systemd-boot` with configurable generation limit.
 - `audio.nix`: PipeWire and RTKit.
 - `fonts.nix`: JetBrains Mono Nerd Font defaults.
-- `hyprland.nix`: Hyprland with UWSM.
+- `hyprland.nix`: Hyprland with UWSM, imported only when `isDisplay = true`.
 - `location.nix`: locale defaults.
+- `compat.nix`: compatibility symlink such as `/bin/bash`.
 - `nix-ld.nix`: compatibility layer for selected binaries.
 - `programs.nix`: `fish`, `zsh`, `localsend`, and `throne`.
 - `services.nix`: Docker and `udisks2`.
@@ -92,17 +94,18 @@ Darwin-specific behavior:
 
 - Entry: `home/default.nix`
 - Uses global packages and user packages.
-- Imports all `home/pkgs/*.nix` bundles plus `home/omarchy.nix` and `home/link-dotfiles.nix`.
+- Imports all `home/pkgs/*.nix` bundles plus `home/omarchy.nix`, `home/throne.nix`, and `home/link-dotfiles.nix`.
 - Enables `programs.home-manager.enable`.
 - In practice this layer is primarily used to install user packages and expose the `link-dotfiles` helper; dotfile linking can also be run manually outside a full Home Manager switch.
 
 Package bundles are grouped by concern:
 
-- `ai.nix`: `qwen-code`, `github-copilot-cli`, `opencode`, `promptfoo`
-- `gui.nix`: desktop apps, browsers, terminals, editors, media tools, Hyprland utilities
+- `ai.nix`: `qwen-code`, `opencode`, `promptfoo`, `uv`
+- `gui.nix`: display-gated desktop apps, browsers, terminals, editors, media tools, and Hyprland utilities
 - `lang.nix`: language servers, formatters, linters, debuggers, and build tools
+- `omarchy.nix`: Linux display-gated Omarchy desktop/runtime packages
 - `shell.nix`: shell quality-of-life tools such as `atuin`, `zoxide`, `starship`, `fzf`, `bat`, `ripgrep`
-- `tui.nix`: terminal-first apps such as `neovim`, `yazi`, `spotify-player`, `ncdu`, `btop`
+- `tui.nix`: terminal-first apps such as `neovim`, `yazi`, `zellij`, `lazygit`, `lazydocker`, `ncdu`, and GPU-aware `btop` variants
 - `utils.nix`: Git, networking, archive, document, filesystem, and encryption utilities
 
 This repo is optimized for:
@@ -120,19 +123,24 @@ This repo is optimized for:
 - `link-dotfiles` is user-invokable at any time; do not assume dotfile changes require a Home Manager rebuild.
 - Dotfiles are discovered at runtime from:
   - `$NIXOS_CONFIG_ROOT`
-  - `$HOME/nixos`
-  - `$HOME/.config/nixos`
+  - `$PWD`
+  - `$XDG_CONFIG_HOME` or `$HOME/.config`
+  - `$HOME`
   - or a nearby `flake.nix` discovered under `$HOME`
 - Platform-specific files override `common` by relative path.
 
 Implication for new environments:
 
-- The repo no longer assumes only `$HOME/nixos`, but that location still remains the simplest default.
+- The repo no longer assumes only `$HOME/nixos`; set `$NIXOS_CONFIG_ROOT` when automatic discovery is ambiguous.
 
 ## Agent And Runtime Files
 
 - OpenCode runtime files live in `dotfiles/common/.config/opencode/`.
 - Codex runtime files live in `dotfiles/common/.codex/`.
+- Claude runtime files live in `dotfiles/common/.claude/`.
+- Cursor rules live in `dotfiles/common/.cursor/rules/`.
+- Pi settings live in `dotfiles/common/.pi/`.
+- Shared agent rules live in `dotfiles/common/.agents/`.
 
 ## Known Risks
 
