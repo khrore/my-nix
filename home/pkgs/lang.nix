@@ -44,6 +44,7 @@ in
       shfmt
 
       # Go
+      go
       delve
 
       # Nushell

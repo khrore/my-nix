@@ -175,6 +175,7 @@ keybinds clear-defaults=true {
         bind "Super o" { MoveTab "right"; }
         bind "Super p" { TogglePaneInGroup; }
         bind "Super Shift p" { ToggleGroupMarking; }
+        bind "Super s" { SwitchToMode "scroll"; }
 
         bind "Super 1" { GoToTab 1; }
         bind "Super 2" { GoToTab 2; }
