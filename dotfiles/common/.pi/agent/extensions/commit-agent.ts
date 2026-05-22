@@ -1,44 +1,18 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const COMMAND_TIMEOUT_MS = 10_000;
-const AGENT_TIMEOUT_MS = 120_000;
-const MAX_DIFF_CHARS = 60_000;
-const DEFAULT_THINKING_LEVEL = "off";
 
-const COMMIT_AGENT_SYSTEM_PROMPT = `You are a fast git commit helper.
-Use only the provided git snapshot unless you must inspect missing details.
-Create at most one commit. Reply concisely with the result.`;
+interface GitResult {
+  code: number | null | undefined;
+  output: string;
+}
 
-const COMMIT_AGENT_PROMPT = `Create exactly one git commit for the current repository changes.
+interface ParsedArgs {
+  message?: string;
+  shouldStageAll: boolean;
+}
 
-Workflow:
-1. Use the provided git snapshot first; avoid re-running inspection commands unless the snapshot is insufficient.
-2. If nothing is staged, stage only files relevant to this commit. Do not stage unrelated changes.
-3. If there are no changes to commit, stop and report that clearly.
-4. Write a concise Conventional Commit message when appropriate.
-   - Do not use the \`feat\` type or the scope \`pi\` in commit subjects (for example, avoid \`feat: ...\` and \`feat(pi): ...\`).
-   - Prefer another accurate type such as \`chore\`, \`fix\`, \`refactor\`, \`docs\`, or \`test\`, with a specific non-agent scope only when genuinely useful.
-5. Run \`git commit -m "<message>"\`.
-6. Report the commit hash and summary.
-
-Do not amend, force-push, or create multiple commits unless explicitly requested.`;
-
-const truncate = (value: string, maxChars: number) => {
-  if (value.length <= maxChars) return value;
-
-  return `${value.slice(0, maxChars)}\n\n[truncated ${value.length - maxChars} character(s)]`;
-};
-
-const formatCommandOutput = (
-  label: string,
-  command: string,
-  output: string,
-) => {
-  const body = output.trim() || "(no output)";
-  return `## ${label}\n\`\`\`console\n$ ${command}\n${body}\n\`\`\``;
-};
-
-const runGit = async (pi: ExtensionAPI, args: string[]) => {
+const runGit = async (pi: ExtensionAPI, args: string[]): Promise<GitResult> => {
   const result = await pi.exec("git", args, { timeout: COMMAND_TIMEOUT_MS });
   const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
 
@@ -48,116 +22,182 @@ const runGit = async (pi: ExtensionAPI, args: string[]) => {
   };
 };
 
-const getGitSnapshot = async (pi: ExtensionAPI) => {
-  const status = await runGit(pi, ["status", "--short"]);
+const parseArgs = (args: string): ParsedArgs => {
+  const trimmed = args.trim();
+  if (!trimmed) return { shouldStageAll: false };
 
-  if (status.code !== 0) {
-    return {
-      hasChanges: true,
-      text: formatCommandOutput(
-        "Git status failed",
-        "git status --short",
-        status.output,
-      ),
-    };
-  }
-
-  if (!status.output.trim()) {
-    return {
-      hasChanges: false,
-      text: formatCommandOutput(
-        "Git status",
-        "git status --short",
-        status.output,
-      ),
-    };
-  }
-
-  const [cachedDiff, unstagedDiff] = await Promise.all([
-    runGit(pi, ["diff", "--cached"]),
-    runGit(pi, ["diff"]),
-  ]);
-
-  const rawSnapshot = [
-    formatCommandOutput("Git status", "git status --short", status.output),
-    formatCommandOutput("Staged diff", "git diff --cached", cachedDiff.output),
-    formatCommandOutput("Unstaged diff", "git diff", unstagedDiff.output),
-  ].join("\n\n");
+  const tokens = trimmed.split(/\s+/);
+  const shouldStageAll = tokens.includes("--all") || tokens.includes("-a");
+  const message = tokens
+    .filter((token) => token !== "--all" && token !== "-a")
+    .join(" ")
+    .trim();
 
   return {
-    hasChanges: true,
-    text: truncate(rawSnapshot, MAX_DIFF_CHARS),
+    shouldStageAll,
+    message: message || undefined,
   };
 };
 
-const getAgentArgs = (prompt: string) => {
-  const provider = process.env.PI_COMMIT_AGENT_PROVIDER?.trim();
-  const model = process.env.PI_COMMIT_AGENT_MODEL?.trim();
-  const thinking =
-    process.env.PI_COMMIT_AGENT_THINKING?.trim() || DEFAULT_THINKING_LEVEL;
+const getStatusLines = async (pi: ExtensionAPI) => {
+  const status = await runGit(pi, ["status", "--short"]);
+  if (status.code !== 0) {
+    throw new Error(status.output || "git status failed");
+  }
 
-  return [
-    ...(provider ? ["--provider", provider] : []),
-    ...(model ? ["--model", model] : []),
-    "--thinking",
-    thinking,
-    "--system-prompt",
-    COMMIT_AGENT_SYSTEM_PROMPT,
-    "--no-session",
-    "--no-extensions",
-    "--no-skills",
-    "--no-prompt-templates",
-    "--no-context-files",
-    "--no-themes",
-    "--offline",
-    "--tools",
-    "bash",
-    "--print",
-    prompt,
-  ];
+  return status.output.split("\n").filter(Boolean);
+};
+
+const getStagedStatusLines = (statusLines: string[]) => {
+  return statusLines.filter((line) => {
+    const indexStatus = line[0];
+    return indexStatus !== " " && indexStatus !== "?";
+  });
+};
+
+const extractPath = (statusLine: string) => {
+  const path = statusLine.slice(3).trim();
+  const renameSeparator = " -> ";
+  if (path.includes(renameSeparator)) {
+    return path.split(renameSeparator).at(-1) ?? path;
+  }
+
+  return path;
+};
+
+const stripExtension = (fileName: string) => {
+  const withoutDirectory = fileName.split("/").at(-1) ?? fileName;
+  return withoutDirectory.replace(/\.[^.]+$/, "");
+};
+
+const inferScope = (paths: string[]) => {
+  if (paths.length === 0) return undefined;
+
+  const firstPath = paths[0];
+  if (paths.every((path) => path.startsWith("dotfiles/common/.pi/")))
+    return "pi";
+  if (paths.every((path) => path.startsWith("dotfiles/"))) return "dotfiles";
+  if (paths.every((path) => path.startsWith("hosts/"))) return "hosts";
+  if (paths.every((path) => path.startsWith("home/"))) return "home";
+  if (paths.every((path) => path.startsWith("docs/") || path.endsWith(".md"))) {
+    return "docs";
+  }
+
+  const directory = firstPath.split("/").slice(0, -1).at(-1);
+  return directory && paths.every((path) => path.includes(`/${directory}/`))
+    ? directory
+    : undefined;
+};
+
+const inferType = (paths: string[]) => {
+  if (paths.every((path) => path.endsWith(".md"))) return "docs";
+  if (
+    paths.some((path) => /(^|\/)(test|tests|spec|__tests__)(\/|$)/.test(path))
+  ) {
+    return "test";
+  }
+  if (
+    paths.some((path) => path.endsWith(".nix") || path.includes(".config/"))
+  ) {
+    return "chore";
+  }
+
+  return "chore";
+};
+
+const inferSubject = (paths: string[]) => {
+  if (paths.length === 0) return "update repository changes";
+  if (paths.length === 1) return `update ${stripExtension(paths[0])}`;
+
+  const scope = inferScope(paths);
+  if (scope) return `update ${scope} configuration`;
+
+  return `update ${paths.length} files`;
+};
+
+const inferCommitMessage = (statusLines: string[]) => {
+  const paths = statusLines.map(extractPath);
+  const type = inferType(paths);
+  const scope = inferScope(paths);
+  const subject = inferSubject(paths);
+  const visibleScope = scope === "pi" ? undefined : scope;
+
+  return visibleScope
+    ? `${type}(${visibleScope}): ${subject}`
+    : `${type}: ${subject}`;
+};
+
+const hasStagedChanges = async (pi: ExtensionAPI) => {
+  const diff = await runGit(pi, ["diff", "--cached", "--quiet"]);
+  return diff.code === 1;
+};
+
+const ensureStagedChanges = async (
+  pi: ExtensionAPI,
+  statusLines: string[],
+  shouldStageAll: boolean,
+) => {
+  const stagedLines = getStagedStatusLines(statusLines);
+  if (stagedLines.length > 0) return stagedLines;
+
+  if (!shouldStageAll) {
+    throw new Error(
+      "No staged changes. Run /commit --all to stage all changes, or stage files manually first.",
+    );
+  }
+
+  const add = await runGit(pi, ["add", "-A"]);
+  if (add.code !== 0) {
+    throw new Error(add.output || "git add -A failed");
+  }
+
+  const nextStatusLines = await getStatusLines(pi);
+  const nextStagedLines = getStagedStatusLines(nextStatusLines);
+  if (nextStagedLines.length === 0 || !(await hasStagedChanges(pi))) {
+    throw new Error("No changes to commit after staging.");
+  }
+
+  return nextStagedLines;
+};
+
+const getCommitSummary = async (pi: ExtensionAPI) => {
+  const summary = await runGit(pi, ["log", "-1", "--pretty=format:%h %s"]);
+  return summary.output || "Commit created.";
 };
 
 export default function commitAgentExtension(pi: ExtensionAPI) {
   pi.registerCommand("commit", {
-    description: "Create a commit in an isolated ephemeral pi subprocess",
+    description: "Create a git commit quickly without launching an agent",
     handler: async (args, ctx) => {
       await ctx.waitForIdle();
 
-      const instructions = args.trim();
-      const snapshot = await getGitSnapshot(pi);
+      try {
+        const parsedArgs = parseArgs(args);
+        const statusLines = await getStatusLines(pi);
 
-      if (!snapshot.hasChanges) {
-        ctx.ui.notify("No changes to commit.", "info");
-        return;
+        if (statusLines.length === 0) {
+          ctx.ui.notify("No changes to commit.", "info");
+          return;
+        }
+
+        const commitLines = await ensureStagedChanges(
+          pi,
+          statusLines,
+          parsedArgs.shouldStageAll,
+        );
+        const message = parsedArgs.message ?? inferCommitMessage(commitLines);
+        const commit = await runGit(pi, ["commit", "-m", message]);
+
+        if (commit.code !== 0) {
+          ctx.ui.notify(commit.output || "git commit failed", "error");
+          return;
+        }
+
+        ctx.ui.notify(await getCommitSummary(pi), "info");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        ctx.ui.notify(message, "error");
       }
-
-      const prompt = [
-        COMMIT_AGENT_PROMPT,
-        instructions ? `User instructions: ${instructions}` : undefined,
-        "Use this pre-collected git snapshot:",
-        snapshot.text,
-      ]
-        .filter(Boolean)
-        .join("\n\n");
-
-      ctx.ui.notify("Starting fast isolated commit agent...", "info");
-
-      const result = await pi.exec("pi", getAgentArgs(prompt), {
-        timeout: AGENT_TIMEOUT_MS,
-      });
-
-      const stdout = result.stdout?.trim();
-      const stderr = result.stderr?.trim();
-
-      if (result.code === 0) {
-        ctx.ui.notify(stdout || "Commit agent finished.", "info");
-        return;
-      }
-
-      ctx.ui.notify(
-        `Commit agent failed with exit code ${result.code ?? "unknown"}.\n${stderr || stdout || "No output."}`,
-        "error",
-      );
     },
   });
 }
