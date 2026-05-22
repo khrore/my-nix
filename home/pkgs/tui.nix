@@ -36,6 +36,7 @@ let
     zellij
     lazygit
     lazydocker
+    basalt
 
     # disk
     ncdu

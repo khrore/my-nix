@@ -11,7 +11,7 @@ return {
 			c = { "clang-format" },
 			cpp = { "clang-format" },
 			cmake = { "cmake_format" },
-			markdown = { "mdformat" },
+			markdown = { "prettierd", "prettier", stop_after_first = true },
 			-- nu = { "nufmt" }, -- so buggy
 		},
 	},

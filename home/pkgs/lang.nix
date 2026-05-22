@@ -55,6 +55,7 @@ in
       # Markdown
       mdformat
       markdownlint-cli2
+      marksman
       glow
 
       # Yaml

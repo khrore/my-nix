@@ -52,10 +52,12 @@ return {
 		-- When obsidian.nvim is loaded by your plugin manager, it will automatically set
 		-- the workspace to the first workspace in the list whose `path` is a parent of the
 		-- current markdown file being edited.
+		legacy_commands = false,
+
 		workspaces = {
 			{
 				name = "notes",
-				path = "~/vaults/notes",
+				path = "/home/khrore/notes",
 			},
 		},
 
@@ -138,48 +140,31 @@ return {
 			return path:with_suffix(".md")
 		end,
 
-		-- Optional, customize how wiki links are formatted. You can set this to one of:
-		-- _ "use_alias_only", e.g. '[[Foo Bar]]'
-		-- _ "prepend*note_id", e.g. '[[foo-bar|Foo Bar]]'
-		-- * "prepend*note_path", e.g. '[[foo-bar.md|Foo Bar]]'
-		-- * "use_path_only", e.g. '[[foo-bar.md]]'
-		-- Or you can set it to a function that takes a table of options and returns a string, like this:
-		wiki_link_func = function(opts)
-			return require("obsidian.util").wiki_link_id_prefix(opts)
-		end,
+		link = {
+			style = "wiki",
+		},
 
-		-- Optional, customize how markdown links are formatted.
-		markdown_link_func = function(opts)
-			return require("obsidian.util").markdown_link(opts)
-		end,
-
-		-- Either 'wiki' or 'markdown'.
-		preferred_link_style = "wiki",
-
-		-- Optional, boolean or a function that takes a filename and returns a boolean.
-		-- `true` indicates that you don't want obsidian.nvim to manage frontmatter.
-		disable_frontmatter = true,
-
-		-- Optional, alternatively you can customize the frontmatter data.
-		---@return table
-		note_frontmatter_func = function(note)
-			-- Add the title of the note as an alias.
-			if note.title then
-				note:add_alias(note.title)
-			end
-
-			local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-
-			-- `note.metadata` contains any manually added fields in the frontmatter.
-			-- So here we just make sure those fields are kept in the frontmatter.
-			if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
-				for k, v in pairs(note.metadata) do
-					out[k] = v
+		frontmatter = {
+			enabled = false,
+			func = function(note)
+				-- Add the title of the note as an alias.
+				if note.title then
+					note:add_alias(note.title)
 				end
-			end
 
-			return out
-		end,
+				local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+
+				-- `note.metadata` contains any manually added fields in the frontmatter.
+				-- So here we just make sure those fields are kept in the frontmatter.
+				if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
+					for k, v in pairs(note.metadata) do
+						out[k] = v
+					end
+				end
+
+				return out
+			end,
+		},
 
 		-- Optional, for templates (see https://github.com/obsidian-nvim/obsidian.nvim/wiki/Using-templates)
 		-- templates = {
@@ -191,20 +176,6 @@ return {
 		-- 	-- See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Template#substitutions
 		-- 	substitutions = {},
 		-- },
-
-		-- Sets how you follow URLs
-		---@param url string
-		follow_url_func = function(url)
-			vim.ui.open(url)
-			-- vim.ui.open(url, { cmd = { "firefox" } })
-		end,
-
-		-- Sets how you follow images
-		---@param img string
-		follow_img_func = function(img)
-			vim.ui.open(img)
-			-- vim.ui.open(img, { cmd = { "loupe" } })
-		end,
 
 		---@class obsidian.config.OpenOpts
 		---
@@ -244,14 +215,11 @@ return {
 			parse_headers = true,
 		},
 
-		-- Optional, sort search results by "path", "modified", "accessed", or "created".
-		-- The recommend value is "modified" and `true` for `sort_reversed`, which means, for example,
-		-- that `:Obsidian quick_switch` will show the notes sorted by latest modified time
-		sort_by = "modified",
-		sort_reversed = true,
-
-		-- Set the maximum number of lines to read from notes on disk when performing certain searches.
-		search_max_lines = 1000,
+		search = {
+			sort_by = "modified",
+			sort_reversed = true,
+			max_lines = 1000,
+		},
 
 		-- Optional, determines how certain commands open notes. The valid options are:
 		-- 1. "current" (the default) - to always open in the current window
@@ -295,20 +263,6 @@ return {
 			ignore_conceal_warn = false, -- set to true to disable conceallevel specific warning
 			update_debounce = 200, -- update delay after a text change (in milliseconds)
 			max_file_length = 5000, -- disable UI features for files with more than this many lines
-			-- Define how various check-boxes are displayed
-			checkboxes = {
-				-- NOTE: the 'char' value has to be a single character, and the highlight groups are defined below.
-				[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-				["x"] = { char = "", hl_group = "ObsidianDone" },
-				[">"] = { char = "", hl_group = "ObsidianRightArrow" },
-				["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-				["!"] = { char = "", hl_group = "ObsidianImportant" },
-				-- Replace the above with this if you don't have a patched font:
-				-- [" "] = { char = "☐", hl_group = "ObsidianTodo" },
-				-- ["x"] = { char = "✔", hl_group = "ObsidianDone" },
-
-				-- You can also add more custom ones...
-			},
 			-- Use bullet marks for non-checkbox lists.
 			bullets = { char = "•", hl_group = "ObsidianBullet" },
 			external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
@@ -348,8 +302,8 @@ return {
 		---Whether to confirm the paste or not. Defaults to true.
 		---@field confirm_img_paste? boolean
 		attachments = {
-			img_folder = "assets/imgs",
-			img_text_func = function(client, path)
+			folder = "assets/imgs",
+			img_text_func = function(path)
 				local encoded_path = require("obsidian.util").urlencode(path:vault_relative_path() or tostring(path))
 				return string.format("![%s](%s)", path.name, encoded_path)
 			end,
@@ -359,8 +313,11 @@ return {
 			confirm_img_paste = true,
 		},
 
-		-- See https://github.com/obsidian-nvim/obsidian.nvim/wiki/Notes-on-configuration#statusline-component
-		statusline = {
+		checkbox = {
+			order = { " ", "~", "!", ">", "x" },
+		},
+
+		footer = {
 			enabled = true,
 			format = "{{properties}} properties {{backlinks}} backlinks {{words}} words {{chars}} chars",
 		},
