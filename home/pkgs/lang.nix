@@ -36,6 +36,7 @@ in
       python313
       ruff
       basedpyright
+      pyright
       python313Packages.debugpy
 
       # Bash

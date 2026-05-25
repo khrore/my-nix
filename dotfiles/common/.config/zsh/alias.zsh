@@ -22,6 +22,7 @@ alias upd='nh os switch --update'
 alias v=nvim
 
 alias nd='nix develop --command "$SHELL" -i'
+alias ns='nix-shell --command "$SHELL"'
 
 alias picommit="pi -p '/commit --all'"
 
