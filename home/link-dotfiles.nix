@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   mylib,
   system,
   ...
@@ -47,7 +46,7 @@ let
       local candidate
 
       for candidate in \
-        "''${NIXOS_CONFIG_ROOT:-}" \
+        "''${NIXOS_CONFIG:-}" \
         "''${PWD:-}" \
         "''${XDG_CONFIG_HOME:-${homeDir}/.config}" \
         "${homeDir}"

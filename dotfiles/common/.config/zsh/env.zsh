@@ -10,3 +10,5 @@ export HISTSIZE="10000"
 export SAVEHIST="10000"
 
 export NIX_BUILD_SHELL="zsh"
+
+export NIXOS_CONFIG="$HOME/my-nix"
