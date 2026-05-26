@@ -9,7 +9,7 @@
     ./nix-ld.nix
     ./programs.nix
     ./services.nix
-    ./users.nix
+    ./user.nix
     ./network.nix
   ]
   ++ (if isDisplay then [ ./hyprland.nix ] else [ ]);

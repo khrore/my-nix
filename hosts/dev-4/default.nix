@@ -1,4 +1,4 @@
-{ mylib, inputs, ... }:
+{ inputs, ... }:
 {
   imports = [
     ../common/default.nix
