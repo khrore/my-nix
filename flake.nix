@@ -12,7 +12,6 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
-
     # home-manager for user environment
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -51,6 +50,7 @@
     }@inputs:
     let
       stateVersion = "26.05";
+      repoRoot = ./.;
       nixpkgsConfig = {
         allowUnfree = true;
         nvidia.acceptLicense = true;
@@ -89,6 +89,7 @@
         }:
         {
           inherit
+            repoRoot
             username
             system
             inputs
@@ -108,7 +109,7 @@
       mkNixosConfiguration =
         name: host:
         nixpkgs.lib.nixosSystem {
-          system = host.system;
+          inherit (host) system;
           modules = host.modules ++ [
             host.path
             inputs.agenix.nixosModules.default
@@ -117,17 +118,19 @@
           ];
           specialArgs = mkSpecialArgs {
             hostName = name;
-            username = host.username;
-            system = host.system;
-            isCuda = host.isCuda;
-            isDisplay = host.isDisplay;
+            inherit (host)
+              username
+              system
+              isCuda
+              isDisplay
+              ;
           };
         };
 
       mkDarwinConfiguration =
         name: host:
         darwin.lib.darwinSystem {
-          system = host.system;
+          inherit (host) system;
           modules = host.modules ++ [
             host.path
             inputs.agenix.darwinModules.default
@@ -136,10 +139,12 @@
           ];
           specialArgs = mkSpecialArgs {
             hostName = name;
-            username = host.username;
-            system = host.system;
-            isCuda = host.isCuda;
-            isDisplay = host.isDisplay;
+            inherit (host)
+              username
+              system
+              isCuda
+              isDisplay
+              ;
           };
         };
 

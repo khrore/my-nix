@@ -1,4 +1,0 @@
-{ nixpkgsConfig, ... }:
-{
-  nixpkgs.config = nixpkgsConfig;
-}

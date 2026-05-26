@@ -1,5 +1,6 @@
-{ username, ... }:
+{ username, nixpkgsConfig, ... }:
 {
+  nixpkgs.config = nixpkgsConfig;
   nix.settings = {
     # Enables flakes
     experimental-features = [

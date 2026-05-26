@@ -24,6 +24,7 @@ in
       nil
       nixfmt
       statix
+      deadnix
       nixd
 
       # Lua
