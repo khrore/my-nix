@@ -30,6 +30,7 @@ let
       zed-editor
       obs-studio
       mpv
+      imv
       anydesk
 
       # Browser

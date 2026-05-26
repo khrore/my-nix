@@ -35,9 +35,11 @@ in
 
       # Python
       python313
+      uv
       ruff
       basedpyright
       pyright
+      python313Packages.vulture
       python313Packages.debugpy
 
       # Bash
@@ -97,6 +99,7 @@ in
       tree-sitter
 
       # Rust
+      rustup
       bacon
     ]
     ++ linuxTools;

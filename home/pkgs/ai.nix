@@ -4,14 +4,7 @@
 }:
 {
   home.packages = with pkgs-unstable; [
-    # Qwen
     qwen-code
-
-    # Open source
     opencode
-    promptfoo
-
-    # Python
-    uv
   ];
 }

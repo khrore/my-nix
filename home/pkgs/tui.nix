@@ -21,15 +21,6 @@ let
       btop
     ];
 
-  linuxPackages =
-    with pkgs-unstable;
-    lib.optionals (mylib.isLinux system) [
-      imv
-
-      # Moved to brew
-      zed-editor
-    ];
-
   shared = with pkgs-unstable; [
     yazi
     neovim
@@ -43,5 +34,5 @@ let
   ];
 in
 {
-  home.packages = shared ++ linuxPackages ++ noGpu ++ nvidiaPackages;
+  home.packages = shared ++ noGpu ++ nvidiaPackages;
 }
