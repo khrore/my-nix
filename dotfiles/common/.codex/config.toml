@@ -1,7 +1,7 @@
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 personality = "pragmatic"
-service_tier = "fast"
+service_tier = "default"
 show_raw_agent_reasoning = true
 model_verbosity = "high"
 check_for_update_on_startup = false
@@ -53,6 +53,18 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/khrore/platform/cluster-manager"]
+trust_level = "trusted"
+
+[projects."/home/khrore/vlad/olnisa_buyers_service"]
+trust_level = "trusted"
+
+[projects."/home/khrore/my-nix"]
+trust_level = "trusted"
+
+[projects."/home/khrore/.codex/skills/mojo-python-interop"]
+trust_level = "trusted"
+
+[projects."/home/khrore/github/codex"]
 trust_level = "trusted"
 
 [memories]

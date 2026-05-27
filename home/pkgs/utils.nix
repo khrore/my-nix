@@ -49,6 +49,7 @@ let
     jq
     carapace
     vivid
+    cloc
 
     # Networking
     sing-box
