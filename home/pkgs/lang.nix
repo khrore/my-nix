@@ -50,6 +50,8 @@ in
       # Go
       go
       delve
+      golangci-lint
+      golangci-lint-langserver
 
       # Nushell
       nufmt
