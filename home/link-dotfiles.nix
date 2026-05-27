@@ -69,7 +69,8 @@ let
     }
 
     link_dotfiles_runtime() {
-      local repo_root dotfiles_root common_dir platform_dir
+      local repo_root dotfiles_root common_dir platform_dir agents_skills codex_skills
+      local skill_source skill_name skill_target codex_skills_link
       local rel source target prefix source_dir target_prefix target_rel layer stale_link
       declare -A sources=()
       local -a layers=()
@@ -137,6 +138,42 @@ let
             ;;
         esac
       done < <(find "$HOME" -xtype l 2>/dev/null)
+
+      agents_skills="$HOME/.agents/skills"
+      codex_skills="$HOME/.codex/skills"
+
+      if [ -d "$agents_skills" ]; then
+        if [ -L "$codex_skills" ]; then
+          codex_skills_link="$(readlink "$codex_skills" 2>/dev/null || true)"
+          if [ "$codex_skills_link" = "$agents_skills" ]; then
+            rm -f "$codex_skills"
+          else
+            echo "Warning: $codex_skills is a symlink, skipping custom skill links..."
+            return 0
+          fi
+        fi
+
+        if [ -e "$codex_skills" ] && [ ! -d "$codex_skills" ]; then
+          echo "Warning: $codex_skills exists and is not a directory, skipping custom skill links..."
+        else
+          mkdir -p "$codex_skills"
+
+          while IFS= read -r -d "" skill_source; do
+            skill_name="$(basename "$skill_source")"
+            if [ "$skill_name" = ".system" ]; then
+              continue
+            fi
+
+            skill_target="$codex_skills/$skill_name"
+            if [ -e "$skill_target" ] && [ ! -L "$skill_target" ]; then
+              echo "Warning: $skill_target exists and is not a symlink, skipping..."
+            else
+              ln -snf "$skill_source" "$skill_target"
+              echo "✓ Linked .codex/skills/$skill_name -> .agents/skills/$skill_name"
+            fi
+          done < <(find "$agents_skills" -mindepth 1 -maxdepth 1 -type d -print0)
+        fi
+      fi
     }
   '';
 
