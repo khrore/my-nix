@@ -24,7 +24,8 @@ in
     with pkgs-unstable;
     [
       # C/C++ stuff
-      clang
+      (lib.setPrio 20 clang)
+      gcc
       lldb
 
       # Nix
@@ -57,11 +58,10 @@ in
       # Go
       go
       gopls
-      # gomodifytags
-      # gotests
-      # gofumpt
-      # revive
-      # staticcheck
+      gomodifytags
+      gotests
+      gofumpt
+      revive
       delve
       golangci-lint
       golangci-lint-langserver

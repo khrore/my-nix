@@ -1,3 +1,5 @@
+name = "reviewer"
+description = "A reviewer that performs a final check for correctness, security, behavioral regressions, and missing tests before changes land."
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
