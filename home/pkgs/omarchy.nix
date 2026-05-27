@@ -37,6 +37,7 @@ let
       xdg-terminal-exec
       upower
       v4l-utils
+      catppuccin-cursors.mochaDark
 
       # Omarchy workflow tools referenced by bindings and helpers
       netcat-openbsd

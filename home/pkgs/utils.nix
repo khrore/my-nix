@@ -29,7 +29,7 @@ let
       rofimoji
       nwg-look
       alsa-lib
-      catppuccin-cursors.mochaDark
+      bubblewrap
     ];
 
   # Cross-platform utilities

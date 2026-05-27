@@ -6,6 +6,13 @@
   ...
 }:
 let
+  gotoolsWithoutModernize = pkgs-unstable.symlinkJoin {
+    name = "gotools-without-modernize";
+    paths = [ pkgs-unstable.gotools ];
+    postBuild = ''
+      rm -f "$out/bin/modernize"
+    '';
+  };
   # Hyprland-specific tools (Linux only)
   linuxTools = lib.optionals (mylib.isLinux system) [
     pkgs-unstable.hyprls
@@ -49,9 +56,16 @@ in
 
       # Go
       go
+      gopls
+      # gomodifytags
+      # gotests
+      # gofumpt
+      # revive
+      # staticcheck
       delve
       golangci-lint
       golangci-lint-langserver
+      impl
 
       # Nushell
       nufmt
@@ -104,5 +118,6 @@ in
       rustup
       bacon
     ]
-    ++ linuxTools;
+    ++ linuxTools
+    ++ [ gotoolsWithoutModernize ];
 }
