@@ -74,6 +74,11 @@ let
     # Docs
     pandoc
     texliveSmall
+    # xpdf # insecure
+    # poppler-utils
+    mupdf
+    imagemagick
+    qpdf
   ];
   flakeUtils = [
     inputs.agenix.packages.${system}.default
