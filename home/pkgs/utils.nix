@@ -24,7 +24,7 @@ let
       brightnessctl
       playerctl
       libsForQt5.qt5ct
-      libsForQt5.qt5.qtwayland
+      libsForQt5.qtwayland
       libxkbcommon
       rofimoji
       nwg-look

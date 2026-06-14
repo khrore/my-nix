@@ -34,6 +34,7 @@ in
       bat
       ripgrep
       fd
+      poppler
       tldr
     ]
     ++ linuxTools;
