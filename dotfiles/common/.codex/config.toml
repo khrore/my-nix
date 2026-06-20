@@ -33,9 +33,6 @@ trust_level = "trusted"
 [projects."/Users/khrore/nixrets"]
 trust_level = "trusted"
 
-[projects."/Users/khrore/projects/pres"]
-trust_level = "trusted"
-
 [projects."/Users/khrore/platform/web-server"]
 trust_level = "trusted"
 
@@ -97,6 +94,15 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/khrore/job"]
+trust_level = "trusted"
+
+[projects."/home/khrore/platform-extenal/architecture"]
+trust_level = "trusted"
+
+[projects."/home/khrore/platform/task-manager"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/fvds"]
 trust_level = "trusted"
 
 [memories]

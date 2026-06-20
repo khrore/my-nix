@@ -1,5 +1,14 @@
 # AGENTS.md - Codex Policy Kernel
 
+## Implementation Principles
+
+For behavior-changing work, validate the implementation against these principles:
+
+- **DRY**: keep each piece of knowledge in one clear place; avoid duplicated logic that can drift.
+- **SRP**: keep each module, type, function, or command focused on one reason to change.
+- **KISS**: choose the simplest design that satisfies the requirement without needless abstraction.
+- **Open/Closed**: prefer extending behavior through stable boundaries instead of rewriting proven code.
+
 ## Validation Minimums
 
 For behavior-changing work, validate in this order when applicable:

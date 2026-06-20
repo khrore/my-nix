@@ -75,7 +75,7 @@ let
     pandoc
     texliveSmall
     # xpdf # insecure
-    # poppler-utils
+    poppler-utils
     mupdf
     imagemagick
     qpdf

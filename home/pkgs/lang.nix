@@ -97,6 +97,7 @@ in
       biome
       nodejs
       bun
+      deno
 
       # CMake
       cmake
