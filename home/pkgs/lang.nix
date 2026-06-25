@@ -66,6 +66,7 @@ in
       golangci-lint
       golangci-lint-langserver
       impl
+      sqlc
 
       # Nushell
       nufmt

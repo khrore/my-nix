@@ -108,6 +108,18 @@ trust_level = "trusted"
 [projects."/home/khrore/projects/vidaud"]
 trust_level = "trusted"
 
+[projects."/home/khrore/projects/vidaud-frontend"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/vidaud/vidaud-auth"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/vidaud/vidaud-architecture"]
+trust_level = "trusted"
+
+[projects."/home/khrore/.ssh"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
