@@ -54,6 +54,7 @@ trust_level = "trusted"
 [projects."/Users/khrore/platform/cluster-manager"]
 trust_level = "trusted"
 
+<<<<<<< HEAD
 [projects."/home/khrore/vlad/olnisa_buyers_service"]
 trust_level = "trusted"
 
@@ -118,6 +119,12 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/khrore/.ssh"]
+trust_level = "trusted"
+
+[projects."/Users/khrore"]
+trust_level = "trusted"
+
+[projects."/Users/khrore/Movies"]
 trust_level = "trusted"
 
 [memories]
