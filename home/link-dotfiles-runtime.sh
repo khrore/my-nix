@@ -32,6 +32,7 @@ find_repo_root() {
 	local candidate
 
 	for candidate in \
+		"${NIXOS_CONFIG_ROOT:-}" \
 		"${NIXOS_CONFIG:-}" \
 		"${PWD:-}" \
 		"${XDG_CONFIG_HOME:-$homeDir/.config}" \
@@ -124,8 +125,10 @@ link_dotfiles_runtime() {
 	local repo_root dotfiles_root common_dir platform_dir agents_skills agent_skill_root
 	local skill_source skill_name skill_target
 	local rel source target prefix source_dir target_prefix target_rel layer stale_link
+	local state_dir manifest_file manifest_tmp previous_rel
 	declare -A sources=()
 	declare -A agent_skill_sources=()
+	declare -A current_targets=()
 	local -a layers=()
 
 	repo_root="$(find_repo_root || true)"
@@ -164,6 +167,7 @@ link_dotfiles_runtime() {
 				target_rel="$rel"
 			fi
 			sources["$target_rel"]="$file"
+			current_targets["$target_rel"]=1
 		done < <(find "$source_dir" -type f ! -name ".gitkeep" ! -path "$source_dir/.agents/skills/*" -print0)
 
 		agent_skill_root="$source_dir/.agents/skills"
@@ -174,9 +178,32 @@ link_dotfiles_runtime() {
 					continue
 				fi
 				agent_skill_sources["$skill_name"]="$skill_source"
+				current_targets[".agents/skills/$skill_name"]=1
 			done < <(find "$agent_skill_root" -mindepth 1 -maxdepth 1 -type d -print0)
 		fi
 	done
+
+	state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/link-dotfiles"
+	manifest_file="$state_dir/manifest.$platform"
+	manifest_tmp="$manifest_file.tmp"
+
+	if [ -f "$manifest_file" ]; then
+		while IFS= read -r previous_rel; do
+			[ -n "$previous_rel" ] || continue
+			if [ -z "${current_targets["$previous_rel"]+x}" ]; then
+				stale_link="$HOME/$previous_rel"
+				if [ -L "$stale_link" ]; then
+					source="$(readlink "$stale_link" 2>/dev/null || true)"
+					case "$source" in
+					"$repo_root"/dotfiles/* | "$repo_root"/omarchy/config/*)
+						rm -f "$stale_link"
+						echo "Removed stale link ${stale_link#"$HOME"/}"
+						;;
+					esac
+				fi
+			fi
+		done <"$manifest_file"
+	fi
 
 	echo "Processing ${#sources[@]} dotfile entries from $repo_root..."
 
@@ -193,16 +220,6 @@ link_dotfiles_runtime() {
 		fi
 	done < <(printf '%s\n' "${!sources[@]}" | LC_ALL=C sort)
 
-	while IFS= read -r stale_link; do
-		source="$(readlink "$stale_link" 2>/dev/null || true)"
-		case "$source" in
-		"$repo_root"/dotfiles/* | "$repo_root"/omarchy/config/*)
-			rm -f "$stale_link"
-			echo "Removed stale link ${stale_link#"$HOME"/}"
-			;;
-		esac
-	done < <(find "$HOME" -xtype l 2>/dev/null)
-
 	agents_skills="$HOME/.agents/skills"
 	if [ -e "$agents_skills" ] && [ ! -d "$agents_skills" ]; then
 		echo "Warning: $agents_skills exists and is not a directory, skipping custom skill links..."
@@ -216,6 +233,10 @@ link_dotfiles_runtime() {
 			link_managed_skill_dir "$skill_source" "$skill_target" ".agents/skills/$skill_name -> ${skill_source#"$repo_root"/}"
 		done < <(printf '%s\n' "${!agent_skill_sources[@]}" | LC_ALL=C sort)
 	fi
+
+	mkdir -p "$state_dir"
+	printf '%s\n' "${!current_targets[@]}" | LC_ALL=C sort >"$manifest_tmp"
+	mv "$manifest_tmp" "$manifest_file"
 }
 
 link_dotfiles_runtime

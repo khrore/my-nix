@@ -7,6 +7,12 @@
       autoUpdate = true;
       cleanup = "zap"; # Uninstall unlisted packages
       upgrade = true;
+      extraEnv = {
+        HTTP_PROXY = "http://127.0.0.1:2080";
+        HTTPS_PROXY = "http://127.0.0.1:2080";
+        http_proxy = "http://127.0.0.1:2080";
+        https_proxy = "http://127.0.0.1:2080";
+      };
     };
 
     # CLI tools not available or better via Homebrew
