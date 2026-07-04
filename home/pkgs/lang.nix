@@ -84,7 +84,6 @@ in
       yaml-language-server
 
       # HTML/CSS/JSON/ESLint
-      vue-language-server
       tailwindcss-language-server
       vscode-langservers-extracted
       eslint
