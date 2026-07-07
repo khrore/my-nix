@@ -3,24 +3,24 @@
   pkgs-unstable,
   mylib,
   system,
+  isDisplay,
   inputs,
   ...
 }:
 let
   darwinUtils = with pkgs-unstable; lib.optionals (mylib.isDarwin system) [ orbstack ];
-  # Linux-specific utilities
-  linuxUtils =
+  # Linux desktop utilities
+  linuxDisplayUtils =
     with pkgs-unstable;
-    lib.optionals (mylib.isLinux system) [
-      # Wayland-specific
+    lib.optionals (mylib.isLinux system && isDisplay) [
+      # Wayland-specific tools
       cliphist
       grimblast
       wl-clipboard
       showmethekey
       wtype
-      nftables
 
-      # Linux-specific tools
+      # Desktop tools
       brightnessctl
       playerctl
       libsForQt5.qt5ct
@@ -29,6 +29,13 @@ let
       rofimoji
       nwg-look
       alsa-lib
+    ];
+
+  # Linux-specific utilities
+  linuxUtils =
+    with pkgs-unstable;
+    lib.optionals (mylib.isLinux system) [
+      nftables
       bubblewrap
     ];
 
@@ -85,5 +92,5 @@ let
   ];
 in
 {
-  home.packages = sharedUtils ++ linuxUtils ++ darwinUtils ++ flakeUtils;
+  home.packages = sharedUtils ++ linuxDisplayUtils ++ linuxUtils ++ darwinUtils ++ flakeUtils;
 }

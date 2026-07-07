@@ -3,6 +3,7 @@
   pkgs-unstable,
   mylib,
   system,
+  isDisplay,
   ...
 }:
 let
@@ -14,7 +15,7 @@ let
     '';
   };
   # Hyprland-specific tools (Linux only)
-  linuxTools = lib.optionals (mylib.isLinux system) [
+  linuxTools = lib.optionals (mylib.isLinux system && isDisplay) [
     pkgs-unstable.hyprls
     # pkgs-unstable.marksman
   ];

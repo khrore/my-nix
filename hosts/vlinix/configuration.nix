@@ -61,11 +61,13 @@
       linkConfig.RequiredForOnline = "routable";
     };
   };
-  services.mysql = {
-    enable = true;
-    package = pkgs.mysql84;
+  services = {
+    mysql = {
+      enable = true;
+      package = pkgs.mysql84;
+    };
+    postgresql.enable = true;
   };
-
   # Extra certificates from OrbStack.
   security.pki.certificates = [
     ''
