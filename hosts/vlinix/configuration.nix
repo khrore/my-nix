@@ -5,6 +5,7 @@
 {
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 
@@ -59,6 +60,10 @@
       };
       linkConfig.RequiredForOnline = "routable";
     };
+  };
+  services.mysql = {
+    enable = true;
+    package = pkgs.mysql84;
   };
 
   # Extra certificates from OrbStack.

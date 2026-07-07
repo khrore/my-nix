@@ -15,4 +15,6 @@ export NH_OS_FLAKE="$HOME/my-nix"
 
 export NIX_BUILD_SHELL="bash"
 
+export GOCACHE="$HOME/.gocache"
+
 export POETRY_CERTIFICATES_INTERNAL_CERT="./certs/gosniias.crt"

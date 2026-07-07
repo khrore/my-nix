@@ -126,6 +126,21 @@ trust_level = "trusted"
 [projects."/Users/khrore/Movies"]
 trust_level = "trusted"
 
+[projects."/Users/khrore/Movies"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/vidaud/vidaud-storage"]
+trust_level = "trusted"
+
+[projects."/home/khrore"]
+trust_level = "trusted"
+
+[projects."/home/khrore/leetcode/leetcode-75"]
+trust_level = "trusted"
+
+[projects."/home/khrore/leetcode/databases-50"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
