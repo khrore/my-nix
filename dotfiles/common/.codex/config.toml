@@ -1,4 +1,4 @@
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 personality = "pragmatic"
 service_tier = "default"
@@ -138,6 +138,36 @@ trust_level = "trusted"
 [projects."/home/khrore/leetcode/databases-50"]
 trust_level = "trusted"
 
+[projects."/home/khrore/projects/go"]
+trust_level = "trusted"
+
+[projects."/home/khrore/vlad/neiro-board"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/2gis-test"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/2gis/application-review-test-master"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/board/auth"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/board/architecture"]
+trust_level = "trusted"
+
+[projects."/home/khrore/github/dify"]
+trust_level = "trusted"
+
+[projects."/home/khrore/github/n8n"]
+trust_level = "trusted"
+
+[projects."/home/khrore/github/langflow"]
+trust_level = "trusted"
+
+[projects."/home/khrore/github/OpenShell"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
@@ -204,3 +234,4 @@ config_file = "agents/docs-researcher.toml"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4

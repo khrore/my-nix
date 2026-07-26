@@ -29,13 +29,11 @@ let
       ghostty
       zed-editor
       obs-studio
-      mpv
       imv
       anydesk
 
       # Browser
       ungoogled-chromium
-      qbittorrent
       tor
       vesktop
     ];
@@ -55,6 +53,9 @@ let
       obsidian
       telegram-desktop
       spotify
+      mpv-unwrapped
+
+      qbittorrent
 
       # DB
       dbeaver-bin
