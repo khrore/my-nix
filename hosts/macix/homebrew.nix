@@ -15,12 +15,6 @@
       };
     };
 
-    # CLI tools not available or better via Homebrew
-    brews = [
-      # Add any Mac-specific brews here if needed
-      # "asmvik/formulae/yabai"
-    ];
-
     # GUI applications
     casks = [
       # Optional: macOS-native apps that aren't in nixpkgs
@@ -33,15 +27,9 @@
       "claude-code"
       "zed"
       "ghostty"
-      "anydesk"
       "chatgpt-atlas"
       "ungoogled-chromium"
       "nikitabobko/tap/aerospace"
     ];
-
-    # Mac App Store apps (requires mas-cli)
-    masApps = {
-      # "Xcode" = 497799835;
-    };
   };
 }
