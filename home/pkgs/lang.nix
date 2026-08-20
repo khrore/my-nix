@@ -69,6 +69,10 @@ in
       impl
       sqlc
 
+      # Protobuf
+      protobuf
+      buf
+
       # Nushell
       nufmt
 

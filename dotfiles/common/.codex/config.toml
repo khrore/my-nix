@@ -1,5 +1,5 @@
 model = "gpt-5.6-sol"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 personality = "pragmatic"
 service_tier = "default"
 show_raw_agent_reasoning = true
@@ -166,6 +166,12 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/khrore/github/OpenShell"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/board/neiro-board"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/game-rs"]
 trust_level = "trusted"
 
 [memories]

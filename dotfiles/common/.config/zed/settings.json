@@ -154,7 +154,7 @@
           },
           // Show expression adjustment hints
           "expressionAdjustmentHints": {
-            "enable": "always",
+            "enable": "never",
             "hideOutsideUnsafe": false,
             "mode": "prefer_prefix",
           },
