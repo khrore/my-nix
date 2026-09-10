@@ -4,5 +4,6 @@
     ./disko.nix
     ./hardware-configuration.nix
     ./nixpkgs-config.nix
+    ./streaming.nix
   ];
 }

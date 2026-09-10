@@ -36,6 +36,8 @@ let
       ungoogled-chromium
       tor
       vesktop
+
+      osu-lazer-bin
     ];
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
