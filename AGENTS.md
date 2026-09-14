@@ -22,7 +22,6 @@ This file captures repository-specific structure and intent so coding agents can
 
 Defined hosts:
 
-- `dev-4`: NixOS, `x86_64-linux`, user `khrore`
 - `nixos`: NixOS, `x86_64-linux`, user `khrore`
 - `vlinix`: NixOS, `aarch64-linux`, user `khrore`
 - `macix`: Darwin, `aarch64-darwin`, user `khrore`
@@ -94,7 +93,7 @@ Darwin-specific behavior:
 
 - Entry: `home/default.nix`
 - Uses global packages and user packages.
-- Imports all `home/pkgs/*.nix` bundles plus `home/omarchy.nix`, `home/throne.nix`, and `home/link-dotfiles.nix`.
+- Imports all `home/pkgs/*.nix` bundles plus `home/omarchy.nix` and `home/link-dotfiles.nix`.
 - Enables `programs.home-manager.enable`.
 - In practice this layer is primarily used to install user packages and expose the `link-dotfiles` helper; dotfile linking can also be run manually outside a full Home Manager switch.
 
@@ -154,8 +153,7 @@ Implication for new environments:
 Run the smallest relevant checks after behavior changes:
 
 1. `nix flake check`
-1. `nixos-rebuild build --flake .#dev-4` for Linux shared changes
-1. `nixos-rebuild build --flake .#nixos` when touching that host
+1. `nixos-rebuild build --flake .#nixos` for Linux shared changes
 1. `darwin-rebuild build --flake .#macix` for Darwin changes
 
 If commands are unavailable or blocked by missing private inputs, report that explicitly.

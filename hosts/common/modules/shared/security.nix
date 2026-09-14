@@ -18,7 +18,6 @@ in
 
   security.pki.certificateFiles = [
     (repoRoot + "/certs/dev-2.crt")
-    (repoRoot + "/certs/dev-4.crt")
   ];
 
   age.secrets.atuin_key = {

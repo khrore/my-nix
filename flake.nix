@@ -30,6 +30,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -149,16 +151,6 @@
         };
 
       hosts = {
-        dev-4 = {
-          kind = "nixos";
-          system = "x86_64-linux";
-          username = "khrore";
-          path = ./hosts/dev-4;
-          modules = [ inputs.disko.nixosModules.disko ];
-          isCuda = false;
-          isDisplay = true;
-        };
-
         nixos = {
           kind = "nixos";
           system = "x86_64-linux";

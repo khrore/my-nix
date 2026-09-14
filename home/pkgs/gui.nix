@@ -41,6 +41,7 @@ let
     ];
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
+    inputs.codex-desktop-linux.packages."${system}".default
     inputs.zen-browser.packages."${system}".twilight
   ];
 

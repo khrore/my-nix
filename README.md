@@ -6,7 +6,7 @@ a separate user-level layer instead of tightly coupling them to Home Manager.
 
 ## What This Repo Defines
 
-- NixOS hosts: `dev-4`, `nixos`, `vlinix`
+- NixOS hosts: `nixos`, `vlinix`
 - Darwin host: `macix`
 - Shared system layer in `hosts/common`
 - Shared Home Manager layer in `home`
@@ -166,7 +166,6 @@ Smallest relevant checks after changes:
 
 ```bash
 nix flake check
-nixos-rebuild build --flake .#dev-4
 nixos-rebuild build --flake .#nixos
 darwin-rebuild build --flake .#macix
 ```
