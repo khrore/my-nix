@@ -1,8 +1,10 @@
 # AGENTS.md - Codex Policy Kernel
 
+Keep the user's desired outcome and constraints distinct from their diagnosis or proposed implementation, which may be hypotheses. Before behavior-changing work, briefly consider whether the requested change addresses the actual problem and mention a materially simpler or safer alternative when one is evident.
+
 ## Implementation Principles
 
-For behavior-changing work, validate the implementation against these principles:
+For behavior-changing work, use these principles as practical heuristics and balance them against each other:
 
 - **DRY**: keep each piece of knowledge in one clear place; avoid duplicated logic that can drift.
   - Look for existing places where the same decision is already represented before adding another one.
@@ -20,17 +22,20 @@ For behavior-changing work, validate the implementation against these principles
   - Follow existing extension patterns when the codebase already provides one.
   - Preserve stable contracts unless the requested behavior explicitly changes them.
   - Isolate variation so existing behavior remains easy to reason about.
+  - Do not introduce extension points or indirection for hypothetical future needs.
 
-## Validation Minimums
+## Validation
 
-For behavior-changing work, validate in this order when applicable:
+Run relevant checks in an order that provides useful feedback quickly. Scale validation with the scope, risk, and reversibility of the change; broaden it when failures or unresolved uncertainty justify doing so.
 
-1. formatter check
-1. linter check
-1. type or LSP-equivalent check
-1. build or compile check
-1. targeted tests for changed behavior
-1. broader tests when risk or scope requires
+Depending on the change, relevant checks may include:
+
+- formatter checks
+- linter checks
+- type or LSP-equivalent checks
+- build or compile checks
+- targeted tests for changed behavior
+- broader tests when risk or scope requires
 
 Classify failures as one of:
 
@@ -39,6 +44,4 @@ Classify failures as one of:
 - environment
 - scope-expanding
 
-Do not claim success without command evidence.
-
-Linter warnings are not ignorable by default. Treat any linter warning on touched code as a failure that must be fixed or explicitly escalated with justification before handoff or completion.
+Report the checks run and their results. If a relevant check cannot be run, explain why. Fix warnings introduced by the change; report pre-existing failures without expanding the task unless they block meaningful validation.
