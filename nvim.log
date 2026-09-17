@@ -1,7 +1,0 @@
-WRN 2026-09-17T23:27:57.468 ui.2       tui_handle_term_mode:226: TUI: terminal mode 69 unavailable, state 0
-WRN 2026-09-17T23:27:57.468 ui.2       tui_handle_term_mode:226: TUI: terminal mode 2026 unavailable, state 0
-WRN 2026-09-17T23:27:57.468 ui.2       tui_handle_term_mode:226: TUI: terminal mode 2027 unavailable, state 0
-WRN 2026-09-17T23:27:57.468 ui.2       tui_handle_term_mode:226: TUI: terminal mode 2031 unavailable, state 0
-WRN 2026-09-17T23:27:57.468 ui.2       tui_handle_term_mode:226: TUI: terminal mode 2048 unavailable, state 0
-WRN 2026-09-17T23:27:57.470 ?.3        server_start:197: Failed to start server: operation not permitted: /run/user/1003/nvim.3.0
-WRN 2026-09-17T23:28:22.644 ui.2       tui_stop:658: TUI: timed out waiting for DA1 response
