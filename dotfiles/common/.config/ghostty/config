@@ -1,11 +1,11 @@
 auto-update = off
-background-opacity = 0.950000
+background-opacity = 1
 clipboard-read = allow
 clipboard-write = allow
 macos-option-as-alt = true
 confirm-close-surface = false
 font-family = JetBrainsMono Nerd Font
-font-size = 14
+font-size = 12
 gtk-custom-css = tab-style.css
 gtk-tabs-location = top
 maximize = true
