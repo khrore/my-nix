@@ -118,7 +118,6 @@
         },
         // Comprehensive inlay hints
         "inlayHints": {
-          "maxLength": null,
           // Show parameter names
           "parameterHints": {
             "enable": true,
@@ -137,21 +136,12 @@
           "closureReturnTypeHints": {
             "enable": "always",
           },
-          // Show lifetime elision hints
-          "lifetimeElisionHints": {
-            "enable": "always",
-            "useParameterNames": true,
-          },
           // Show binding mode hints
           "bindingModeHints": {
             "enable": true,
           },
           // Show closure capture hints
           "closureCaptureHints": {
-            "enable": true,
-          },
-          // Show implicit drops
-          "implicitDrops": {
             "enable": true,
           },
           // Show discriminant hints for enums
