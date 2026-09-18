@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Design by Contract
 
 ## Problem
@@ -30,7 +32,7 @@ Inputs, outputs, invariants, side effects, or failure modes are implicit at a pu
 - Define deterministic failure behavior.
 - Test postconditions and important invalid cases.
 
-## Problem Example
+## Pressure Example
 
 ```ts
 async function createAccount(input: AccountInput) {
@@ -39,7 +41,7 @@ async function createAccount(input: AccountInput) {
 }
 ```
 
-## Refactored Example
+## Possible Refactoring
 
 ```ts
 function parseAccount(input: AccountInput): AccountDraft {
@@ -66,27 +68,3 @@ async function createAccount(input: AccountInput) {
 - Contracts documented only in comments.
 - Validation duplicated deep inside every helper.
 - Adapters that throw incompatible errors.
-
-## Review Checklist
-
-- Can you name the design pressure without naming the principle?
-- Does the proposed change reduce real coupling, drift, surprise, or invalid state?
-- Is the smallest useful boundary visible in names, types, or module layout?
-- Are validation and failure behavior explicit at the edge where callers enter?
-- Does the refactor preserve current behavior while making the next change safer?
-- Would an ordinary maintainer know where to make the next related edit?
-
-## Refactoring Moves
-
-- Start with a narrow local change before introducing a broad abstraction.
-- Move knowledge to the owner that already maintains the relevant invariant.
-- Prefer explicit parameters, small helpers, and named value objects before frameworks.
-- Add tests around the behavior that was hard to reason about before the refactor.
-- Keep compatibility at public boundaries unless the task explicitly includes migration.
-
-## Example Reading Guide
-
-- The problem example shows the smell to recognize in real code.
-- The refactored example shows one possible shape, not the only valid implementation.
-- Translate classes, interfaces, and modules into the host language's natural units.
-- Preserve local conventions when they already solve the same problem clearly.

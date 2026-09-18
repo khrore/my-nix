@@ -1,20 +1,18 @@
 <!-- markdownlint-disable MD013 MD031 -->
 
-# Rule Catalog — SQLAlchemy Patterns
+# Review Cues — SQLAlchemy Patterns
 
 ## Scope
 
 - Covers: SQLAlchemy session and transaction lifecycle, query construction, tenant scoping, raw SQL boundaries, and write-path concurrency safeguards.
 - Does NOT cover: table/model schema and migration design details (handled by `db-schema-rule.md`).
 
-## Rules
+## Cues
 
 ### Use Session context manager with explicit transaction control behavior
 
-- Category: best practices
-- Severity: critical
-- Description: Session and transaction lifecycle must be explicit and bounded on write paths. Missing commits can silently drop intended updates, while ad-hoc or long-lived transactions increase contention, lock duration, and deadlock risk.
-- Suggested fix:
+- Why it matters: Session and transaction lifecycle must be explicit and bounded on write paths. Missing commits can silently drop intended updates, while ad-hoc or long-lived transactions increase contention, lock duration, and deadlock risk.
+- Possible responses:
   - Use **explicit `session.commit()`** after completing a related write unit.
   - Or use **`session.begin()` context manager** for automatic commit/rollback on a scoped block.
   - Keep transaction windows short: avoid network I/O, heavy computation, or unrelated work inside the transaction.
@@ -54,10 +52,8 @@
 
 ### Enforce tenant_id scoping on shared-resource queries
 
-- Category: security
-- Severity: critical
-- Description: Reads and writes against shared tables must be scoped by `tenant_id` to prevent cross-tenant data leakage or corruption.
-- Suggested fix: Add `tenant_id` predicate to all tenant-owned entity queries and propagate tenant context through service/repository interfaces.
+- Why it matters: Reads and writes against shared tables must be scoped by `tenant_id` to prevent cross-tenant data leakage or corruption.
+- Possible responses: Add `tenant_id` predicate to all tenant-owned entity queries and propagate tenant context through service/repository interfaces.
 - Example:
   - Bad:
     ```python
@@ -73,12 +69,13 @@
     workflow = session.execute(stmt).scalar_one_or_none()
     ```
 
-### Prefer SQLAlchemy expressions over raw SQL by default
+### Choose between SQLAlchemy expressions and raw SQL deliberately
 
-- Category: maintainability
-- Severity: suggestion
-- Description: Raw SQL should be exceptional. ORM/Core expressions are easier to evolve, safer to compose, and more consistent with the codebase.
-- Suggested fix: Rewrite straightforward raw SQL into SQLAlchemy `select/update/delete` expressions; keep raw SQL only when required by clear technical constraints.
+- Why it matters: Raw SQL is reasonable for measured performance needs, database-specific features, or queries that are
+  clearer in SQL. It becomes a concern when it bypasses parameterization, tenant policy, result mapping, portability
+  expectations, or an established SQLAlchemy boundary without a concrete benefit.
+- Possible responses: Use SQLAlchemy `select/update/delete` expressions for straightforward composable queries; keep
+  justified raw SQL parameterized, locally contained, and covered by integration tests.
 - Example:
   - Bad:
     ```python
@@ -98,12 +95,12 @@
 
 ### Protect write paths with concurrency safeguards
 
-- Category: quality
-- Severity: critical
-- Description: Multi-writer paths without explicit concurrency control can silently overwrite data. Choose the safeguard based on contention level, lock scope, and throughput cost instead of defaulting to one strategy.
-- Suggested fix:
+- Why it matters: Multi-writer paths without explicit concurrency control can silently overwrite data. Choose the safeguard based on contention level, lock scope, and throughput cost instead of defaulting to one strategy.
+- Possible responses:
   - **Optimistic locking**: Use when contention is usually low and retries are acceptable. Add a version (or updated_at) guard in `WHERE` and treat `rowcount == 0` as a conflict.
-  - **Redis distributed lock**: Use when the critical section spans multiple steps/processes (or includes non-DB side effects) and you need cross-worker mutual exclusion.
+  - **Distributed lock**: Consider only when the critical section genuinely spans processes and the existing architecture
+    provides explicit lease, expiry, fencing, failure, and recovery semantics. It is not a substitute for database
+    constraints, idempotency, or transaction design.
   - **SELECT ... FOR UPDATE**: Use when contention is high on the same rows and strict in-transaction serialization is required. Keep transactions short to reduce lock wait/deadlock risk.
   - In all cases, scope by `tenant_id` and verify affected row counts for conditional writes.
 - Example:
@@ -129,17 +126,7 @@
     if result.rowcount == 0:
         raise WorkflowStateConflictError("stale version, retry")
 
-    # 2) Redis distributed lock (cross-worker critical section)
-    lock_name = f"workflow_run_lock:{tenant_id}:{run_id}"
-    with redis_client.lock(lock_name, timeout=20):
-        session.execute(
-            update(WorkflowRun)
-            .where(WorkflowRun.id == run_id, WorkflowRun.tenant_id == tenant_id)
-            .values(status="cancelled")
-        )
-        session.commit()
-
-    # 3) Pessimistic lock with SELECT ... FOR UPDATE (high contention)
+    # 2) Pessimistic lock with SELECT ... FOR UPDATE (high contention)
     run = session.execute(
         select(WorkflowRun)
         .where(WorkflowRun.id == run_id, WorkflowRun.tenant_id == tenant_id)

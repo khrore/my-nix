@@ -1,63 +1,61 @@
 ---
 name: software-design-patterns
-description: Use when implementing or refactoring code with a concrete recurring design problem such as interchangeable behavior, object construction, external integration, state transitions, event notification, command execution, workflow composition, persistence boundaries, or dependency boundaries. Helps choose and apply named software design patterns without unnecessary abstraction.
+description: >-
+  Choose or review a named software design pattern when implementation or
+  refactoring has a concrete recurring pressure such as variation, construction,
+  integration, state, events, commands, composition, persistence, or dependency
+  boundaries. Do not use merely because a familiar pattern could fit.
 ---
+
+<!-- markdownlint-disable MD013 -->
 
 # Software Design Patterns
 
-Use this skill when implementation needs a recurring design shape, not whenever code is being written. A named pattern is useful only when it removes real complexity, clarifies a stable variation point, protects a boundary, or matches an established local convention.
+Use patterns to make an existing design pressure easier to understand, test, or change. Prefer a plain function,
+module, data structure, or direct call when it solves the current problem clearly.
 
-Prefer plain functions, modules, structs, records, helpers, and direct calls when they solve the problem clearly. Do not introduce pattern vocabulary, interfaces, factories, inheritance, or indirection just because a pattern could fit.
+The reference examples are small TypeScript-shaped sketches, not prescriptions. Adapt them to the host language and
+local conventions, and keep the direct shape when the pattern shape does not produce a clear present benefit.
 
-For broad architecture layering, dependency-rule enforcement, entities, use cases, and full ports-and-adapters architecture, use `clean-architecture` instead.
+## Decide From the Pressure
 
-## Selection Rules
+Load only the reference for the most plausible candidate. Compare a second pattern only when the tradeoff is genuinely
+unclear.
 
-- Start from the pressure in the code: variation, construction, integration, state, events, commands, wrapping, persistence, dependencies, traversal, or object families.
-- Load only the specific pattern reference needed for the design pressure in front of you.
-- Choose the smallest pattern form that makes the pressure explicit and testable.
-- Keep public contracts narrow and named after the domain or capability, not the pattern.
-- Stop before speculative generality: support the variations that exist now or are required by the current change.
+- Interchangeable policy or behavior: [Strategy](references/pattern-strategy.md),
+  [State](references/pattern-state.md), [Specification](references/pattern-specification.md), or
+  [Template Method](references/pattern-template-method.md)
+- Construction and related object families: [Builder](references/pattern-builder.md),
+  [Simple Factory](references/pattern-simple-factory.md), [Factory Method](references/pattern-factory-method.md),
+  [Abstract Factory](references/pattern-abstract-factory.md), or [Prototype](references/pattern-prototype.md)
+- External systems and dependency boundaries: [Adapter](references/pattern-adapter.md),
+  [Facade](references/pattern-facade.md), [Proxy](references/pattern-proxy.md),
+  [Dependency Injection](references/pattern-dependency-injection.md), or
+  [Ports and Adapters](references/pattern-ports-and-adapters.md)
+- Persistence boundaries: [Repository](references/pattern-repository.md) or
+  [Unit of Work](references/pattern-unit-of-work.md)
+- Object composition or added behavior: [Composite](references/pattern-composite.md),
+  [Decorator](references/pattern-decorator.md), [Bridge](references/pattern-bridge.md), or
+  [Flyweight](references/pattern-flyweight.md)
+- Ordered processing or represented operations: [Chain of Responsibility](references/pattern-chain-of-responsibility.md),
+  [Command](references/pattern-command.md), or [Interpreter](references/pattern-interpreter.md)
+- Coordination, traversal, snapshots, or operations over stable structures:
+  [Mediator](references/pattern-mediator.md), [Iterator](references/pattern-iterator.md),
+  [Memento](references/pattern-memento.md), or [Visitor](references/pattern-visitor.md)
+- In-process or decoupled events: [Observer](references/pattern-observer.md) or
+  [Pub-Sub](references/pattern-pub-sub.md)
+- A truly process-wide identity or resource: [Singleton](references/pattern-singleton.md), treated as a last-resort
+  lifecycle choice rather than a convenience for global access
 
-## Pattern References
+## Apply With Restraint
 
-- **Abstract Factory**: read `references/pattern-abstract-factory.md`.
-- **Adapter**: read `references/pattern-adapter.md`.
-- **Bridge**: read `references/pattern-bridge.md`.
-- **Builder**: read `references/pattern-builder.md`.
-- **Chain of Responsibility**: read `references/pattern-chain-of-responsibility.md`.
-- **Command**: read `references/pattern-command.md`.
-- **Composite**: read `references/pattern-composite.md`.
-- **Decorator**: read `references/pattern-decorator.md`.
-- **Dependency Injection**: read `references/pattern-dependency-injection.md`.
-- **Facade**: read `references/pattern-facade.md`.
-- **Factory Method**: read `references/pattern-factory-method.md`.
-- **Flyweight**: read `references/pattern-flyweight.md`.
-- **Interpreter**: read `references/pattern-interpreter.md`.
-- **Iterator**: read `references/pattern-iterator.md`.
-- **Mediator**: read `references/pattern-mediator.md`.
-- **Memento**: read `references/pattern-memento.md`.
-- **Observer**: read `references/pattern-observer.md`.
-- **Ports and Adapters**: read `references/pattern-ports-and-adapters.md`.
-- **Prototype**: read `references/pattern-prototype.md`.
-- **Proxy**: read `references/pattern-proxy.md`.
-- **Pub-Sub**: read `references/pattern-pub-sub.md`.
-- **Repository**: read `references/pattern-repository.md`.
-- **Simple Factory**: read `references/pattern-simple-factory.md`.
-- **Singleton**: read `references/pattern-singleton.md`.
-- **Specification**: read `references/pattern-specification.md`.
-- **State**: read `references/pattern-state.md`.
-- **Strategy**: read `references/pattern-strategy.md`.
-- **Template Method**: read `references/pattern-template-method.md`.
-- **Unit of Work**: read `references/pattern-unit-of-work.md`.
-- **Visitor**: read `references/pattern-visitor.md`.
+- Name the concrete pressure without relying on the pattern name.
+- Check whether existing project conventions already solve it.
+- Explain why a simpler construct is insufficient for the present requirement.
+- Use the smallest domain-named contract that makes the pressure explicit.
+- Keep selection and assembly in one discoverable place.
+- Preserve current behavior and add tests around the variation or boundary the pattern is meant to protect.
+- Reject the pattern when it adds concepts without reducing coupling, duplication, invalid states, or change cost.
 
-## Output Guidance
-
-When recommending a pattern:
-
-- Name the concrete pressure it solves.
-- Explain why a simpler construct is insufficient.
-- State the smallest contract or interface needed.
-- Identify where construction, selection, or assembly belongs.
-- List tests that prove the pattern preserves behavior and handles expected variations.
+When recommending a pattern, describe the pressure, minimal shape, tradeoff, and evidence that it will help. Do not turn a
+local conditional or single implementation into a framework for hypothetical future variants.

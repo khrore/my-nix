@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Linguistic Modular Units
 
 ## Problem
@@ -29,14 +31,14 @@ Core behavior is hidden behind ad hoc structure instead of natural language or f
 - Move behavior into the smallest natural unit that owns it.
 - Use language-native boundaries before custom organization schemes.
 
-## Problem Example
+## Pressure Example
 
 ```ts
 // utils.ts
 export function doStuff(input: any) { /* parses invoice, charges card, sends mail */ }
 ```
 
-## Refactored Example
+## Possible Refactoring
 
 ```ts
 // invoice-parser.ts
@@ -57,27 +59,3 @@ export async function chargeInvoice(invoice: InvoiceDraft): Promise<Receipt> { /
 - Creating many tiny files for one cohesive operation.
 - Renaming without improving ownership.
 - Fighting required framework file layout.
-
-## Review Checklist
-
-- Can you name the design pressure without naming the principle?
-- Does the proposed change reduce real coupling, drift, surprise, or invalid state?
-- Is the smallest useful boundary visible in names, types, or module layout?
-- Are validation and failure behavior explicit at the edge where callers enter?
-- Does the refactor preserve current behavior while making the next change safer?
-- Would an ordinary maintainer know where to make the next related edit?
-
-## Refactoring Moves
-
-- Start with a narrow local change before introducing a broad abstraction.
-- Move knowledge to the owner that already maintains the relevant invariant.
-- Prefer explicit parameters, small helpers, and named value objects before frameworks.
-- Add tests around the behavior that was hard to reason about before the refactor.
-- Keep compatibility at public boundaries unless the task explicitly includes migration.
-
-## Example Reading Guide
-
-- The problem example shows the smell to recognize in real code.
-- The refactored example shows one possible shape, not the only valid implementation.
-- Translate classes, interfaces, and modules into the host language's natural units.
-- Preserve local conventions when they already solve the same problem clearly.

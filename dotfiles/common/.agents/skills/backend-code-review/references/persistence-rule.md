@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 MD031 -->
 
-# Rule Catalog — Persistence and Data-Access Safety
+# Review Cues — Persistence and Data-Access Safety
 
 ## Scope
 
@@ -8,15 +8,13 @@
   resource cleanup, and write-path idempotency across Python, Go, and Rust backends.
 - Complements language-specific rules such as `sqlalchemy-rule.md`, `go-rule.md`, and `rust-rule.md`.
 
-## Rules
+## Cues
 
 ### Bound every transaction explicitly
 
-- Category: correctness
-- Severity: critical
-- Description: Write paths need a clear transaction boundary with explicit commit/rollback behavior. Long or implicit
+- Why it matters: Write paths need a clear transaction boundary with explicit commit/rollback behavior. Long or implicit
   transactions increase contention and can silently lose writes when errors are mishandled.
-- Suggested fix:
+- Possible responses:
   - Keep transactions short and avoid network I/O or expensive computation inside them.
   - Ensure rollback runs on every error path.
   - Commit only after all writes in the unit are complete and validated.
@@ -48,11 +46,9 @@
 
 ### Enforce tenant and ownership predicates on shared resources
 
-- Category: security
-- Severity: critical
-- Description: Reads and writes against tenant-owned or user-owned data must include tenant/owner predicates. Looking up
+- Why it matters: Reads and writes against tenant-owned or user-owned data must include tenant/owner predicates. Looking up
   by object ID alone can leak or corrupt data across tenants or users.
-- Suggested fix:
+- Possible responses:
   - Propagate tenant/user context through service and repository interfaces.
   - Include tenant/owner predicates in reads, writes, deletes, uniqueness checks, and affected-row validation.
   - Treat missing affected rows on scoped writes as not-found or conflict, not success.
@@ -65,11 +61,9 @@
 
 ### Prefer parameterized queries and query builders over string concatenation
 
-- Category: security
-- Severity: critical
-- Description: Query strings built with interpolation, concatenation, or formatting can introduce SQL injection and
+- Why it matters: Query strings built with interpolation, concatenation, or formatting can introduce SQL injection and
   broken escaping. This also makes query review harder.
-- Suggested fix:
+- Possible responses:
   - Use placeholders and bound parameters.
   - Use ORM/query-builder APIs for composable filters when available.
   - If dynamic identifiers are unavoidable, validate against an allowlist before interpolation.
@@ -85,11 +79,9 @@
 
 ### Protect contested writes with a concurrency strategy
 
-- Category: correctness
-- Severity: critical
-- Description: Multi-writer code can lose updates without optimistic locking, pessimistic locking, idempotency keys, or
+- Why it matters: Multi-writer code can lose updates without optimistic locking, pessimistic locking, idempotency keys, or
   compare-and-swap semantics.
-- Suggested fix:
+- Possible responses:
   - Use optimistic locking for low-contention updates and retryable workflows.
   - Use `SELECT ... FOR UPDATE` or equivalent when strict serialization is required.
   - Use idempotency keys for external callbacks, retries, and job processing.
@@ -103,22 +95,18 @@
 
 ### Close rows, bodies, cursors, and streams
 
-- Category: reliability
-- Severity: critical
-- Description: Database cursors, HTTP bodies, files, and streams can leak connections or descriptors if not closed on
+- Why it matters: Database cursors, HTTP bodies, files, and streams can leak connections or descriptors if not closed on
   every path.
-- Suggested fix:
+- Possible responses:
   - In Go, `defer rows.Close()` and `defer resp.Body.Close()` immediately after successful creation.
   - In Rust, prefer RAII-owned resources and avoid holding DB rows/transactions longer than needed.
   - In Python, use context managers for sessions, cursors, files, and clients.
 
 ### Add timeouts and cancellation to external work
 
-- Category: reliability
-- Severity: suggestion
-- Description: Backend calls without cancellation can hang request handlers, goroutines, async tasks, or workers and
+- Why it matters: Backend calls without cancellation can hang request handlers, goroutines, async tasks, or workers and
   exhaust pools under partial outages.
-- Suggested fix:
+- Possible responses:
   - Thread request context/deadlines through database, HTTP, RPC, and queue calls.
   - Use bounded retries with jittered backoff and clear idempotency semantics.
   - Avoid blocking calls inside async runtimes.

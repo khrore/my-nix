@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 MD024 MD031 -->
 
-# Rule Catalog — Framework-Specific Frontend Cues
+# Review Cues — Framework-Specific Frontend Cues
 
 ## Scope
 
@@ -21,7 +21,7 @@ Covers review cues that depend on common JavaScript and TypeScript frontend fram
 - Use computed values for pure derivations instead of watchers.
 - Clean up watchers, event listeners, intervals, and external subscriptions.
 - Keep Nuxt server/client-only code in the appropriate plugin, composable, or lifecycle boundary.
-- Validate `v-html` usage and sanitize trusted content.
+- Validate `v-html` usage, sanitize untrusted content, and document genuinely trusted sources.
 
 ## Svelte and SvelteKit
 

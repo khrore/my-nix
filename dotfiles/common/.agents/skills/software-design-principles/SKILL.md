@@ -1,44 +1,55 @@
 ---
 name: software-design-principles
-description: Use when planning, reviewing, refactoring, or implementing language-agnostic software design. Applies SOLID, composition over inheritance, DRY, KISS, Law of Demeter, Design by Contract, encapsulation, command-query separation, least astonishment, self-documenting code, uniform access, single choice, and persistence closure as pragmatic heuristics.
+description: >-
+  Apply language-agnostic design principles when planning or reviewing a
+  refactor, API, module boundary, state model, or other concrete design decision.
+  Use when coupling, duplicated knowledge, unclear ownership, surprising
+  behavior, invalid states, or unstable contracts materially affect the task;
+  do not invoke for routine code changes without such a design pressure.
 ---
+
+<!-- markdownlint-disable MD013 -->
 
 # Software Design Principles
 
-Use this skill to shape or review language-agnostic software design across code, scripts, configuration, schemas, CLIs, automation, and tests.
+Use design principles as diagnostic lenses, not compliance rules. Start from the observed pressure and recommend the
+smallest change that reduces meaningful coupling, drift, surprise, invalid state, or maintenance cost.
 
-These principles are heuristics, not ceremony. Prefer the smallest change that reduces coupling, drift, surprise, invalid states, or maintenance cost. Do not add abstraction unless it removes real complexity, protects a real boundary, or matches an established local convention.
+Reference examples illustrate one possible refactoring in TypeScript-like notation. Preserve a simpler local design when
+it already addresses the pressure, and adapt any example to the language and repository conventions in front of you.
 
-## How to Apply
+## Choose the Relevant Lens
 
-- Start from the existing codebase shape, naming, and ownership boundaries.
-- Load only the specific principle reference needed for the design pressure in front of you.
-- Use references for problem recognition, examples, tests, and misuse signals.
-- When principles conflict, favor simple, explicit code with stable boundaries and clear contracts.
-- Recommend the smallest structural change that resolves the design pressure.
+Load only the reference that helps explain the current decision. Use more than one only when each reveals a distinct
+tradeoff.
 
-## Principle References
+- Mixed responsibilities or unstable dependency direction: [SOLID](references/principle-solid.md)
+- Fragile inheritance or behavior reuse: [Composition Over Inheritance](references/principle-composition-over-inheritance.md)
+- Duplicated change-prone knowledge: [DRY](references/principle-dry.md) or
+  [Single Choice](references/principle-single-choice.md)
+- Excess concepts or accidental complexity: [KISS](references/principle-kiss.md)
+- Excess knowledge of collaborators: [Law of Demeter](references/principle-law-of-demeter.md)
+- Unclear inputs, outputs, invariants, or failure behavior:
+  [Design by Contract](references/principle-design-by-contract.md)
+- Leaking internals or unstable mutation rules: [Encapsulation](references/principle-encapsulation.md)
+- Reads with hidden writes or commands with surprising query behavior:
+  [Command-Query Separation](references/principle-command-query-separation.md)
+- Surprising names, defaults, or side effects: [Least Astonishment](references/principle-least-astonishment.md)
+- Vague or unnatural module boundaries: [Linguistic Modular Units](references/principle-linguistic-modular-units.md)
+- Structure that cannot explain itself: [Self-Documentation](references/principle-self-documentation.md)
+- Callers coupled to storage versus computation: [Uniform Access](references/principle-uniform-access.md)
+- Persisted state invalid without omitted context: [Persistence Closure](references/principle-persistence-closure.md)
 
-- **SOLID**: read `references/principle-solid.md`.
-- **Composition Over Inheritance**: read `references/principle-composition-over-inheritance.md`.
-- **DRY**: read `references/principle-dry.md`.
-- **KISS**: read `references/principle-kiss.md`.
-- **Law of Demeter**: read `references/principle-law-of-demeter.md`.
-- **Design by Contract**: read `references/principle-design-by-contract.md`.
-- **Encapsulation**: read `references/principle-encapsulation.md`.
-- **Command-Query Separation**: read `references/principle-command-query-separation.md`.
-- **Principle of Least Astonishment**: read `references/principle-least-astonishment.md`.
-- **Linguistic Modular Units**: read `references/principle-linguistic-modular-units.md`.
-- **Self-Documentation**: read `references/principle-self-documentation.md`.
-- **Uniform Access**: read `references/principle-uniform-access.md`.
-- **Single Choice**: read `references/principle-single-choice.md`.
-- **Persistence Closure**: read `references/principle-persistence-closure.md`.
+## Apply Pragmatically
 
-## Output Guidance
+- Describe the concrete pressure before naming a principle.
+- Respect the repository's existing ownership, naming, and extension boundaries.
+- Distinguish duplicated knowledge from code that only looks similar.
+- Prefer explicit parameters, focused helpers, and cohesive modules before introducing frameworks or broad interfaces.
+- State the tradeoff when improving one principle makes another quality worse.
+- Preserve public behavior unless the task explicitly includes a contract change or migration.
+- Recommend tests around the behavior or boundary that was previously difficult to reason about.
+- Do not report a principle violation unless it creates a meaningful present risk or obstructs the requested change.
 
-When using these principles in a review or plan:
-
-- Lead with concrete risks and file or API references when available.
-- Explain the design pressure, not just the principle name.
-- State the smallest change that addresses the pressure.
-- Mention tradeoffs only when they affect the decision.
+For reviews and plans, lead with the risk and smallest useful change. Principle names may explain the reasoning, but they
+are not findings by themselves.

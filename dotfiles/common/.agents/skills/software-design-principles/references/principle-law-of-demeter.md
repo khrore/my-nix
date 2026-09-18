@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Law of Demeter
 
 ## Problem
@@ -30,7 +32,7 @@ Code reaches through nested collaborators or skips layers, coupling callers to i
 - Pass stable values instead of rich objects.
 - Use facades only when they reduce real coupling.
 
-## Problem Example
+## Pressure Example
 
 ```ts
 function canRetry(context: RequestContext) {
@@ -38,7 +40,7 @@ function canRetry(context: RequestContext) {
 }
 ```
 
-## Refactored Example
+## Possible Refactoring
 
 ```ts
 type RetryPolicy = { allows(attempt: number): boolean };
@@ -59,27 +61,3 @@ function canRetry(policy: RetryPolicy, attempt: number) {
 - Counting dots instead of ownership crossings.
 - Creating pass-through wrappers for plain data.
 - Hiding needed data behind an anemic facade.
-
-## Review Checklist
-
-- Can you name the design pressure without naming the principle?
-- Does the proposed change reduce real coupling, drift, surprise, or invalid state?
-- Is the smallest useful boundary visible in names, types, or module layout?
-- Are validation and failure behavior explicit at the edge where callers enter?
-- Does the refactor preserve current behavior while making the next change safer?
-- Would an ordinary maintainer know where to make the next related edit?
-
-## Refactoring Moves
-
-- Start with a narrow local change before introducing a broad abstraction.
-- Move knowledge to the owner that already maintains the relevant invariant.
-- Prefer explicit parameters, small helpers, and named value objects before frameworks.
-- Add tests around the behavior that was hard to reason about before the refactor.
-- Keep compatibility at public boundaries unless the task explicitly includes migration.
-
-## Example Reading Guide
-
-- The problem example shows the smell to recognize in real code.
-- The refactored example shows one possible shape, not the only valid implementation.
-- Translate classes, interfaces, and modules into the host language's natural units.
-- Preserve local conventions when they already solve the same problem clearly.

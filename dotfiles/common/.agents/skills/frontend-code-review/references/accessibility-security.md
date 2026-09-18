@@ -1,23 +1,20 @@
 <!-- markdownlint-disable MD013 MD024 MD031 -->
 
-# Rule Catalog — Frontend Accessibility and Security
+# Review Cues — Frontend Accessibility and Security
 
 ## Scope
 
 Covers accessibility, browser security, unsafe HTML, URL/file handling, storage, secrets, and user-controlled navigation across frontend frameworks.
 
-## Rules
+## Cues
 
 ### Preserve semantic and keyboard accessibility
 
-IsUrgent: True
-Category: Accessibility
-
-#### Description
+#### Why it matters
 
 Interactive UI must be reachable and understandable with keyboard and assistive technology. Clickable `div`s, missing labels, hidden focus, and non-semantic controls block users and often violate product requirements.
 
-#### Suggested Fix
+#### Possible responses
 
 - Prefer native controls such as `button`, `a`, `input`, `select`, and `label`.
 - Add accessible names for icon-only controls.
@@ -26,14 +23,11 @@ Interactive UI must be reachable and understandable with keyboard and assistive 
 
 ### Handle focus and announcements in dynamic UI
 
-IsUrgent: True
-Category: Accessibility
-
-#### Description
+#### Why it matters
 
 Modals, drawers, route changes, validation errors, async updates, and toasts need deliberate focus management and announcements so assistive technology users are not stranded.
 
-#### Suggested Fix
+#### Possible responses
 
 - Move focus into modal/dialog content and restore focus on close.
 - Associate validation messages with fields.
@@ -42,14 +36,11 @@ Modals, drawers, route changes, validation errors, async updates, and toasts nee
 
 ### Avoid unsafe HTML and template injection
 
-IsUrgent: True
-Category: Security
-
-#### Description
+#### Why it matters
 
 Rendering user-controlled HTML, Markdown, SVG, or template strings can introduce XSS when sanitization and trust boundaries are unclear.
 
-#### Suggested Fix
+#### Possible responses
 
 - Avoid raw HTML APIs by default: `dangerouslySetInnerHTML`, `v-html`, Svelte `{@html}`, Angular `bypassSecurityTrust*`, `innerHTML`, and similar APIs.
 - If raw HTML is required, sanitize with an approved sanitizer and document the trusted source.
@@ -57,30 +48,25 @@ Rendering user-controlled HTML, Markdown, SVG, or template strings can introduce
 
 ### Validate URLs and navigation targets
 
-IsUrgent: True
-Category: Security
-
-#### Description
+#### Why it matters
 
 User-controlled URLs can cause open redirects, `javascript:` execution, tabnabbing, or navigation to untrusted origins.
 
-#### Suggested Fix
+#### Possible responses
 
 - Allowlist internal routes or trusted origins for redirects.
 - Reject dangerous protocols such as `javascript:` and unexpected `data:` URLs.
-- Add `rel="noopener noreferrer"` for external links opened in a new tab.
+- Verify that links opened in a new tab cannot control the opener; add `noopener` where the browser or integration does
+  not already guarantee it. Add `noreferrer` only when suppressing referrer data is also intended.
 - Prefer router link components for internal navigation.
 
 ### Keep secrets out of frontend bundles
 
-IsUrgent: True
-Category: Security
-
-#### Description
+#### Why it matters
 
 Anything shipped to the browser is public. API keys, private tokens, signing secrets, service credentials, and privileged feature flags must not be embedded in client bundles or source maps.
 
-#### Suggested Fix
+#### Possible responses
 
 - Use only explicitly public environment variables in frontend code.
 - Move privileged calls behind backend endpoints.
@@ -88,14 +74,11 @@ Anything shipped to the browser is public. API keys, private tokens, signing sec
 
 ### Treat file and clipboard input as untrusted
 
-IsUrgent: True
-Category: Security
-
-#### Description
+#### Why it matters
 
 Uploaded files, drag-and-drop payloads, pasted HTML, and clipboard data can contain malicious content, huge payloads, or unexpected MIME types.
 
-#### Suggested Fix
+#### Possible responses
 
 - Validate file size, type, extension, and content where possible.
 - Avoid rendering pasted/uploaded HTML directly.
@@ -104,14 +87,11 @@ Uploaded files, drag-and-drop payloads, pasted HTML, and clipboard data can cont
 
 ### Avoid leaking sensitive data in telemetry
 
-IsUrgent: True
-Category: Security
-
-#### Description
+#### Why it matters
 
 Logs, analytics, replay tools, error trackers, and performance traces can accidentally capture tokens, PII, form values, URLs, or API responses.
 
-#### Suggested Fix
+#### Possible responses
 
 - Redact sensitive fields before logging or reporting errors.
 - Avoid sending full request/response bodies to client telemetry.

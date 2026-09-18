@@ -1,23 +1,20 @@
 <!-- markdownlint-disable MD013 MD024 MD031 -->
 
-# Rule Catalog — Frontend Performance
+# Review Cues — Frontend Performance
 
 ## Scope
 
 Covers rendering, reactivity, hydration, network usage, bundle size, media, and client-side resource management across JavaScript/TypeScript frontend frameworks.
 
-## Rules
+## Cues
 
 ### Avoid unnecessary render or reactive churn
 
-IsUrgent: False
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Unstable references, expensive template expressions, broad store subscriptions, and large reactive dependencies can make components re-render or recompute more often than needed.
 
-#### Suggested Fix
+#### Possible responses
 
 - Stabilize objects/functions only when identity matters: memoized children, effect dependencies, context/provider values, third-party APIs, or measured hot paths.
 - Narrow store subscriptions/selectors to the data a component actually needs.
@@ -26,14 +23,11 @@ Unstable references, expensive template expressions, broad store subscriptions, 
 
 ### Prevent unbounded DOM work
 
-IsUrgent: True
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Rendering large lists, tables, canvases, maps, timelines, or graphs without pagination, virtualization, or incremental rendering can block the main thread and make the UI unusable.
 
-#### Suggested Fix
+#### Possible responses
 
 - Add pagination, virtual scrolling, windowing, clustering, or progressive rendering for large collections.
 - Avoid layout thrashing by batching DOM reads and writes.
@@ -41,14 +35,11 @@ Rendering large lists, tables, canvases, maps, timelines, or graphs without pagi
 
 ### Keep data fetching scoped and cancellable
 
-IsUrgent: True
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Duplicate fetches, un-cancelled requests, request waterfalls, and stale responses can waste bandwidth and show incorrect UI after navigation or input changes.
 
-#### Suggested Fix
+#### Possible responses
 
 - Use the framework/router data-loading model when available.
 - Cancel or ignore stale requests with `AbortController`, cleanup hooks, RxJS operators, query libraries, or framework-specific invalidation.
@@ -57,14 +48,11 @@ Duplicate fetches, un-cancelled requests, request waterfalls, and stale response
 
 ### Protect hydration and server-rendered output
 
-IsUrgent: True
-Category: Performance
-
-#### Description
+#### Why it matters
 
 SSR/SSG/hydrated apps can fail or re-render excessively when server markup differs from client markup. Random values, dates, locale-sensitive formatting, browser-only data, and user-specific state are common causes.
 
-#### Suggested Fix
+#### Possible responses
 
 - Avoid non-deterministic values during server render unless serialized into the page.
 - Defer client-only rendering until mount or use framework-specific client-only boundaries.
@@ -72,14 +60,11 @@ SSR/SSG/hydrated apps can fail or re-render excessively when server markup diffe
 
 ### Watch bundle size and code splitting
 
-IsUrgent: False
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Large dependencies, eager imports, and all-in-one route bundles slow startup, especially on mobile or low-bandwidth networks.
 
-#### Suggested Fix
+#### Possible responses
 
 - Lazy-load heavy route-only components, editors, charts, maps, syntax highlighters, and media tooling.
 - Prefer tree-shakeable imports and avoid importing whole utility libraries for a small function.
@@ -87,14 +72,11 @@ Large dependencies, eager imports, and all-in-one route bundles slow startup, es
 
 ### Optimize images, fonts, and media
 
-IsUrgent: False
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Unoptimized images, blocking fonts, autoplaying media, and layout-shifting assets harm perceived performance and Core Web Vitals.
 
-#### Suggested Fix
+#### Possible responses
 
 - Provide dimensions or aspect ratios for images and media.
 - Use responsive image formats and lazy loading where appropriate.
@@ -102,14 +84,11 @@ Unoptimized images, blocking fonts, autoplaying media, and layout-shifting asset
 
 ### Move heavy CPU work off the hot path
 
-IsUrgent: False
-Category: Performance
-
-#### Description
+#### Why it matters
 
 Parsing large payloads, formatting big datasets, encryption, compression, syntax highlighting, or complex filtering can block input and animations on the main thread.
 
-#### Suggested Fix
+#### Possible responses
 
 - Debounce or throttle user-driven expensive work.
 - Use web workers, idle callbacks, chunking, or server-side preprocessing when work is large.

@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Single Choice
 
 ## Problem
@@ -29,7 +31,7 @@ Supported modes, variants, providers, feature flags, or enum-like options are du
 - Derive labels, validation, dispatch, docs, and tests from that source where practical.
 - Centralize mode selection at a clear boundary.
 
-## Problem Example
+## Pressure Example
 
 ```ts
 const cliProviders = ["openai", "local"];
@@ -41,7 +43,7 @@ function createProvider(name: string) {
 }
 ```
 
-## Refactored Example
+## Possible Refactoring
 
 ```ts
 const PROVIDERS = {
@@ -64,27 +66,3 @@ const providerDocs = Object.keys(PROVIDERS).join(", ");
 - Global registries with unclear ownership.
 - Centralizing choices that belong to different contexts.
 - Duplicating the source of truth in generated files without checks.
-
-## Review Checklist
-
-- Can you name the design pressure without naming the principle?
-- Does the proposed change reduce real coupling, drift, surprise, or invalid state?
-- Is the smallest useful boundary visible in names, types, or module layout?
-- Are validation and failure behavior explicit at the edge where callers enter?
-- Does the refactor preserve current behavior while making the next change safer?
-- Would an ordinary maintainer know where to make the next related edit?
-
-## Refactoring Moves
-
-- Start with a narrow local change before introducing a broad abstraction.
-- Move knowledge to the owner that already maintains the relevant invariant.
-- Prefer explicit parameters, small helpers, and named value objects before frameworks.
-- Add tests around the behavior that was hard to reason about before the refactor.
-- Keep compatibility at public boundaries unless the task explicitly includes migration.
-
-## Example Reading Guide
-
-- The problem example shows the smell to recognize in real code.
-- The refactored example shows one possible shape, not the only valid implementation.
-- Translate classes, interfaces, and modules into the host language's natural units.
-- Preserve local conventions when they already solve the same problem clearly.

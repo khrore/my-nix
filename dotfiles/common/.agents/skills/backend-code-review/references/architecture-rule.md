@@ -1,21 +1,19 @@
 <!-- markdownlint-disable MD013 MD031 -->
 
-# Rule Catalog — Architecture
+# Review Cues — Architecture
 
 ## Scope
 
 - Covers: handler/controller/service/use-case/domain/library/model layering, dependency direction, responsibility placement,
   and observability-friendly flow across Python, Go, and Rust backend code.
 
-## Rules
+## Cues
 
 ### Keep business logic out of transport handlers
 
-- Category: maintainability
-- Severity: critical
-- Description: HTTP/RPC handlers should parse input, perform boundary validation, authorize, call services/use cases, and
+- Why it matters: HTTP/RPC handlers should parse input, perform boundary validation, authorize, call services/use cases, and
   serialize responses. Business decisions in handlers are hard to reuse, test, and protect consistently.
-- Suggested fix:
+- Possible responses:
   - Move domain/business rules into services, use cases, or pure domain functions.
   - Keep handlers thin and orchestration-focused.
   - Pass explicit actor/tenant/request context into the service layer instead of reading global web state in domain code.
@@ -46,12 +44,10 @@
 
 ### Preserve layer dependency direction
 
-- Category: best practices
-- Severity: critical
-- Description: Transport/adapters may depend on services/use cases; services may depend on domain contracts; domain code
+- Why it matters: Transport/adapters may depend on services/use cases; services may depend on domain contracts; domain code
   should not depend on web frameworks, SQL clients, queues, or concrete infrastructure. Reversing this direction creates
   cycles and leaks framework concerns into business rules.
-- Suggested fix:
+- Possible responses:
   - Define contracts at the domain/use-case boundary.
   - Put framework, database, queue, and HTTP client details in adapters/infrastructure modules.
   - Inject dependencies through constructors, traits/interfaces/protocols, or explicit function parameters.
@@ -81,11 +77,9 @@
 
 ### Keep shared libraries business-agnostic
 
-- Category: maintainability
-- Severity: critical
-- Description: Generic library/helper modules should remain reusable building blocks. They must not encode product
+- Why it matters: Generic library/helper modules should remain reusable building blocks. They must not encode product
   workflow, tenant policy, pricing rules, or business decisions.
-- Suggested fix:
+- Possible responses:
   - Move business logic into services/use cases/domain modules.
   - Keep shared libraries focused on generic utilities such as time, validation primitives, serialization, hashing,
     retry helpers, or collection transformations.
@@ -115,11 +109,9 @@
 
 ### Keep observability at boundaries without leaking secrets
 
-- Category: reliability
-- Severity: suggestion
-- Description: Backend flows should emit useful logs/traces/metrics at request, job, and integration boundaries, but
+- Why it matters: Backend flows should emit useful logs/traces/metrics at request, job, and integration boundaries, but
   must not log secrets, credentials, tokens, raw PII, or full untrusted payloads.
-- Suggested fix:
+- Possible responses:
   - Log stable identifiers, tenant/user IDs where safe, operation names, durations, and sanitized error classes.
   - Add trace spans around external dependencies and expensive operations.
   - Redact or hash sensitive values before logging.
