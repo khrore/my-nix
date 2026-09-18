@@ -2,7 +2,7 @@
 
 # Ensure desktop helper bins are in the path
 export OMARCHY_PATH=$HOME/.local/share/linux-desktop
-export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/bin:$OMARCHY_PATH/bin:$PATH
 
 # Set default terminal and editor
 source ~/.config/uwsm/default
