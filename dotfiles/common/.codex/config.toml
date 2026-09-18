@@ -9,6 +9,8 @@ web_search = "live"
 approvals_reviewer = "user"
 plan_mode_reasoning_effort = "high"
 
+notify = ["/Users/khrore/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+
 [projects."/Users/khrore/platform"]
 trust_level = "trusted"
 
@@ -174,6 +176,9 @@ trust_level = "trusted"
 [projects."/home/khrore/projects/game-rs"]
 trust_level = "trusted"
 
+[projects."/Users/khrore/my-nix"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
@@ -185,7 +190,6 @@ network_access = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-20T10:28:21Z"
 source_type = "local"
 source = "/Users/khrore/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -204,6 +208,15 @@ enabled = true
 enabled = true
 
 [plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
 enabled = true
 
 [features]
@@ -241,3 +254,34 @@ config_file = "agents/docs-researcher.toml"
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
+
+[desktop]
+followUpQueueMode = "queue"
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/khrore/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/khrore/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = ""
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.915.31029"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/khrore/.codex/plugins/cache/openai-bundled/browser/26.915.31029/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+SKY_CUA_SERVICE_PATH = "/Users/khrore/.codex/computer-use/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false

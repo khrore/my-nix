@@ -19,6 +19,11 @@
         },
         {
           "paths": [
+            "/home/khrore/projects/board/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/khrore/projects/test/./"
           ]
         },
