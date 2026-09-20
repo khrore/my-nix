@@ -38,6 +38,7 @@ let
       vesktop
 
       osu-lazer-bin
+      code-cursor
     ];
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
