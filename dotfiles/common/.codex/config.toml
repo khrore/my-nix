@@ -254,9 +254,11 @@ config_file = "agents/docs-researcher.toml"
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
+gpt-6-astra = 2
 
 [desktop]
 followUpQueueMode = "queue"
+conversationDetailMode = "STEPS_PROSE"
 
 [mcp_servers.node_repl]
 args = []

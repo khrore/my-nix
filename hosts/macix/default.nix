@@ -10,6 +10,7 @@
   imports = [
     ../common/default.nix
     ./homebrew.nix
+    ./streaming.nix
   ];
 
   # Hostname
