@@ -1,5 +1,5 @@
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model = "gpt-6-luna"
+model_reasoning_effort = "medium"
 personality = "pragmatic"
 service_tier = "default"
 show_raw_agent_reasoning = true
@@ -179,6 +179,9 @@ trust_level = "trusted"
 [projects."/Users/khrore/my-nix"]
 trust_level = "trusted"
 
+[projects."/home/khrore/projects/aps"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
@@ -250,6 +253,9 @@ config_file = "agents/reviewer.toml"
 [agents.docs_researcher]
 description = "Documentation specialist that verifies APIs, framework behavior, and release notes."
 config_file = "agents/docs-researcher.toml"
+
+[tui]
+screen_reader_detection_done = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
