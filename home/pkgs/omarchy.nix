@@ -12,7 +12,6 @@ let
     lib.optionals (mylib.isLinux system && isDisplay) [
       # Omarchy desktop/runtime layer
       alacritty
-      bluetui
       elephant
       fastfetch
       fcitx5
@@ -35,7 +34,6 @@ let
       walker
       wiremix
       xdg-terminal-exec
-      upower
       v4l-utils
       catppuccin-cursors.mochaDark
 

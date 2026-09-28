@@ -33,18 +33,13 @@
 #cpu,
 #battery,
 #pulseaudio,
-#custom-omarchy,
-#custom-update {
+#custom-omarchy {
   min-width: 12px;
   margin: 0 7.5px;
 }
 
 #tray {
   margin-right: 16px;
-}
-
-#bluetooth {
-  margin-right: 17px;
 }
 
 #network {
@@ -57,10 +52,6 @@
 
 tooltip {
   padding: 2px;
-}
-
-#custom-update {
-  font-size: 10px;
 }
 
 #clock {
@@ -87,14 +78,5 @@ tooltip {
 
 #custom-idle-indicator.active,
 #custom-notification-silencing-indicator.active {
-  color: #a55555;
-}
-
-#custom-voxtype {
-  min-width: 12px;
-  margin: 0 0 0 7.5px;
-}
-
-#custom-voxtype.recording {
   color: #a55555;
 }
