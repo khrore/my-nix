@@ -51,7 +51,7 @@
       ...
     }@inputs:
     let
-      stateVersion = "26.05";
+      stateVersion = "26.11";
       repoRoot = ./.;
       nixpkgsConfig = {
         allowUnfree = true;
