@@ -1,4 +1,4 @@
-model = "gpt-6-luna"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 personality = "pragmatic"
 service_tier = "default"
@@ -180,6 +180,15 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/khrore/projects/aps"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/plane"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/speedtest"]
+trust_level = "trusted"
+
+[projects."/home/khrore/projects/simple-ml"]
 trust_level = "trusted"
 
 [memories]
