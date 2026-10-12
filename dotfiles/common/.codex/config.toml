@@ -191,6 +191,9 @@ trust_level = "trusted"
 [projects."/home/khrore/projects/simple-ml"]
 trust_level = "trusted"
 
+[projects."/home/khrore/personal"]
+trust_level = "trusted"
+
 [memories]
 generate_memories = true
 use_memories = true
