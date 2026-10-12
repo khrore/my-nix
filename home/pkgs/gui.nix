@@ -36,9 +36,6 @@ let
       ungoogled-chromium
       tor
       vesktop
-
-      osu-lazer-bin
-      code-cursor
     ];
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
@@ -59,6 +56,7 @@ let
       spotify
       mpv-unwrapped
 
+      bitwarden-desktop
       qbittorrent
 
       # DB

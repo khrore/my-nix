@@ -31,6 +31,7 @@ let
 
     # disk
     ncdu
+    bitwarden-cli
   ];
 in
 {
