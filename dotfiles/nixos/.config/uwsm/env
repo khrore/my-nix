@@ -1,11 +1,11 @@
 # Changes require a restart to take effect.
 
 # Ensure desktop helper bins are in the path
-export OMARCHY_PATH=$HOME/.local/share/linux-desktop
-export PATH=$HOME/.local/bin:$OMARCHY_PATH/bin:$PATH
+export LINUX_SESSION_ROOT=$HOME/.local/share/linux-desktop
+export PATH=$HOME/.local/bin:$LINUX_SESSION_ROOT/bin:$PATH
 
 # Set default terminal and editor
 source ~/.config/uwsm/default
 
 # Activate mise if present on the system
-omarchy-cmd-present mise && eval "$(mise activate bash --shims)"
+command-present mise && eval "$(mise activate bash --shims)"

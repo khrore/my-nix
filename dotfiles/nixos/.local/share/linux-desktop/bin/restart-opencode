@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Reload opencode configuration after a theme change.
+
+if pgrep -x opencode >/dev/null; then
+  killall -SIGUSR2 opencode
+fi

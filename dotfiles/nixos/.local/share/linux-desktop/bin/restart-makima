@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Restart makima after a key mapping change.
+
+sudo systemctl restart makima

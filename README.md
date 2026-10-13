@@ -4,6 +4,8 @@ Personal multi-host Nix flake for Linux and macOS. It uses Nix for
 system-level state and package installation, while keeping dotfiles linkable as
 a separate user-level layer instead of tightly coupling them to Home Manager.
 
+The Linux desktop is inspired by [Omarchy](https://github.com/omacom/omarchy).
+
 ## What This Repo Defines
 
 - NixOS hosts: `nixos`, `vlinix`
@@ -82,8 +84,8 @@ Composition flow:
 1. The host imports `hosts/common/default.nix`.
 1. `hosts/common/default.nix` imports shared system modules and
    `home/default.nix`.
-1. `home/default.nix` imports all package bundles, the Omarchy activation
-   layer, and the `link-dotfiles` helper definition.
+1. `home/default.nix` imports all package bundles and the `link-dotfiles`
+   helper definition.
 1. Dotfiles are linked from `dotfiles/common` and the active platform directory
    when activation runs or when `link-dotfiles` is called manually.
 

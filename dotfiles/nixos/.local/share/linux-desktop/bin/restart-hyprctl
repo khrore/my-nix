@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Reload Hyprland configuration after a theme change.
+
+hyprctl reload >/dev/null

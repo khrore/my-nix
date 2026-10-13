@@ -125,6 +125,7 @@ link_dotfiles_runtime() {
 	local repo_root dotfiles_root common_dir platform_dir agents_skills agent_skill_root
 	local skill_source skill_name skill_target
 	local rel source target prefix source_dir target_prefix target_rel layer stale_link
+	local legacy_link legacy_target
 	local state_dir manifest_file manifest_tmp previous_rel
 	declare -A sources=()
 	declare -A agent_skill_sources=()
@@ -135,6 +136,23 @@ link_dotfiles_runtime() {
 	if [ -z "$repo_root" ]; then
 		echo "Dotfiles repo not found. Set NIXOS_CONFIG_ROOT to override automatic discovery."
 		return 0
+	fi
+
+	if [ "$platform" = "nixos" ] && [ -d "$homeDir/.config/omarchy" ] && [ ! -L "$homeDir/.config/omarchy" ]; then
+		if [ ! -e "$homeDir/.config/linux-desktop" ] && [ ! -L "$homeDir/.config/linux-desktop" ]; then
+			mv "$homeDir/.config/omarchy" "$homeDir/.config/linux-desktop"
+			while IFS= read -r -d "" legacy_link; do
+				legacy_target="$(readlink "$legacy_link")"
+				case "$legacy_target" in
+				"$homeDir/.config/omarchy/"*)
+					legacy_target="${legacy_target#"$homeDir/.config/omarchy/"}"
+					ln -sfn "$homeDir/.config/linux-desktop/$legacy_target" "$legacy_link"
+					;;
+				esac
+			done < <(find "$homeDir/.config/linux-desktop" -type l -print0)
+		else
+			echo "Warning: merge $homeDir/.config/omarchy into $homeDir/.config/linux-desktop manually."
+		fi
 	fi
 
 	dotfiles_root="$repo_root/dotfiles"
@@ -195,7 +213,7 @@ link_dotfiles_runtime() {
 				if [ -L "$stale_link" ]; then
 					source="$(readlink "$stale_link" 2>/dev/null || true)"
 					case "$source" in
-					"$repo_root"/dotfiles/* | "$repo_root"/omarchy/config/*)
+					"$repo_root"/dotfiles/*)
 						rm -f "$stale_link"
 						echo "Removed stale link ${stale_link#"$HOME"/}"
 						;;

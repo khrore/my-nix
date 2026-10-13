@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Reload mako configuration after a theme change.
+
+makoctl reload

@@ -93,7 +93,7 @@ Darwin-specific behavior:
 
 - Entry: `home/default.nix`
 - Uses global packages and user packages.
-- Imports all `home/pkgs/*.nix` bundles plus `home/omarchy.nix` and `home/link-dotfiles.nix`.
+- Imports all `home/pkgs/*.nix` bundles plus `home/link-dotfiles.nix`.
 - Enables `programs.home-manager.enable`.
 - In practice this layer is primarily used to install user packages and expose the `link-dotfiles` helper; dotfile linking can also be run manually outside a full Home Manager switch.
 
@@ -102,7 +102,7 @@ Package bundles are grouped by concern:
 - `ai.nix`: `qwen-code`, `opencode`, `promptfoo`, `uv`
 - `gui.nix`: display-gated desktop apps, browsers, terminals, editors, media tools, and Hyprland utilities
 - `lang.nix`: language servers, formatters, linters, debuggers, and build tools
-- `omarchy.nix`: Linux display-gated Omarchy desktop/runtime packages
+- `session.nix`: Linux display-gated session/runtime packages
 - `shell.nix`: shell quality-of-life tools such as `atuin`, `zoxide`, `starship`, `fzf`, `bat`, `ripgrep`
 - `tui.nix`: terminal-first apps such as `neovim`, `yazi`, `zellij`, `lazygit`, `lazydocker`, `ncdu`, and GPU-aware `btop` variants
 - `utils.nix`: Git, networking, archive, document, filesystem, and encryption utilities

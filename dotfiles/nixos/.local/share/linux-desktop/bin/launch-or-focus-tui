@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Launch or focus on a given TUI identified by the passed in as the command.
+# Keep one instance of a terminal application open.
+
+APP_ID="local.$(basename "$1")"
+LAUNCH_COMMAND="launch-tui $@"
+
+exec launch-or-focus "$APP_ID" "$LAUNCH_COMMAND"
