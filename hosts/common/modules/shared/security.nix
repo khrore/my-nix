@@ -16,10 +16,6 @@ in
     "/etc/ssh/ssh_host_ed25519_key"
   ];
 
-  security.pki.certificateFiles = [
-    (repoRoot + "/certs/dev-2.crt")
-  ];
-
   age.secrets.atuin_key = {
     owner = username;
     path = "${userHome}/.local/share/atuin/shared_key";
