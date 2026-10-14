@@ -15,6 +15,7 @@ x-scheme-handler/discord=vesktop.desktop
 x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 x-scheme-handler/throne=throne-url-handler.desktop
 x-scheme-handler/codex=chatgpt.desktop
+x-scheme-handler/bitwarden=bitwarden.desktop
 
 [Added Associations]
 x-scheme-handler/http=zen.desktop;zen-beta.desktop;zen-twilight.desktop;

@@ -57,9 +57,9 @@ open_in_editor() {
 show_learn_menu() {
   case $(menu "Learn" "  Keybindings\n  Hyprland\n  Neovim\n󱆃  Bash") in
   *Keybindings*) menu-keybindings ;;
-  *Hyprland*) launch-webapp "https://wiki.hypr.land/" ;;
-  *Bash*) launch-webapp "https://devhints.io/bash" ;;
-  *Neovim*) launch-webapp "https://www.lazyvim.org/keymaps" ;;
+  *Hyprland*) xdg-open "https://wiki.hypr.land/" ;;
+  *Bash*) xdg-open "https://devhints.io/bash" ;;
+  *Neovim*) xdg-open "https://www.lazyvim.org/keymaps" ;;
   *) show_main_menu ;;
   esac
 }
