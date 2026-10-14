@@ -34,6 +34,11 @@ function GetEntries()
   local user_theme_dir = os.getenv("HOME") .. "/.config/linux-desktop/themes"
   local session_root = os.getenv("LINUX_SESSION_ROOT") or os.getenv("HOME") .. "/.local/share/linux-desktop"
   local default_theme_dir = session_root .. "/themes"
+  local current_theme_file = io.open(session_root .. "/current/theme.name", "r")
+  local current_theme = current_theme_file and current_theme_file:read("*l") or nil
+  if current_theme_file then
+    current_theme_file:close()
+  end
 
   local seen_themes = {}
 
@@ -65,22 +70,20 @@ function GetEntries()
           preview_path = first_image_in_dir(theme_path .. "/backgrounds")
         end
 
-        if preview_path and preview_path ~= "" then
-          local display_name = theme_name:gsub("_", " "):gsub("%-", " ")
-          display_name = display_name:gsub("(%a)([%w_']*)", function(first, rest)
-            return first:upper() .. rest:lower()
-          end)
-          display_name = display_name .. "  "
-
-          table.insert(entries, {
-            Text = display_name,
-            Preview = preview_path,
-            PreviewType = "file",
-            Actions = {
-              activate = "theme-set " .. theme_name,
-            },
-          })
-        end
+        local display_name = theme_name:gsub("_", " "):gsub("%-", " ")
+        display_name = display_name:gsub("(%a)([%w_']*)", function(first, rest)
+          return first:upper() .. rest:lower()
+        end)
+        local is_current = theme_name == current_theme
+        local entry = {
+          Text = is_current and ("Active: " .. display_name) or display_name,
+          Preview = preview_path,
+          PreviewType = preview_path and "file" or nil,
+          Actions = {
+            activate = "theme-set " .. theme_name,
+          },
+        }
+        table.insert(entries, is_current and 1 or (#entries + 1), entry)
       end
     end
 

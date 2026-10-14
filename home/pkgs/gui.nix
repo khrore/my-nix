@@ -40,7 +40,7 @@ let
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
     inputs.codex-desktop-linux.packages."${system}".default
-    inputs.zen-browser.packages."${system}".twilight
+    inputs.zen-browser.packages.${pkgs-unstable.stdenv.hostPlatform.system}.default
   ];
 
   # Cross-platform GUI packages

@@ -39,19 +39,17 @@ echo "$THEME_NAME" >"$HOME/.local/share/linux-desktop/current/theme.name"
 theme-bg-next
 
 # Restart components to apply new theme
-if pgrep -x waybar >/dev/null; then
+if pgrep -u "$(id -u)" -f '(^|/)waybar([[:space:]]|$)' >/dev/null; then
   restart-waybar
 fi
 restart-swayosd
 restart-terminal
 restart-hyprctl
 restart-btop
-restart-opencode
 restart-mako
 
 # Change app-specific themes
 theme-set-gnome
-theme-set-browser
 theme-set-vscode
 theme-set-obsidian
 theme-set-keyboard

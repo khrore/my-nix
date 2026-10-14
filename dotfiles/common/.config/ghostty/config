@@ -11,6 +11,7 @@ gtk-tabs-location = top
 maximize = true
 mouse-hide-while-typing = true
 theme = Gruvbox Dark
+config-file = ?local-theme.conf
 keybind = clear
 
 keybind = shift+insert=paste_from_clipboard

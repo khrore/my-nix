@@ -155,6 +155,8 @@ At runtime the script searches upward from:
 
 Platform-specific files override `dotfiles/common` by relative path. Existing
 non-symlink files in `$HOME` are left in place and reported as warnings.
+The Linux theme files under `current/` are copied only when no theme has been
+selected yet; later `link-dotfiles` runs leave the selected theme intact.
 
 Manual usage:
 

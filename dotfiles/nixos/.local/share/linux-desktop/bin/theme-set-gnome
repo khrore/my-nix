@@ -1,5 +1,7 @@
 #!/bin/bash
 
+command -v gsettings >/dev/null || exit 0
+
 # Change gnome modes
 if [[ -f ~/.local/share/linux-desktop/current/theme/light.mode ]]; then
   gsettings set org.gnome.desktop.interface color-scheme "prefer-light"

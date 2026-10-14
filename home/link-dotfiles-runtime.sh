@@ -126,7 +126,7 @@ link_dotfiles_runtime() {
 	local skill_source skill_name skill_target
 	local rel source target prefix source_dir target_prefix target_rel layer stale_link
 	local legacy_link legacy_target
-	local state_dir manifest_file manifest_tmp previous_rel
+	local state_dir manifest_file manifest_tmp previous_rel theme_seed theme_current btop_theme
 	declare -A sources=()
 	declare -A agent_skill_sources=()
 	declare -A current_targets=()
@@ -184,6 +184,9 @@ link_dotfiles_runtime() {
 			else
 				target_rel="$rel"
 			fi
+			if [ "$platform" = "nixos" ] && [[ "$target_rel" == .local/share/linux-desktop/current/* ]]; then
+				continue
+			fi
 			sources["$target_rel"]="$file"
 			current_targets["$target_rel"]=1
 		done < <(find "$source_dir" -type f ! -name ".gitkeep" ! -path "$source_dir/.agents/skills/*" -print0)
@@ -221,6 +224,20 @@ link_dotfiles_runtime() {
 				fi
 			fi
 		done <"$manifest_file"
+	fi
+
+	if [ "$platform" = "nixos" ]; then
+		theme_seed="$platform_dir/.local/share/linux-desktop/current"
+		theme_current="$homeDir/.local/share/linux-desktop/current"
+		if [ -d "$theme_seed" ] && [ ! -e "$theme_current/theme.name" ]; then
+			mkdir -p "$theme_current"
+			cp -an "$theme_seed/." "$theme_current/"
+		fi
+		btop_theme="$homeDir/.config/btop/themes/current.theme"
+		if [ ! -e "$btop_theme" ] || [ -L "$btop_theme" ]; then
+			mkdir -p "$(dirname "$btop_theme")"
+			ln -sfn "$theme_current/theme/btop.theme" "$btop_theme"
+		fi
 	fi
 
 	echo "Processing ${#sources[@]} dotfile entries from $repo_root..."

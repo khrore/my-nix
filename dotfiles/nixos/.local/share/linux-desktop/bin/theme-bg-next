@@ -11,9 +11,13 @@ mapfile -d '' -t BACKGROUNDS < <(find -L "$USER_BACKGROUNDS_PATH" "$THEME_BACKGR
 TOTAL=${#BACKGROUNDS[@]}
 
 if (( TOTAL == 0 )); then
-  notify-send "No background was found for theme" -t 2000
   pkill -x swaybg
-  setsid uwsm-app -- swaybg --color '#000000' >/dev/null 2>&1 &
+  if [[ -f $CURRENT_BACKGROUND_LINK ]]; then
+    setsid uwsm-app -- swaybg -i "$CURRENT_BACKGROUND_LINK" -m fill >/dev/null 2>&1 &
+  else
+    notify-send "No background was found for theme" -t 2000
+    setsid uwsm-app -- swaybg --color '#000000' >/dev/null 2>&1 &
+  fi
 else
   # Get current background from symlink
   if [[ -L $CURRENT_BACKGROUND_LINK ]]; then

@@ -3,5 +3,11 @@
 # Restart an application by killing it and relaunching via uwsm.
 # Usage: restart-app <application-name> [application-args...]
 
-pkill -x $1
+if [[ ! $1 =~ ^[A-Za-z0-9_.-]+$ ]]; then
+  echo "Usage: restart-app <application-name> [application-args...]" >&2
+  exit 2
+fi
+
+app_pattern=${1//./\\.}
+pkill -u "$(id -u)" -f "(^|/)${app_pattern}([[:space:]]|$)" || true
 setsid uwsm-app -- "$@" >/dev/null 2>&1 &
