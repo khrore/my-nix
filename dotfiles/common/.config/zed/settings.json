@@ -71,6 +71,10 @@
       "default": "allow",
     },
     "dock": "right",
+    "inline_assistant_model": {
+      "provider": "zed.dev",
+      "model": "gpt-6-luna",
+    },
     "default_model": {
       "effort": "medium",
       "enable_thinking": true,
