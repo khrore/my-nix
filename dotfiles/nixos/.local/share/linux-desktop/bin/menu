@@ -156,7 +156,7 @@ show_style_menu() {
   *Theme*) show_theme_menu ;;
   *Font*) show_font_menu ;;
   *Background*) show_background_menu ;;
-  *Hyprland*) open_in_editor ~/.config/hypr/looknfeel.conf ;;
+  *Hyprland*) open_in_editor "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/looknfeel.lua" ;;
   *Screensaver*) open_in_editor ~/.local/share/linux-desktop/branding/screensaver.txt ;;
   *About*) open_in_editor ~/.local/share/linux-desktop/branding/about.txt ;;
   *) show_main_menu ;;
@@ -182,15 +182,15 @@ show_font_menu() {
 
 show_setup_menu() {
   local options="  Audio\n󰍹  Monitors"
-  [[ -f ~/.config/hypr/bindings.conf ]] && options="$options\n  Keybindings"
-  [[ -f ~/.config/hypr/input.conf ]] && options="$options\n  Input"
+  [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.lua" ]] && options="$options\n  Keybindings"
+  [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/input.lua" ]] && options="$options\n  Input"
   options="$options\n  Config"
 
   case $(menu "Setup" "$options") in
   *Audio*) launch-audio ;;
-  *Monitors*) open_in_editor ~/.config/hypr/monitors.conf ;;
-  *Keybindings*) open_in_editor ~/.config/hypr/bindings.conf ;;
-  *Input*) open_in_editor ~/.config/hypr/input.conf ;;
+  *Monitors*) open_in_editor "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/monitors.lua" ;;
+  *Keybindings*) open_in_editor "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.lua" ;;
+  *Input*) open_in_editor "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/input.lua" ;;
   *Config*) show_setup_config_menu ;;
   *) show_main_menu ;;
   esac
@@ -199,7 +199,7 @@ show_setup_menu() {
 show_setup_config_menu() {
   case $(menu "Setup" "  Defaults\n  Hyprland\n  Hypridle\n  Hyprlock\n  Hyprsunset\n  Swayosd\n󰌧  Walker\n󰍜  Waybar\n󰞅  XCompose") in
   *Defaults*) open_in_editor ~/.config/uwsm/default ;;
-  *Hyprland*) open_in_editor ~/.config/hypr/hyprland.conf ;;
+  *Hyprland*) open_in_editor "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/hyprland.lua" ;;
   *Hypridle*) open_in_editor ~/.config/hypr/hypridle.conf && restart-hypridle ;;
   *Hyprlock*) open_in_editor ~/.config/hypr/hyprlock.conf ;;
   *Hyprsunset*) open_in_editor ~/.config/hypr/hyprsunset.conf && restart-hyprsunset ;;

@@ -46,7 +46,7 @@ parse_keycodes() {
   while IFS= read -r line; do
     if [[ $line =~ code:([0-9]+) ]]; then
       code="${BASH_REMATCH[1]}"
-      symbol=$(lookup_keycode_cached "$code" "$XKB_KEYMAP_CACHE")
+      symbol=$(lookup_keycode_cached "$code")
       echo "${line/code:${code}/$symbol}"
     elif [[ $line =~ mouse:([0-9]+) ]]; then
       code="${BASH_REMATCH[1]}"
@@ -64,7 +64,7 @@ parse_keycodes() {
     fi
   done
 
-  if [[ $DEBUG == "1" ]]; then
+  if [[ ${DEBUG:-0} == "1" ]]; then
     end=$(date +%s.%N)
     # fall back to awk if bc is missing
     if command -v bc >/dev/null 2>&1; then
@@ -84,8 +84,11 @@ parse_keycodes() {
 # - Map numeric modifier key mask to a textual rendition
 # - Output comma-separated values that the parser can understand
 dynamic_bindings() {
+  # 0.56.2's JSON IPC omits Lua keycodes; plain IPC retains the display key.
+  local display_keys
+  display_keys=$(hyprctl binds | sed -n 's/^[[:space:]]*key: //p')
   hyprctl -j binds |
-    jq -r '.[] | {modmask, key, keycode, description, dispatcher, arg} | "\(.modmask),\(.key)@\(.keycode),\(.description),\(.dispatcher),\(.arg)"' |
+    jq -r --arg display_keys "$display_keys" '($display_keys | split("\n")) as $keys | to_entries[] | .key as $index | .value | if .key == "" and .keycode == 0 then .key = ($keys[$index] | split("+") | last | gsub("^ +| +$"; "")) else . end | {modmask, key, keycode, description, dispatcher, arg} | "\(.modmask),\(.key)@\(.keycode),\(.description),\(.dispatcher),\(.arg)"' |
     sed -r \
       -e 's/null//' \
       -e 's,~/.local/share/linux-desktop/bin/,,' \
@@ -228,7 +231,7 @@ output_keybindings() {
     prioritize_entries
 }
 
-if [[ $1 == "--print" || $1 == "-p" ]]; then
+if [[ ${1:-} == "--print" || ${1:-} == "-p" ]]; then
   output_keybindings
 else
   monitor_height=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .height')

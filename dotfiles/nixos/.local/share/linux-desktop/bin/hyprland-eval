@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# hyprctl can return a Lua error as text; only its explicit "ok" means success.
+set -euo pipefail
+if [[ $# != 1 ]]; then
+    echo "Usage: hyprland-eval <lua-code>" >&2
+    exit 2
+fi
+reply=$(hyprctl eval "$1")
+if [[ $reply != ok ]]; then
+    printf '%s\n' "$reply" >&2
+    exit 1
+fi

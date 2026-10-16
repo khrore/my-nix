@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Validate a standalone theme with the compositor's Lua parser before installing it.
+set -euo pipefail
+if [[ $# != 1 || ! -f $1 ]]; then
+  echo "Usage: hyprland-theme-verify <hyprland.lua>" >&2
+  exit 2
+fi
+# A verifier must not attach to the live compositor or its IPC sockets.
+verify_dir=$(mktemp -d)
+trap 'rm -rf "$verify_dir"' EXIT
+if ! env -u HYPRLAND_INSTANCE_SIGNATURE XDG_RUNTIME_DIR="$verify_dir" Hyprland --verify-config --config "$1" >"$verify_dir/log" 2>&1; then
+  cat "$verify_dir/log" >&2
+  exit 1
+fi

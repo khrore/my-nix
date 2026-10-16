@@ -180,3 +180,30 @@ Some evaluation paths may still require access to the private `secrets` flake.
 
 Runtime-specific configs live under hidden files in `dotfiles/common`, including
 OpenCode, Codex, Claude, Cursor, Pi, and shared `.agents` rules/skills.
+
+## Hyprland Lua desktop
+
+The Linux desktop targets Hyprland **0.56.2**, pinned through nixpkgs revision
+`7fd4004d0511991fff3a0524856a9be09e28c5f0`. Configuration now starts at
+`~/.config/hypr/hyprland.lua`: shared defaults and application rules load first,
+then the generated Lua theme, then personal overrides. UWSM owns environment
+exports and session startup; other Hypr tools retain their `.conf` formats.
+
+The migration also fixes conflicting shortcuts, window pop/pin operations,
+themed gap restoration, per-monitor screensaver launching, floating-rule order,
+and theme validation. The binding menu is now **SUPER+CTRL+ALT+K**; use it to see
+all combinations. Themes are checked before replacing the selected runtime theme.
+
+The [migration guide](docs/hyprland-lua-migration.md) records the changed shortcuts,
+checks and limitations, plus TTY application and rollback instructions. All 19
+built-in themes passed the real compositor parser. An isolated compositor checked
+window operations, layouts, bindings, theme switching and repeat reloads. Physical
+monitor scaling, input, suspend/lock and screen sharing still require post-login
+checks. The implementation does not switch the running desktop.
+
+Repeat the parser/regression checks with:
+
+```bash
+python3 tests/hyprland/check.py
+python3 tests/hyprland/check.py --integration
+```

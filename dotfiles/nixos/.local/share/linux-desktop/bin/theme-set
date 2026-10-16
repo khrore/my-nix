@@ -1,14 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-if [[ -z $1 ]]; then
+if [[ -z ${1:-} ]]; then
   echo "Usage: theme-set <theme-name>"
   exit 1
 fi
 
-CURRENT_THEME_PATH="$HOME/.local/share/linux-desktop/current/theme"
-NEXT_THEME_PATH="$HOME/.local/share/linux-desktop/current/next-theme"
-USER_THEMES_PATH="$HOME/.config/linux-desktop/themes"
-BUILTIN_THEMES_PATH="$HOME/.local/share/linux-desktop/themes"
+SESSION_ROOT=${LINUX_SESSION_ROOT:-$HOME/.local/share/linux-desktop}
+CURRENT_THEME_PATH="$SESSION_ROOT/current/theme"
+NEXT_THEME_PATH="$SESSION_ROOT/current/next-theme"
+USER_THEMES_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/linux-desktop/themes"
+BUILTIN_THEMES_PATH="$SESSION_ROOT/themes"
 
 THEME_NAME=$(echo "$1" | sed -E 's/<[^>]+>//g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 
@@ -17,42 +19,59 @@ if [[ ! -d $BUILTIN_THEMES_PATH/$THEME_NAME ]] && [[ ! -d $USER_THEMES_PATH/$THE
   exit 1
 fi
 
-# Setup clean next theme directory (for atomic theme config swapping)
+if [[ $THEME_NAME == */* || $THEME_NAME == . || $THEME_NAME == .. ]]; then
+  echo "Theme name must be a directory name, not a path" >&2
+  exit 1
+fi
+
+# Prepare a separate directory before replacing the selected theme.
 rm -rf "$NEXT_THEME_PATH"
 mkdir -p "$NEXT_THEME_PATH"
 
 # Copy official theme first, then overlay user customizations on top
-cp -r "$BUILTIN_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
-cp -r "$USER_THEMES_PATH/$THEME_NAME/"* "$NEXT_THEME_PATH/" 2>/dev/null
+for source_dir in "$BUILTIN_THEMES_PATH/$THEME_NAME" "$USER_THEMES_PATH/$THEME_NAME"; do
+  if [[ -d $source_dir ]]; then
+    cp -a "$source_dir/." "$NEXT_THEME_PATH/"
+  fi
+done
+if [[ -f $USER_THEMES_PATH/$THEME_NAME/hyprland.conf ]]; then
+  echo "Migrate $USER_THEMES_PATH/$THEME_NAME/hyprland.conf to hyprland.lua first" >&2
+  exit 1
+fi
 
 # Generate dynamic configs
 theme-set-templates
 
-# Swap next theme in as current
-rm -rf "$CURRENT_THEME_PATH"
-mv "$NEXT_THEME_PATH" "$CURRENT_THEME_PATH"
+# Validate before touching the selected theme or its name.
+hyprland-theme-verify "$NEXT_THEME_PATH/hyprland.lua"
+
+# Keep the old directory until the staged directory has been installed.
+PREVIOUS_THEME_PATH="$SESSION_ROOT/current/previous-theme"
+rm -rf "$PREVIOUS_THEME_PATH"
+if [[ -e $CURRENT_THEME_PATH ]]; then
+  mv "$CURRENT_THEME_PATH" "$PREVIOUS_THEME_PATH"
+fi
+if ! mv "$NEXT_THEME_PATH" "$CURRENT_THEME_PATH"; then
+  [[ ! -e $PREVIOUS_THEME_PATH ]] || mv "$PREVIOUS_THEME_PATH" "$CURRENT_THEME_PATH"
+  exit 1
+fi
+rm -rf "$PREVIOUS_THEME_PATH"
 
 # Store theme name for reference
-echo "$THEME_NAME" >"$HOME/.local/share/linux-desktop/current/theme.name"
+echo "$THEME_NAME" >"$SESSION_ROOT/current/theme.name"
 
-# Change background with theme
-theme-bg-next
-
-# Restart components to apply new theme
-if pgrep -u "$(id -u)" -f '(^|/)waybar([[:space:]]|$)' >/dev/null; then
-  restart-waybar
+# Offline preparation from a TTY must not start desktop applications.
+if ! hyprctl -j version >/dev/null 2>&1; then
+  echo "Theme prepared; no running Hyprland instance to reload."
+  exit 0
 fi
-restart-swayosd
-restart-terminal
+
+# Apply Hyprland first; other integrations may be absent or fail independently.
 restart-hyprctl
-restart-btop
-restart-mako
-
-# Change app-specific themes
-theme-set-gnome
-theme-set-vscode
-theme-set-obsidian
-theme-set-keyboard
-
-# Call hook on theme set
+if pgrep -u "$(id -u)" -f '(^|/)waybar([[:space:]]|$)' >/dev/null; then
+  restart-waybar || echo "Warning: could not restart Waybar" >&2
+fi
+for command in theme-bg-next restart-swayosd restart-terminal restart-btop restart-mako theme-set-gnome theme-set-vscode theme-set-obsidian theme-set-keyboard; do
+  "$command" || echo "Warning: $command failed after installing the theme" >&2
+done
 hook theme-set "$THEME_NAME"

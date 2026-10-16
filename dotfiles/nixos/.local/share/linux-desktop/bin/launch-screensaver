@@ -1,54 +1,17 @@
-#!/bin/bash
-
-# Launch the screensaver in the default terminal with the correct font configuration.
-
-# Exit early if we don't have the tte show
-if ! command -v tte &>/dev/null; then
+#!/usr/bin/env bash
+# Launch one screensaver per output without racing asynchronous window creation.
+set -euo pipefail
+command -v tte >/dev/null || exit 1
+pgrep -f '[l]ocal.screensaver' >/dev/null && exit 0
+if [[ -f ${XDG_STATE_HOME:-$HOME/.local/state}/linux-desktop/toggles/screensaver-off && ${1:-} != force ]]; then
   exit 1
 fi
-
-# Exit early if screensave is already running
-pgrep -f local.screensaver && exit 0
-
-# Allow screensaver to be turned off but also force started
-if [[ -f ~/.local/state/linux-desktop/toggles/screensaver-off ]] && [[ $1 != "force" ]]; then
-  exit 1
-fi
-
-# Silently quit Walker on overlay
-walker -q
-
-focused=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')
+walker -q || true
 terminal=$(xdg-terminal-exec --print-id)
-
-for m in $(hyprctl monitors -j | jq -r '.[] | .name'); do
-  hyprctl dispatch focusmonitor $m
-
-  case $terminal in
-  *Alacritty*)
-    hyprctl dispatch exec -- \
-      alacritty --class=local.screensaver \
-      --config-file ~/.local/share/linux-desktop/default/alacritty/screensaver.toml \
-      -e screensaver
-    ;;
-  *ghostty*)
-    hyprctl dispatch exec -- \
-      ghostty --class=local.screensaver \
-      --config-file=~/.local/share/linux-desktop/default/ghostty/screensaver \
-      --font-size=18 \
-      -e screensaver
-    ;;
-  *kitty*)
-    hyprctl dispatch exec -- \
-      kitty --class=local.screensaver \
-      --override font_size=18 \
-      --override window_padding_width=0 \
-      -e screensaver
-    ;;
-  *)
-    notify-send "✋  Screensaver only runs in Alacritty, Ghostty, or Kitty"
-    ;;
-  esac
-done
-
-hyprctl dispatch focusmonitor $focused
+case $terminal in
+  *Alacritty*) terminal=alacritty ;;
+  *ghostty*) terminal=ghostty ;;
+  *kitty*) terminal=kitty ;;
+  *) echo "Screensaver requires Alacritty, Ghostty, or Kitty" >&2; exit 1 ;;
+esac
+hyprland-eval "desktop.launch_screensaver(\"$terminal\")"
