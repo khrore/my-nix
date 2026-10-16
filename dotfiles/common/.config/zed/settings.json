@@ -72,10 +72,10 @@
     },
     "dock": "right",
     "default_model": {
-      "effort": "high",
+      "effort": "medium",
       "enable_thinking": true,
       "provider": "zed.dev",
-      "model": "claude-sonnet-4-6",
+      "model": "claude-haiku-5-5",
     },
   },
   "git_panel": {
