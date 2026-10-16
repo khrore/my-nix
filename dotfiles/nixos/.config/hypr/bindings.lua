@@ -33,18 +33,3 @@ hl.bind(
 )
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("uwsm-app -- typora --enable-wayland-ime"), { description = "Typora" })
 hl.bind("SUPER + SHIFT + slash", hl.dsp.exec_cmd("uwsm-app -- bitwarden"), { description = "Passwords" })
-
--- Add extra bindings
-hl.bind(
-	"SUPER + TAB",
-	hl.dsp.exec_cmd("hyprctl switchxkblayout gaming-keyboard next"),
-	{ description = "Keyboard layout (gaming keyboard)" }
-)
-
--- Override existing bindings, such as putting the main menu on Super + Space
-
-hl.bind(
-	"SUPER + SHIFT + R",
-	hl.dsp.exec_cmd("hyprctl switchxkblayout all next"),
-	{ description = "Keyboard layout (all keyboards)" }
-)

@@ -1,8 +1,8 @@
--- Personal input settings. SUPER+TAB changes the gaming keyboard layout; SUPER+SHIFT+R changes all.
+-- Personal input settings. Caps Lock switches between English and Russian.
 hl.config({
 	input = {
 		kb_layout = "us,ru",
-		kb_options = "compose:caps",
+		kb_options = "grp:caps_toggle",
 		repeat_rate = 40,
 		repeat_delay = 400,
 		numlock_by_default = true,
