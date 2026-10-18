@@ -1,0 +1,21 @@
+/* Adapted from grazen0/kanagawa-zen-browser. */
+:root {
+  --zen-colors-primary: #7e9cd8 !important;
+  --zen-colors-secondary: #957fb8 !important;
+  --zen-colors-tertiary: #16161d !important;
+  --zen-colors-border: #54546d !important;
+  --zen-dialog-background: #1f1f28 !important;
+  --toolbar-field-background-color: #2a2a37 !important;
+  --toolbar-field-focus-background-color: #1e2030 !important;
+  --zen-main-browser-background: #1f1f28 !important;
+  --zen-main-browser-background-toolbar: #1f1f28 !important;
+  --zen-primary-color: #7e9cd8 !important;
+  --toolbar-color: #dcd7ba !important;
+  --toolbar-field-color: #dcd7ba !important;
+  --lwt-text-color: #dcd7ba !important;
+  --arrowpanel-color: #dcd7ba !important;
+  --arrowpanel-background: #1f1f28 !important;
+  --toolbar-bgcolor: #1f1f28 !important;
+  --sidebar-text-color: #dcd7ba !important;
+  color-scheme: dark !important;
+}

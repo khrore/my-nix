@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Firefox passes native-host arguments; the bridge only needs its own mode.
+exec "$(dirname "$0")/theme-set-browser" --firefox-native

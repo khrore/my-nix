@@ -1,0 +1,10 @@
+{
+  "firefox": {
+    "url": "https://addons.mozilla.org/en-US/firefox/addon/catppuccin-mocha-blue-git/",
+    "source": "https://addons.mozilla.org/en-US/firefox/addon/catppuccin-mocha-blue-git/"
+  },
+  "chromium": {
+    "url": "https://chromewebstore.google.com/detail/catppuccin-chrome-theme-m/bkkmolkhemgaeaeggcmfbghljjjoofoh",
+    "source": "https://github.com/catppuccin/chrome"
+  }
+}

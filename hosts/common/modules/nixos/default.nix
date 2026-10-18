@@ -12,7 +12,15 @@
     ./user.nix
     ./network.nix
   ]
-  ++ (if isDisplay then [ ./hyprland.nix ] else [ ]);
+  ++ (
+    if isDisplay then
+      [
+        ./hyprland.nix
+        ./browser-theme.nix
+      ]
+    else
+      [ ]
+  );
 
   system.stateVersion = stateVersion;
 }

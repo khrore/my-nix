@@ -39,6 +39,7 @@ let
 
       # Tools referenced by session bindings and helpers
       netcat-openbsd
+      pywalfox-native
       pam_u2f
       xournalpp
     ];

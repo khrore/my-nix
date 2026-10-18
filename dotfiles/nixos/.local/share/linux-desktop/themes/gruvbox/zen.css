@@ -1,0 +1,30 @@
+/* Static gruvbox color adaptation. */
+:root {
+  --zen-primary-color: #7daea3 !important;
+  --zen-colors-primary: #3c3836 !important;
+  --zen-colors-secondary: #3c3836 !important;
+  --zen-colors-tertiary: #282828 !important;
+  --zen-colors-border: #7daea3 !important;
+  --zen-dialog-background: #282828 !important;
+  --zen-main-browser-background: #282828 !important;
+  --zen-main-browser-background-toolbar: #282828 !important;
+  --zen-themed-toolbar-bg: #282828 !important;
+  --toolbar-bgcolor: #282828 !important;
+  --toolbar-color: #d4be98 !important;
+  --lwt-text-color: #d4be98 !important;
+  --toolbox-textcolor: #d4be98 !important;
+  --toolbar-field-color: #d4be98 !important;
+  --toolbar-field-background-color: #3c3836 !important;
+  --toolbar-field-focus-color: #d4be98 !important;
+  --toolbar-field-focus-background-color: #282828 !important;
+  --toolbarbutton-icon-fill: #d4be98 !important;
+  --tab-selected-textcolor: #d4be98 !important;
+  --arrowpanel-color: #d4be98 !important;
+  --arrowpanel-background: #282828 !important;
+  --sidebar-text-color: #d4be98 !important;
+  --lwt-sidebar-text-color: #d4be98 !important;
+  --lwt-sidebar-background-color: #282828 !important;
+  --newtab-background-color: #282828 !important;
+  --newtab-text-primary-color: #d4be98 !important;
+  color-scheme: dark !important;
+}

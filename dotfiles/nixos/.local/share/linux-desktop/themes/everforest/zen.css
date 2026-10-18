@@ -1,0 +1,30 @@
+/* Static everforest color adaptation. */
+:root {
+  --zen-primary-color: #7fbbb3 !important;
+  --zen-colors-primary: #475258 !important;
+  --zen-colors-secondary: #475258 !important;
+  --zen-colors-tertiary: #2d353b !important;
+  --zen-colors-border: #7fbbb3 !important;
+  --zen-dialog-background: #2d353b !important;
+  --zen-main-browser-background: #2d353b !important;
+  --zen-main-browser-background-toolbar: #2d353b !important;
+  --zen-themed-toolbar-bg: #2d353b !important;
+  --toolbar-bgcolor: #2d353b !important;
+  --toolbar-color: #d3c6aa !important;
+  --lwt-text-color: #d3c6aa !important;
+  --toolbox-textcolor: #d3c6aa !important;
+  --toolbar-field-color: #d3c6aa !important;
+  --toolbar-field-background-color: #475258 !important;
+  --toolbar-field-focus-color: #d3c6aa !important;
+  --toolbar-field-focus-background-color: #2d353b !important;
+  --toolbarbutton-icon-fill: #d3c6aa !important;
+  --tab-selected-textcolor: #d3c6aa !important;
+  --arrowpanel-color: #d3c6aa !important;
+  --arrowpanel-background: #2d353b !important;
+  --sidebar-text-color: #d3c6aa !important;
+  --lwt-sidebar-text-color: #d3c6aa !important;
+  --lwt-sidebar-background-color: #2d353b !important;
+  --newtab-background-color: #2d353b !important;
+  --newtab-text-primary-color: #d3c6aa !important;
+  color-scheme: dark !important;
+}

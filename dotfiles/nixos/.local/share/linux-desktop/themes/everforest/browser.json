@@ -1,0 +1,10 @@
+{
+  "firefox": {
+    "url": "https://addons.mozilla.org/en-US/firefox/addon/everforest-dark-soft-theme/",
+    "source": "https://addons.mozilla.org/en-US/firefox/addon/everforest-dark-soft-theme/"
+  },
+  "chromium": {
+    "url": "https://chromewebstore.google.com/detail/everforest-chrome-theme/dlcadbmcfambdjhecipbnolmjchgnode",
+    "source": "https://github.com/thmatosbr/everforest-chrome"
+  }
+}

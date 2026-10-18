@@ -1,0 +1,10 @@
+{
+  "firefox": {
+    "url": "https://addons.mozilla.org/en-US/firefox/addon/kanagawa-theme/",
+    "source": "https://addons.mozilla.org/en-US/firefox/addon/kanagawa-theme/"
+  },
+  "chromium": {
+    "url": "https://chromewebstore.google.com/detail/kanagawa/djnghjlejbfgnbnmjfgbdaeafbiklpha",
+    "source": "https://chromewebstore.google.com/detail/kanagawa/djnghjlejbfgnbnmjfgbdaeafbiklpha"
+  }
+}

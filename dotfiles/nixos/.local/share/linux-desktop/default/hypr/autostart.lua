@@ -2,6 +2,7 @@
 -- UWSM owns propagation of the session environment to D-Bus and systemd.
 hl.on("hyprland.start", function()
 	for _, command in ipairs({
+		"theme-set-browser",
 		"uwsm-app -- hypridle",
 		"uwsm-app -- mako",
 		"uwsm-app -- waybar",

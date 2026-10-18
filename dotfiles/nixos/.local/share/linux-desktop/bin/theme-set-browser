@@ -1,0 +1,512 @@
+#!/usr/bin/env python3
+"""Sync desktop colors to browsers, or open an upstream theme installer."""
+
+import argparse
+import configparser
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import tomllib
+
+
+def read_json(path):
+    with path.open() as source:
+        return json.load(source)
+
+
+def write_text(path, text):
+    # Do not follow dotfile symlinks back into another configuration repository.
+    if path.is_symlink():
+        raise ValueError(f"Refusing to replace symlink: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(dir=path.parent)
+    try:
+        with os.fdopen(fd, "w") as output:
+            output.write(text)
+        if path.exists():
+            os.chmod(temporary, path.stat().st_mode & 0o777)
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def write_json(path, value):
+    text = json.dumps(value, indent=2) + "\n"
+    if not path.is_file() or path.read_text() != text:
+        write_text(path, text)
+
+
+def running_processes():
+    names = set()
+    for process in Path("/proc").iterdir():
+        if not process.name.isdecimal():
+            continue
+        try:
+            if process.stat().st_uid == os.getuid():
+                names.add((process / "comm").read_text().strip())
+        except OSError:
+            continue
+    return names
+
+
+def discover_profiles(roots):
+    profiles = []
+    for root in roots:
+        directory = Path(root).expanduser()
+        index = directory / "profiles.ini"
+        if not index.is_file():
+            continue
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read(index)
+        for section in parser.sections():
+            if not section.startswith("Profile") or not parser.has_option(
+                section, "Path"
+            ):
+                continue
+            profile = Path(parser[section]["Path"])
+            if parser.getboolean(section, "IsRelative", fallback=True):
+                profile = directory / profile
+            profile = profile.expanduser().resolve()
+            if (profile / "prefs.js").is_file():
+                profiles.append(str(profile))
+    return list(dict.fromkeys(profiles))
+
+
+def native_environment():
+    cache = (
+        Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+        / "linux-desktop/browsers"
+    )
+    config = (
+        Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+        / "linux-desktop/browser-native"
+    )
+    temporary = cache / "tmp"
+    temporary.mkdir(parents=True, exist_ok=True, mode=0o700)
+    return {
+        **os.environ,
+        "XDG_CACHE_HOME": str(cache),
+        "XDG_CONFIG_HOME": str(config),
+        "TMPDIR": str(temporary),
+    }
+
+
+def setup_firefox(root, directories):
+    manifest = {
+        "name": "pywalfox",
+        "description": "Linux desktop theme bridge for Pywalfox",
+        "path": str(root / "bin/theme-firefox-native"),
+        "type": "stdio",
+        "allowed_extensions": ["pywalfox@frewacom.org"],
+    }
+    for directory in set(directories):
+        path = Path(directory).expanduser() / "pywalfox.json"
+        if (
+            path.exists()
+            and read_json(path).get("description") != manifest["description"]
+        ):
+            raise ValueError(
+                f"An existing Pywalfox host owns {path}; migrate it before setup"
+            )
+        write_json(path, manifest)
+
+
+def sync_firefox(root, settings, theme, palette):
+    if not settings["firefox_enabled"]:
+        return
+    environment = native_environment()
+    light = (theme / "light.mode").is_file()
+    colors = {f"color{i}": palette[f"color{i}"] for i in range(16)}
+    # Pywalfox's light template expects a conventional dark-to-light terminal
+    # palette even when the desktop palette itself is light. Keep text legible.
+    colors["color0"] = palette["foreground"] if light else palette["background"]
+    colors["color15"] = palette["background"] if light else palette["foreground"]
+    if light:
+        colors["color7"] = palette["background"]
+    colors["color3"] = colors["color10"] = palette["accent"]
+    write_json(
+        Path(environment["XDG_CACHE_HOME"]) / "wal/colors.json",
+        {
+            "wallpaper": "",
+            "special": {k: palette[k] for k in ("background", "foreground", "cursor")},
+            "colors": colors,
+        },
+    )
+    paths = [
+        entry["native_hosts"]
+        for entry in settings["firefox_profile_roots"]
+        if discover_profiles([entry["profiles"]])
+    ]
+    if not paths:
+        return
+    setup_firefox(root, paths)
+    command = settings["commands"]["pywalfox"]
+    if not command or not shutil.which(command[0]):
+        print(
+            "theme-set-browser: Firefox live colors need pywalfox-native; activate the Nix configuration.",
+            file=sys.stderr,
+        )
+        return
+    mode = "light" if light else "dark"
+    # Persist mode while Firefox is closed; update each running native host's
+    # socket separately so simultaneous profiles can all receive the palette.
+    subprocess.run(
+        [*command, mode], env=environment, check=True, stdout=subprocess.DEVNULL
+    )
+    for instance in Path(environment["TMPDIR"]).glob("host-*"):
+        if not instance.is_dir() or not list(instance.glob("pywalfox_socket_*")):
+            continue
+        # A newly installed add-on has no colors yet. Fetch first so switching
+        # modes never asks it to rebuild a nonexistent saved colorscheme.
+        for action in ("update", mode):
+            subprocess.run(
+                [*command, action],
+                env={**environment, "TMPDIR": str(instance)},
+                check=True,
+                stdout=subprocess.DEVNULL,
+            )
+
+
+def sync_chromium(settings, palette, state, processes):
+    policy = Path(
+        os.environ.get("LINUX_DESKTOP_CHROMIUM_POLICY", state / "chromium-policy.json")
+    )
+    write_json(
+        policy,
+        {"BrowserThemeColor": palette["background"]}
+        if settings["chromium_enabled"]
+        else {},
+    )
+    # Refresh only browsers already running; never start one just to theme it.
+    for process, command in settings["chromium_refresh_commands"].items():
+        if process in processes and command and shutil.which(command[0]):
+            subprocess.run(
+                [*command, "--refresh-platform-policy", "--no-startup-window"],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=15,
+            )
+
+
+def restart_notice(settings):
+    if not shutil.which("notify-send"):
+        return
+    response = subprocess.run(
+        [
+            "notify-send",
+            "--app-name=Desktop theme",
+            "--expire-time=15000",
+            "--wait",
+            "--hint=string:x-dunst-stack-tag:linux-desktop-browser-theme",
+            "--action=restart=Open restart controls",
+            "Zen theme updated",
+            "Restart Zen to load the selected desktop theme.",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if response.stdout.strip() == "restart":
+        subprocess.run([*settings["commands"]["zen"], "about:profiles"], check=True)
+
+
+def status(settings, state):
+    policy = Path(
+        os.environ.get("LINUX_DESKTOP_CHROMIUM_POLICY", state / "chromium-policy.json")
+    )
+    installed = any(
+        Path(path).is_file() and Path(path).resolve() == policy.resolve()
+        for path in settings["chromium_policy_paths"]
+    )
+    print(
+        "Chromium: "
+        + (
+            "live policy installed"
+            if installed
+            else "NixOS activation required for live policy"
+        )
+    )
+    roots = [entry["profiles"] for entry in settings["firefox_profile_roots"]]
+    firefox = discover_profiles(roots)
+    if firefox:
+        installed_addon = False
+        for profile in firefox:
+            extensions = Path(profile) / "extensions.json"
+            if extensions.is_file():
+                installed_addon |= any(
+                    a.get("id") == "pywalfox@frewacom.org" and a.get("active")
+                    for a in read_json(extensions).get("addons", [])
+                )
+        print(
+            "Firefox: "
+            + (
+                "Pywalfox add-on active"
+                if installed_addon
+                else "install Pywalfox once (--setup-firefox)"
+            )
+        )
+    else:
+        print("Firefox: no profiles detected")
+    zen = list(
+        dict.fromkeys(
+            [
+                *settings["zen_profiles"],
+                *discover_profiles(settings["zen_profile_roots"]),
+            ]
+        )
+    )
+    for profile in zen:
+        enrolled = (Path(profile) / "chrome/linux-desktop-theme.css").is_symlink()
+        print(
+            f"Zen: {'enrolled (restart after changes)' if enrolled else 'not yet enrolled'}: {profile}"
+        )
+
+
+def theme_directory(root, name):
+    if name is None:
+        selected = (root / "current/theme.name").read_text().strip()
+        if (root / "current/theme/browser.json").is_file():
+            return root / "current/theme"
+        name = selected
+    if not name or Path(name).name != name or name in (".", ".."):
+        raise ValueError("Theme must be a directory name")
+    custom = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    custom = custom / "linux-desktop/themes" / name
+    return custom if (custom / "browser.json").is_file() else root / "themes" / name
+
+
+def enroll_zen(profile, css):
+    profile = profile.expanduser().resolve()
+    if not profile.is_dir() or not (profile / "prefs.js").is_file():
+        raise ValueError(
+            f"Not an initialized Zen profile (missing prefs.js): {profile}"
+        )
+    chrome = profile / "chrome"
+    stylesheet = chrome / "userChrome.css"
+    preferences = profile / "user.js"
+    managed = chrome / "linux-desktop-theme.css"
+    # Preflight all conflicts before writing any profile files.
+    for path in (stylesheet, preferences):
+        if path.is_symlink() or (path.exists() and not path.is_file()):
+            raise ValueError(f"Refusing to replace non-regular profile file: {path}")
+    if managed.exists() or managed.is_symlink():
+        raise ValueError(
+            f"Theme link already exists; sync or unregister first: {managed}"
+        )
+    original = stylesheet.read_text() if stylesheet.exists() else ""
+    if "linux-desktop-theme.css" in original:
+        raise ValueError(f"Theme import already exists in {stylesheet}")
+    prefs = preferences.read_text() if preferences.exists() else ""
+    chrome.mkdir(parents=True, exist_ok=True)
+    # Imports must precede other CSS rules. Never replace the user's own CSS.
+    write_text(stylesheet, '@import "linux-desktop-theme.css";\n' + original)
+    write_text(
+        preferences,
+        prefs.rstrip()
+        + "\n// Enable the enrolled Linux desktop theme.\n"
+        + 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);\n',
+    )
+    managed.symlink_to(css)
+    return str(profile)
+
+
+def sync_zen(profiles, css):
+    if not profiles:
+        return
+    if not css.is_file():
+        raise ValueError(f"Selected theme has no Zen CSS: {css}")
+    failures = []
+    for entry in profiles:
+        profile = Path(entry).expanduser().resolve()
+        managed = profile / "chrome/linux-desktop-theme.css"
+        if not (profile / "prefs.js").is_file() or not managed.is_symlink():
+            failures.append(f"Zen profile is missing or not enrolled: {profile}")
+            continue
+        with tempfile.TemporaryDirectory(dir=managed.parent) as directory:
+            temporary = Path(directory) / "theme.css"
+            temporary.symlink_to(css)
+            os.replace(temporary, managed)
+    if failures:
+        raise ValueError("\n".join(failures))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    actions = parser.add_mutually_exclusive_group()
+    actions.add_argument("--open", choices=("firefox", "chromium"))
+    actions.add_argument("--url", choices=("firefox", "chromium"))
+    actions.add_argument("--source", choices=("firefox", "chromium"))
+    actions.add_argument("--register-zen", type=Path, metavar="PROFILE")
+    actions.add_argument("--setup-firefox", action="store_true")
+    actions.add_argument("--status", action="store_true")
+    actions.add_argument(
+        "--firefox-native", action="store_true", help=argparse.SUPPRESS
+    )
+    actions.add_argument(
+        "--restart-notice", action="store_true", help=argparse.SUPPRESS
+    )
+    parser.add_argument(
+        "--theme", help="Named theme; defaults to the desktop selection"
+    )
+    args = parser.parse_args()
+    root = (
+        Path(
+            os.environ.get(
+                "LINUX_SESSION_ROOT", Path.home() / ".local/share/linux-desktop"
+            )
+        )
+        .expanduser()
+        .absolute()
+    )
+    config_path = (
+        Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+        / "linux-desktop/browsers.json"
+    )
+    settings = read_json(root / "default/browsers.json")
+    if config_path.exists():
+        custom = read_json(config_path)
+        if not isinstance(custom, dict) or not isinstance(
+            custom.get("commands", {}), dict
+        ):
+            raise ValueError(
+                "Browser settings must be an object with a commands object"
+            )
+        settings["commands"].update(custom.get("commands", {}))
+        settings.update(
+            {key: value for key, value in custom.items() if key != "commands"}
+        )
+    profiles = settings["zen_profiles"]
+    if not isinstance(profiles, list) or not all(isinstance(p, str) for p in profiles):
+        raise ValueError("zen_profiles must be a list of profile paths")
+    state = (
+        Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+        / "linux-desktop/browser"
+    )
+    if args.status:
+        status(settings, state)
+        return
+    if args.firefox_native:
+        command = settings["commands"]["pywalfox"]
+        environment = native_environment()
+        with tempfile.TemporaryDirectory(
+            prefix="host-", dir=environment["TMPDIR"]
+        ) as instance:
+            subprocess.run(
+                [*command, "start"], env={**environment, "TMPDIR": instance}, check=True
+            )
+        return
+    if args.restart_notice:
+        restart_notice(settings)
+        return
+    if args.setup_firefox:
+        setup_firefox(
+            root, [entry["native_hosts"] for entry in settings["firefox_profile_roots"]]
+        )
+        print("Install Pywalfox once in each Firefox profile, then restart Firefox:")
+        print(settings["firefox_addon_url"])
+        return
+    theme = theme_directory(root, args.theme)
+    browser = args.open or args.url or args.source
+    if browser:
+        metadata = read_json(theme / "browser.json")[browser]
+        url = metadata["source" if args.source else "url"]
+        if not isinstance(url, str) or not url.startswith("https://"):
+            raise ValueError("Browser theme links must use HTTPS")
+        if args.open:
+            command = settings["commands"][browser]
+            if (
+                not isinstance(command, list)
+                or not command
+                or not all(isinstance(a, str) and a for a in command)
+            ):
+                raise ValueError(
+                    f"commands.{browser} must be a non-empty argument list"
+                )
+            subprocess.run([*command, url], check=True)
+        else:
+            print(url)
+        return
+    css = theme / "zen.css"
+    if not css.is_file():
+        raise ValueError(f"Selected theme has no Zen CSS: {css}")
+    if args.register_zen:
+        profile = str(args.register_zen.expanduser().resolve())
+        if profile not in profiles:
+            # Check the config destination before making any profile changes.
+            if config_path.is_symlink():
+                raise ValueError(f"Refusing to replace symlink: {config_path}")
+            profiles.append(enroll_zen(Path(profile), css))
+            write_text(config_path, json.dumps(settings, indent=2) + "\n")
+        print("Zen profile enrolled. Restart Zen to load the selected desktop theme.")
+        sync_zen(profiles, css)
+        return
+    processes = running_processes()
+    with (theme / "colors.toml").open("rb") as source:
+        palette = tomllib.load(source)
+    for color in (
+        *[palette[key] for key in ("background", "foreground", "accent", "cursor")],
+        *[palette[f"color{i}"] for i in range(16)],
+    ):
+        if not isinstance(color, str) or len(color) != 7 or color[0] != "#":
+            raise ValueError("Browser palette colors must be #RRGGBB values")
+        int(color[1:], 16)
+    failures = []
+    for sync in (
+        lambda: sync_chromium(settings, palette, state, processes),
+        lambda: sync_firefox(root, settings, theme, palette),
+    ):
+        try:
+            sync()
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            failures.append(str(error))
+    if settings["discover_zen"]:
+        for profile in discover_profiles(settings["zen_profile_roots"]):
+            if profile not in profiles:
+                try:
+                    profiles.append(enroll_zen(Path(profile), css))
+                    write_json(config_path, settings)
+                except (OSError, ValueError) as error:
+                    failures.append(str(error))
+    try:
+        sync_zen(profiles, css)
+        fingerprint = hashlib.sha256(css.read_bytes()).hexdigest()
+        previous = state / "zen-theme.sha256"
+        changed = not previous.is_file() or previous.read_text() != fingerprint
+        if profiles and changed:
+            write_text(previous, fingerprint)
+            if settings["notify"] and processes.intersection(settings["zen_processes"]):
+                subprocess.Popen(
+                    [
+                        sys.executable,
+                        str(root / "bin/theme-set-browser"),
+                        "--restart-notice",
+                    ],
+                    start_new_session=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+    except (OSError, ValueError) as error:
+        failures.append(str(error))
+    if failures:
+        raise ValueError("\n".join(failures))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        subprocess.CalledProcessError,
+    ) as error:
+        print(f"theme-set-browser: {error}", file=sys.stderr)
+        sys.exit(1)
