@@ -7,6 +7,11 @@ export PATH=$HOME/.local/bin:$LINUX_SESSION_ROOT/bin:$PATH
 # Set default terminal and editor
 source ~/.config/uwsm/default
 
+# Proxy for UWSM-managed applications.
+export HTTP_PROXY="http://127.0.0.1:2080"
+export HTTPS_PROXY="$HTTP_PROXY"
+export NO_PROXY="localhost,127.0.0.1,::1"
+
 # Activate mise if present on the system
 command-present mise && eval "$(mise activate bash --shims)"
 
