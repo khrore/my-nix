@@ -1,0 +1,7 @@
+{
+  "zed": "Nord Dark",
+  "zellij": "nord",
+  "codex": "nord",
+  "zed_source": "https://github.com/mikasius/zed-nord-theme/blob/d0b459c49797aec598622bed992537e4a83688da/themes/nord.json",
+  "qt_source": "https://github.com/mnussbaum/base16-qt5ct/blob/a2ccf3fa3fb7e1c1c82f23e629e41aee0dc2bede/colors/base16-nord.conf"
+}

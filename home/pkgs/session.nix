@@ -38,6 +38,15 @@ let
       catppuccin-cursors.mochaDark
 
       # Tools referenced by session bindings and helpers
+      qt6Packages.qt6ct
+      (writeShellScriptBin "theme-config-python" ''
+        exec ${
+          python3.withPackages (ps: [
+            ps.tomlkit
+            ps.json5
+          ])
+        }/bin/python3 "$@"
+      '')
       netcat-openbsd
       pywalfox-native
       pam_u2f

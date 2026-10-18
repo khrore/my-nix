@@ -3,6 +3,10 @@
 hl.on("hyprland.start", function()
 	for _, command in ipairs({
 		"theme-set-browser",
+		"theme-set-zed",
+		"theme-set-zellij",
+		"theme-set-codex",
+		"theme-set-throne",
 		"uwsm-app -- hypridle",
 		"uwsm-app -- mako",
 		"uwsm-app -- waybar",

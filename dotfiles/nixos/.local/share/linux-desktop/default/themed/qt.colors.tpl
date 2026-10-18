@@ -1,0 +1,5 @@
+# Desktop palette fallback for themes without an upstream Qt port.
+[ColorScheme]
+active_colors={{ foreground }}, {{ color0 }}, {{ color7 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ foreground }}, {{ foreground }}, {{ foreground }}, {{ background }}, {{ background }}, {{ color8 }}, {{ accent }}, {{ background }}, {{ color4 }}, {{ color5 }}, {{ color0 }}, {{ background }}, {{ background }}, {{ foreground }}, {{ color8 }}, {{ accent }}
+inactive_colors={{ foreground }}, {{ color0 }}, {{ color7 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ foreground }}, {{ foreground }}, {{ foreground }}, {{ background }}, {{ background }}, {{ color8 }}, {{ accent }}, {{ background }}, {{ color4 }}, {{ color5 }}, {{ color0 }}, {{ background }}, {{ background }}, {{ foreground }}, {{ color8 }}, {{ accent }}
+disabled_colors={{ color8 }}, {{ color0 }}, {{ color7 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ color8 }}, {{ background }}, {{ background }}, {{ color8 }}, {{ accent }}, {{ background }}, {{ color4 }}, {{ color5 }}, {{ color0 }}, {{ background }}, {{ background }}, {{ color8 }}, {{ color8 }}, {{ accent }}

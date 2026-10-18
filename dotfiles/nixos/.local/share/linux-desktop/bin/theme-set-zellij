@@ -1,0 +1,51 @@
+#!/usr/bin/env theme-config-python
+"""Apply the selected desktop theme to zellij."""
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+# Resolve the shared helpers beside the script, including when invoked through a dotfile symlink.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+sys.dont_write_bytecode = True
+from theme_config import run, write_text
+
+
+def apply_theme(config):
+    theme, settings = config.theme, config.settings
+    metadata = json.loads((theme / "apps.json").read_text())
+    path = Path(os.environ.get("ZELLIJ_CONFIG_FILE", settings["settings"])).expanduser()
+    if "ZELLIJ_CONFIG_DIR" in os.environ and "ZELLIJ_CONFIG_FILE" not in os.environ:
+        path = Path(os.environ["ZELLIJ_CONFIG_DIR"]) / "config.kdl"
+    if not path.exists():
+        return
+    text = path.read_text()
+    # These are root KDL options; leave keybindings, plugins and layouts alone.
+    option = re.compile(r'(?m)^theme(?:_dark|_light)?[ \t]+"[^"\n]*"[^\n]*\n?')
+    text = option.sub("", text).rstrip()
+    text += "\n" + "theme " + json.dumps(metadata["zellij"]) + "\n"
+    if shutil.which("zellij"):
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".kdl", dir=path.parent
+        ) as temporary:
+            temporary.write(text)
+            temporary.flush()
+            check = subprocess.run(
+                ["zellij", "--config", temporary.name, "setup", "--check"],
+                capture_output=True,
+                check=False,
+                timeout=10,
+            )
+            if check.returncode:
+                raise ValueError("Zellij rejected the updated configuration")
+    write_text(path, text)
+    print(f"zellij: {metadata['zellij']}")
+
+
+if __name__ == "__main__":
+    sys.exit(run("zellij", apply_theme))

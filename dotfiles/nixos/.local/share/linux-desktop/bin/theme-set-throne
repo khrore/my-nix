@@ -1,0 +1,57 @@
+#!/usr/bin/env theme-config-python
+"""Apply the selected desktop theme to throne."""
+
+import configparser
+import io
+import sys
+from pathlib import Path
+
+# Resolve the shared helpers beside the script, including when invoked through a dotfile symlink.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+sys.dont_write_bytecode = True
+from theme_config import notify_once, processes, run, write_text
+
+
+def apply_theme(config):
+    theme, settings = config.theme, config.settings
+    state, running, notify = config.state, processes(), config.notify
+    source = theme / "qt.colors"
+    if not source.exists():
+        raise ValueError(
+            "Selected theme has no Qt palette; run theme-set to render templates"
+        )
+    path = Path(settings["settings"]).expanduser()
+    # qt6ct watches this directory, not just the palette's source directory.
+    target = path.parent / "colors/linux-desktop.conf"
+    write_text(target, source.read_text())
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.optionxform = str
+    if path.exists():
+        parser.read(path)
+    if not parser.has_section("Appearance"):
+        parser.add_section("Appearance")
+    parser["Appearance"].update(
+        {"style": "Fusion", "custom_palette": "true", "color_scheme_path": str(target)}
+    )
+    output = io.StringIO()
+    parser.write(output, space_around_delimiters=False)
+    write_text(path, output.getvalue(), force=True)
+    for process in running.get("throne", []):
+        try:
+            environment = (process / "environ").read_bytes().split(b"\0")
+        except OSError:
+            continue
+        if b"QT_QPA_PLATFORMTHEME=qt6ct" not in environment:
+            notify_once(
+                state,
+                "throne",
+                "qt6ct-startup",
+                "Throne palette saved. After rebuilding, restart Throne once with its theme set to System.",
+                notify,
+            )
+            break
+    print("throne: Qt palette updated")
+
+
+if __name__ == "__main__":
+    sys.exit(run("throne", apply_theme))
