@@ -1,4 +1,5 @@
 [Default Applications]
+inode/directory=yazi.desktop;
 x-scheme-handler/http=zen.desktop
 x-scheme-handler/https=zen.desktop
 x-scheme-handler/chrome=zen.desktop
@@ -18,6 +19,7 @@ x-scheme-handler/codex=chatgpt.desktop
 x-scheme-handler/bitwarden=bitwarden.desktop
 
 [Added Associations]
+inode/directory=yazi.desktop;
 x-scheme-handler/http=zen.desktop;zen-beta.desktop;zen-twilight.desktop;
 x-scheme-handler/https=zen.desktop;zen-beta.desktop;zen-twilight.desktop;
 x-scheme-handler/chrome=zen.desktop;zen-beta.desktop;zen-twilight.desktop;

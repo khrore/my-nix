@@ -10,10 +10,10 @@ hl.bind(
 	{ description = "Zellij" }
 )
 hl.bind("SUPER + SHIFT + Return", hl.dsp.exec_cmd("launch-browser"), { description = "Browser" })
-hl.bind("SUPER + SHIFT + F", hl.dsp.exec_cmd("uwsm-app -- nautilus --new-window"), { description = "File manager" })
+hl.bind("SUPER + SHIFT + F", hl.dsp.exec_cmd("launch-tui yazi"), { description = "File manager" })
 hl.bind(
 	"SUPER + ALT + SHIFT + F",
-	hl.dsp.exec_cmd('uwsm-app -- nautilus --new-window "$(terminal-cwd)"'),
+	hl.dsp.exec_cmd('launch-tui yazi "$(terminal-cwd)"'),
 	{ description = "File manager (cwd)" }
 )
 hl.bind("SUPER + SHIFT + B", hl.dsp.exec_cmd("launch-browser"), { description = "Browser" })

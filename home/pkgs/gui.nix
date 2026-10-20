@@ -23,7 +23,6 @@ let
       hyprpicker
       hyprshot
       clipse
-      nautilus
 
       # Other
       ghostty

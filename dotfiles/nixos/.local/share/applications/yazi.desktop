@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Yazi File Manager
+Comment=Browse files in the preferred terminal
+Icon=yazi
+Type=Application
+TryExec=xdg-terminal-exec
+Exec=xdg-terminal-exec -- yazi %f
+Terminal=false
+MimeType=inode/directory;
+Categories=System;FileManager;ConsoleOnly;
