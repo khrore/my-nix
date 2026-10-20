@@ -50,24 +50,24 @@ hl.bind(
 	{ description = "Keyboard backlight cycle", locked = true }
 )
 
--- Precise 1% multimedia adjustments with Alt modifier
+-- Precise 1% multimedia adjustments with Super modifier
 hl.bind(
-	"ALT + XF86AudioRaiseVolume",
+	"SUPER + XF86AudioRaiseVolume",
 	hl.dsp.exec_cmd(osdclient .. " --output-volume +1"),
 	{ description = "Volume up precise", repeating = true, locked = true }
 )
 hl.bind(
-	"ALT + XF86AudioLowerVolume",
+	"SUPER + XF86AudioLowerVolume",
 	hl.dsp.exec_cmd(osdclient .. " --output-volume -1"),
 	{ description = "Volume down precise", repeating = true, locked = true }
 )
 hl.bind(
-	"ALT + XF86MonBrightnessUp",
+	"SUPER + XF86MonBrightnessUp",
 	hl.dsp.exec_cmd("brightness-display +1%"),
 	{ description = "Brightness up precise", repeating = true, locked = true }
 )
 hl.bind(
-	"ALT + XF86MonBrightnessDown",
+	"SUPER + XF86MonBrightnessDown",
 	hl.dsp.exec_cmd("brightness-display 1%-"),
 	{ description = "Brightness down precise", repeating = true, locked = true }
 )

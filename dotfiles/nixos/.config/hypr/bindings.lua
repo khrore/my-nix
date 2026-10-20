@@ -1,13 +1,13 @@
 -- Application bindings
 hl.bind(
-	"ALT + Return",
+	"SUPER + Return",
 	hl.dsp.exec_cmd('uwsm-app -- xdg-terminal-exec --dir="$(terminal-cwd)"'),
 	{ description = "Terminal" }
 )
 hl.bind(
 	"SUPER + ALT + Return",
-	hl.dsp.exec_cmd('uwsm-app -- xdg-terminal-exec --dir="$(terminal-cwd)" bash -c "tmux attach || tmux new -s Work"'),
-	{ description = "Tmux" }
+	hl.dsp.exec_cmd('uwsm-app -- xdg-terminal-exec --dir="$(terminal-cwd)" zellij attach --create Work'),
+	{ description = "Zellij" }
 )
 hl.bind("SUPER + SHIFT + Return", hl.dsp.exec_cmd("launch-browser"), { description = "Browser" })
 hl.bind("SUPER + SHIFT + F", hl.dsp.exec_cmd("uwsm-app -- nautilus --new-window"), { description = "File manager" })

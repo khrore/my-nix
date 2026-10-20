@@ -155,41 +155,8 @@ keybinds clear-defaults=true {
             SwitchToMode "locked"
         }
     }
-    shared_among "normal" "locked" {
-        bind "Super left" { MoveFocusOrTab "left"; }
-        bind "Super down" { MoveFocus "down"; }
-        bind "Super up" { MoveFocus "up"; }
-        bind "Super right" { MoveFocusOrTab "right"; }
-        bind "Super +" { Resize "Increase"; }
-        bind "Super -" { Resize "Decrease"; }
-        bind "Super =" { Resize "Increase"; }
-        bind "Super [" { PreviousSwapLayout; }
-        bind "Super ]" { NextSwapLayout; }
-        bind "Super f" { ToggleFloatingPanes; }
-        bind "Super h" { MoveFocusOrTab "left"; }
-        bind "Super i" { MoveTab "left"; }
-        bind "Super j" { MoveFocus "down"; }
-        bind "Super k" { MoveFocus "up"; }
-        bind "Super l" { MoveFocusOrTab "right"; }
-        bind "Super n" { NewPane; }
-        bind "Super o" { MoveTab "right"; }
-        bind "Super p" { TogglePaneInGroup; }
-        bind "Super Shift p" { ToggleGroupMarking; }
-        bind "Super s" { SwitchToMode "scroll"; }
-
-        bind "Super 1" { GoToTab 1; }
-        bind "Super 2" { GoToTab 2; }
-        bind "Super 3" { GoToTab 3; }
-        bind "Super 4" { GoToTab 4; }
-        bind "Super 5" { GoToTab 5; }
-        bind "Super 6" { GoToTab 6; }
-        bind "Super 7" { GoToTab 7; }
-        bind "Super 8" { GoToTab 8; }
-        bind "Super 9" { GoToTab 9; }
-        bind "Super t" { NewTab; }
-        bind "Super w" { CloseTab; }
-        bind "Super g" { EditScrollback; }
-    }
+    // Super shortcuts belong to the desktop. In locked mode, pass application
+    // keys through; Ctrl+l enters normal mode, then p/t/r/m select Vim controls.
     shared_except "locked" "renametab" "renamepane" {
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl q" { Quit; }
