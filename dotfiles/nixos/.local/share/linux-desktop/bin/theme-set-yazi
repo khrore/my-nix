@@ -16,7 +16,9 @@ def apply_theme(config):
     path = Path(config.settings["settings"]).expanduser()
     if "YAZI_CONFIG_HOME" in os.environ:
         path = Path(os.environ["YAZI_CONFIG_HOME"]) / "theme.toml"
-    write_text(path, (config.theme / "yazi.toml").read_text())
+    flavor = path.parent / "flavors/linux-desktop.yazi"
+    write_text(flavor / "tmtheme.xml", (config.theme / "yazi.tmtheme").read_text())
+    write_text(flavor / "flavor.toml", (config.theme / "yazi.toml").read_text())
     if shutil.which("ya"):
         # DDS receiver 0 broadcasts to subscribers, without guessing instance IDs.
         result = subprocess.run(

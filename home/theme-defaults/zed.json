@@ -1,0 +1,16 @@
+{
+  "name": "Linux Desktop",
+  "author": "Local desktop",
+  "themes": [
+    {
+      "name": "Linux Desktop",
+      "appearance": "dark",
+      "style": {
+        "background": "#282828",
+        "editor.background": "#282828",
+        "editor.foreground": "#ebdbb2",
+        "text": "#ebdbb2"
+      }
+    }
+  ]
+}

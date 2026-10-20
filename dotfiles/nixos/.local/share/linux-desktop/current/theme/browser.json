@@ -1,0 +1,10 @@
+{
+  "firefox": {
+    "url": "https://addons.mozilla.org/en-US/firefox/addon/gruvbox-true-dark/",
+    "source": "https://addons.mozilla.org/en-US/firefox/addon/gruvbox-true-dark/"
+  },
+  "chromium": {
+    "url": "https://chromewebstore.google.com/detail/gruvbox-theme/ihennfdbghdiflogeancnalflhgmanop",
+    "source": "https://github.com/bbrks/chrome-gruvbox"
+  }
+}

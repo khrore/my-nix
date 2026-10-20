@@ -1,104 +1,43 @@
 #!/usr/bin/env theme-config-python
-"""Apply the selected desktop theme to zed."""
+"""Update Zed's named desktop theme without changing its linked settings."""
 
 import json
-import re
 import sys
 from pathlib import Path
 
-import json5
-
-# Resolve the shared helpers beside the script, including when invoked through a dotfile symlink.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
 sys.dont_write_bytecode = True
-from theme_config import notify_once, processes, run, write_text
-
-
-def jsonc_property(text, name, value):
-    """Replace one root property, preserving JSONC comments and other formatting."""
-    original = json5.loads(text, allow_duplicate_keys=False)
-    if not isinstance(original, dict):
-        raise TypeError("Zed settings must be a JSON object")
-    if original.get(name) == value:
-        return text
-    tokens = list(re.finditer(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*[\s\S]*?\*/|[^\s]', text))
-    tokens = [t for t in tokens if not t[0].startswith(("//", "/*"))]
-    depth = 0
-    for index, token in enumerate(tokens):
-        word = token[0]
-        if depth == 1 and word == json.dumps(name) and tokens[index + 1][0] == ":":
-            start = tokens[index + 2].start()
-            nested = 0
-            for end in tokens[index + 2 :]:
-                if nested == 0 and end[0] in (",", "}"):
-                    result = text[:start] + json.dumps(value) + text[end.start() :]
-                    break
-                if end[0] in ("{", "["):
-                    nested += 1
-                elif end[0] in ("}", "]"):
-                    nested -= 1
-            else:
-                raise ValueError("Unterminated Zed setting")
-            break
-        if word in ("{", "["):
-            depth += 1
-        elif word in ("}", "]"):
-            depth -= 1
-    else:
-        start = tokens[0].end()
-        comma = "," if original else ""
-        result = (
-            text[:start]
-            + "\n  "
-            + json.dumps(name)
-            + ": "
-            + json.dumps(value)
-            + comma
-            + text[start:]
-        )
-    expected = {**original, name: value}
-    if json5.loads(result, allow_duplicate_keys=False) != expected:
-        raise ValueError("Could not safely update Zed settings")
-    return result
+from theme_config import run, write_text
 
 
 def apply_theme(config):
-    root, theme, settings = config.root, config.theme, config.settings
-    metadata = json.loads((theme / "apps.json").read_text())
-    state, running, notify = config.state, processes(), config.notify
-    path = Path(settings["settings"]).expanduser()
+    path = Path(config.settings["settings"]).expanduser()
     if not path.exists():
         return
-    installed = False
-    # Install all upstream variants once, so subsequent switches only change settings.
-    for directory in (root / "themes").iterdir():
-        source = directory / "zed.json"
-        if source.is_file():
-            target = (
-                path.parent / "themes" / ("linux-desktop-" + directory.name + ".json")
-            )
-            installed |= write_text(target, source.read_text())
-    selected = theme / "zed.json"
-    if selected.exists():
-        name = (root / "current/theme.name").read_text().strip()
-        if not re.fullmatch(r"[a-zA-Z0-9_-]+", name):
-            raise ValueError("Invalid selected theme name")
-        installed |= write_text(
-            path.parent / "themes" / ("linux-desktop-" + name + ".json"),
-            selected.read_text(),
-        )
-    changed = write_text(
-        path, jsonc_property(path.read_text(), "theme", metadata["zed"])
+    metadata = json.loads((config.theme / "apps.json").read_text())
+    source = config.theme / "zed.json"
+    if not source.exists():
+        # Nix extracts this from the same pinned source as the installed Zed.
+        source = config.root / "default/zed-gruvbox.json"
+    family = json.loads(source.read_text())
+    selected = next(
+        (theme for theme in family["themes"] if theme["name"] == metadata["zed"]), None
     )
-    if installed and any(name in running for name in ("zed", "zed-editor")):
-        notify_once(
-            state,
-            "zed",
-            "local-themes-installed",
-            "Zed themes installed. Restart Zed once to load the new themes.",
-            notify,
-        )
-    print(f"zed: {metadata['zed']}" + (" (updated)" if changed else ""))
+    if selected is None:
+        raise ValueError(f"zed.json has no theme named {metadata['zed']}")
+    if selected["appearance"] != "dark":
+        raise ValueError("Zed's desktop theme must be dark")
+    selected["name"] = "Linux Desktop"
+    family["name"] = "Linux Desktop"
+    family["themes"] = [selected]
+    # Zed watches this directory and reloads the fixed-name theme. Do not leave
+    # backups here: it also parses those files and can reload the old palette.
+    write_text(
+        path.parent / "themes/linux-desktop.json",
+        json.dumps(family, indent=2) + "\n",
+        backup=False,
+    )
+    print(f"zed: {metadata['zed']}")
 
 
 if __name__ == "__main__":

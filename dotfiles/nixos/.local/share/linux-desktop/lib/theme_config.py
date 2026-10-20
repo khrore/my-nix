@@ -10,16 +10,16 @@ import tempfile
 from pathlib import Path
 
 
-def write_text(path, text, *, force=False):
+def write_text(path, text, *, force=False, backup=True):
     old = path.read_text() if path.exists() else None
     if old == text and not force:
         return False
     path.parent.mkdir(parents=True, exist_ok=True)
     # Materialize mutable app settings: never write through dotfile symlinks.
-    backup = path.with_name(path.name + ".before-desktop-theme")
-    if old is not None and not backup.exists():
-        with backup.open("x") as output:
-            os.chmod(backup, 0o600)
+    backup_path = path.with_name(path.name + ".before-desktop-theme")
+    if backup and old is not None and not backup_path.exists():
+        with backup_path.open("x") as output:
+            os.chmod(backup_path, 0o600)
             output.write(old)
     descriptor, temporary = tempfile.mkstemp(dir=path.parent)
     try:

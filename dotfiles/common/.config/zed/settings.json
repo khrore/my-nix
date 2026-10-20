@@ -99,11 +99,7 @@
     "show_parameter_hints": true,
     "show_other_hints": true,
   },
-  "theme": {
-    "mode": "dark",
-    "light": "Gruvbox Light",
-    "dark": "Gruvbox Dark",
-  },
+  "theme": "Linux Desktop",
   "lsp": {
     "rust-analyzer": {
       "initialization_options": {
