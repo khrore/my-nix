@@ -52,6 +52,7 @@ let
       catppuccin-cursors.mochaDark
 
       # Tools referenced by session bindings and helpers
+      dconf
       qt6Packages.qt6ct
       (writeShellScriptBin "theme-config-python" ''
         exec ${
@@ -69,6 +70,19 @@ let
 in
 {
   home.packages = sessionPkgs;
+
+  # Publish a dark fallback even before the first desktop palette is selected.
+  dconf.settings = lib.mkIf isLinuxDesktop {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "Adwaita-dark";
+    };
+  };
+  qt = lib.mkIf isLinuxDesktop {
+    enable = true;
+    platformTheme.name = "qtct";
+    style.name = "Fusion";
+  };
 
   xdg.configFile."org.freedesktop.FileManager1.common/config" = lib.mkIf isLinuxDesktop {
     text = "cmd=${fileManagerLauncher}\n";

@@ -19,7 +19,6 @@ def apply_theme(config):
     theme, settings = config.theme, config.settings
     metadata = json.loads((theme / "apps.json").read_text())
     palette = tomlkit.parse((theme / "colors.toml").read_text()).unwrap()
-    light = (theme / "light.mode").exists()
     state, running, notify = config.state, processes(), config.notify
     path = Path(settings["settings"]).expanduser()
     if "CODEX_HOME" in os.environ:
@@ -28,7 +27,7 @@ def apply_theme(config):
         return
     document = tomlkit.parse(path.read_text())
     desktop = document.setdefault("desktop", tomlkit.table())
-    mode = "Light" if light else "Dark"
+    mode = "Dark"
     desktop["appearanceTheme"] = mode.lower()
     desktop[f"appearance{mode}CodeThemeId"] = metadata["codex"]
     key = f"appearance{mode}ChromeTheme"

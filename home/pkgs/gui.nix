@@ -29,11 +29,9 @@ let
       zed-editor
       obs-studio
       imv
-      anydesk
 
       # Browser
       ungoogled-chromium
-      tor
       vesktop
     ];
 

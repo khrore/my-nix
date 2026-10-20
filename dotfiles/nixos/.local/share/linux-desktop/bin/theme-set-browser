@@ -121,14 +121,9 @@ def sync_firefox(root, settings, theme, palette):
     if not settings["firefox_enabled"]:
         return
     environment = native_environment()
-    light = (theme / "light.mode").is_file()
     colors = {f"color{i}": palette[f"color{i}"] for i in range(16)}
-    # Pywalfox's light template expects a conventional dark-to-light terminal
-    # palette even when the desktop palette itself is light. Keep text legible.
-    colors["color0"] = palette["foreground"] if light else palette["background"]
-    colors["color15"] = palette["background"] if light else palette["foreground"]
-    if light:
-        colors["color7"] = palette["background"]
+    colors["color0"] = palette["background"]
+    colors["color15"] = palette["foreground"]
     colors["color3"] = colors["color10"] = palette["accent"]
     write_json(
         Path(environment["XDG_CACHE_HOME"]) / "wal/colors.json",
@@ -153,7 +148,7 @@ def sync_firefox(root, settings, theme, palette):
             file=sys.stderr,
         )
         return
-    mode = "light" if light else "dark"
+    mode = "dark"
     # Persist mode while Firefox is closed; update each running native host's
     # socket separately so simultaneous profiles can all receive the palette.
     subprocess.run(

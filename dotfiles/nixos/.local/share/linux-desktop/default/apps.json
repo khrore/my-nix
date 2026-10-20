@@ -3,5 +3,7 @@
   "zellij": {"enabled": true, "settings": "~/.config/zellij/config.kdl"},
   "codex": {"enabled": true, "settings": "~/.codex/config.toml"},
   "throne": {"enabled": true, "settings": "~/.config/qt6ct/qt6ct.conf"},
-  "notify": true
+  "notify": true,
+  "yazi": {"enabled": true, "settings": "~/.config/yazi/theme.toml"},
+  "telegram": {"enabled": true, "settings": "~/.config/telegram-desktop/desktop.tdesktop-theme"}
 }

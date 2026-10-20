@@ -1,20 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-command -v gsettings >/dev/null || exit 0
+# dconf is also used by Home Manager; no ambient gsettings/schema dependency.
+dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+dconf write /org/gnome/desktop/interface/gtk-theme "'Adwaita-dark'"
 
-# Change gnome modes
-if [[ -f ~/.local/share/linux-desktop/current/theme/light.mode ]]; then
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
-else
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
-fi
-
-# Change gnome icon theme color
-GNOME_ICONS_THEME=~/.local/share/linux-desktop/current/theme/icons.theme
+SESSION_ROOT=${LINUX_SESSION_ROOT:-$HOME/.local/share/linux-desktop}
+GNOME_ICONS_THEME="$SESSION_ROOT/current/theme/icons.theme"
+icon_theme="Yaru-blue"
 if [[ -f $GNOME_ICONS_THEME ]]; then
-  gsettings set org.gnome.desktop.interface icon-theme "$(<$GNOME_ICONS_THEME)"
-else
-  gsettings set org.gnome.desktop.interface icon-theme "Yaru-blue"
+  icon_theme=$(<"$GNOME_ICONS_THEME")
 fi
+# Quote the icon name as a GVariant string.
+icon_theme=${icon_theme//\\/\\\\}
+icon_theme=${icon_theme//\'/\\\'}
+dconf write /org/gnome/desktop/interface/icon-theme "'$icon_theme'"

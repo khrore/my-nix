@@ -39,6 +39,12 @@ if [[ -f $USER_THEMES_PATH/$THEME_NAME/hyprland.conf ]]; then
   exit 1
 fi
 
+if [[ -f $NEXT_THEME_PATH/light.mode ]]; then
+  echo "Light themes are disabled: $THEME_NAME" >&2
+  rm -rf "$NEXT_THEME_PATH"
+  exit 1
+fi
+
 # Generate dynamic configs
 theme-set-templates
 
@@ -71,7 +77,7 @@ restart-hyprctl
 if pgrep -u "$(id -u)" -f '(^|/)waybar([[:space:]]|$)' >/dev/null; then
   restart-waybar || echo "Warning: could not restart Waybar" >&2
 fi
-for command in theme-bg-next restart-walker restart-swayosd restart-terminal restart-btop restart-mako theme-set-gnome theme-set-browser theme-set-zed theme-set-zellij theme-set-codex theme-set-throne theme-set-vscode theme-set-obsidian theme-set-keyboard; do
+for command in theme-bg-next restart-walker restart-swayosd restart-terminal restart-btop restart-mako theme-set-gnome theme-set-browser theme-set-zed theme-set-zellij theme-set-yazi theme-set-telegram theme-set-codex theme-set-throne theme-set-vscode theme-set-obsidian theme-set-keyboard; do
   "$command" || echo "Warning: $command failed after installing the theme" >&2
 done
 hook theme-set "$THEME_NAME"

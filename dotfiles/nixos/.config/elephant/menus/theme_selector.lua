@@ -53,7 +53,18 @@ function GetEntries()
     for theme_path in handle:lines() do
       local theme_name = theme_path:match(".*/(.+)$")
 
-      if theme_name and not seen_themes[theme_name] then
+      if
+        theme_name
+        and not seen_themes[theme_name]
+        and not file_exists(user_theme_dir .. "/" .. theme_name .. "/light.mode")
+        and not file_exists(default_theme_dir .. "/" .. theme_name .. "/light.mode")
+        and (
+          file_exists(user_theme_dir .. "/" .. theme_name .. "/colors.toml")
+          or file_exists(default_theme_dir .. "/" .. theme_name .. "/colors.toml")
+          or file_exists(user_theme_dir .. "/" .. theme_name .. "/hyprland.lua")
+          or file_exists(default_theme_dir .. "/" .. theme_name .. "/hyprland.lua")
+        )
+      then
         seen_themes[theme_name] = true
 
         -- Check for preview images directly (no subprocess)

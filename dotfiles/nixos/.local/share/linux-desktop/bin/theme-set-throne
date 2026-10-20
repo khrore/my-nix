@@ -1,8 +1,9 @@
 #!/usr/bin/env theme-config-python
-"""Apply the selected desktop theme to throne."""
+"""Apply the desktop palette to Qt apps, including Throne."""
 
 import configparser
 import io
+import os
 import sys
 from pathlib import Path
 
@@ -20,22 +21,29 @@ def apply_theme(config):
         raise ValueError(
             "Selected theme has no Qt palette; run theme-set to render templates"
         )
-    path = Path(settings["settings"]).expanduser()
-    # qt6ct watches this directory, not just the palette's source directory.
-    target = path.parent / "colors/linux-desktop.conf"
-    write_text(target, source.read_text())
-    parser = configparser.ConfigParser(interpolation=None)
-    parser.optionxform = str
-    if path.exists():
-        parser.read(path)
-    if not parser.has_section("Appearance"):
-        parser.add_section("Appearance")
-    parser["Appearance"].update(
-        {"style": "Fusion", "custom_palette": "true", "color_scheme_path": str(target)}
-    )
-    output = io.StringIO()
-    parser.write(output, space_around_delimiters=False)
-    write_text(path, output.getvalue(), force=True)
+    config_home = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    # qtct uses separate settings for Qt 5 and Qt 6. Keep their palettes together.
+    paths = [Path(settings["settings"]).expanduser(), config_home / "qt5ct/qt5ct.conf"]
+    for path in paths:
+        # qt6ct watches this directory, not just the palette's source directory.
+        target = path.parent / "colors/linux-desktop.conf"
+        write_text(target, source.read_text())
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.optionxform = str
+        if path.exists():
+            parser.read(path)
+        if not parser.has_section("Appearance"):
+            parser.add_section("Appearance")
+        parser["Appearance"].update(
+            {
+                "style": "Fusion",
+                "custom_palette": "true",
+                "color_scheme_path": str(target),
+            }
+        )
+        output = io.StringIO()
+        parser.write(output, space_around_delimiters=False)
+        write_text(path, output.getvalue(), force=True)
     for process in running.get("throne", []):
         try:
             environment = (process / "environ").read_bytes().split(b"\0")
@@ -50,7 +58,7 @@ def apply_theme(config):
                 notify,
             )
             break
-    print("throne: Qt palette updated")
+    print("qt: Qt 5 and Qt 6 palettes updated")
 
 
 if __name__ == "__main__":

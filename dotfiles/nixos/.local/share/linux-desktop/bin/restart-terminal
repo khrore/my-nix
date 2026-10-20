@@ -5,3 +5,6 @@ if [[ -f ~/.config/alacritty/alacritty.toml ]]; then
 fi
 
 pkill -u "$(id -u)" -SIGUSR1 -f '(^|/)kitty([[:space:]]|$)' || true
+
+# Ghostty reloads the palette in existing windows on SIGUSR2.
+pkill -u "$(id -u)" -SIGUSR2 -f '(^|/)ghostty([[:space:]]|$)' || true

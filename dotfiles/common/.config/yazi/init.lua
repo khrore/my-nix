@@ -11,3 +11,10 @@ function Linemode:size_and_mtime()
 	local size = self._file:size()
 	return string.format("%s %s", size and ya.readable_size(size) or "-", time)
 end
+
+-- Desktop palette changes are broadcast by theme-set-yazi.
+if ya.target_os() == "linux" then
+	ps.sub_remote("desktop-theme", function()
+		ya.emit("app:theme", {})
+	end)
+end
