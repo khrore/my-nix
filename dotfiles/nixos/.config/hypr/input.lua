@@ -14,5 +14,8 @@ hl.config({
 	},
 })
 
+-- Pan through window columns on workspaces using the scrolling layout.
+hl.gesture({ fingers = 3, direction = "horizontal", action = "scroll_move" })
+
 hl.window_rule({ name = "input-1", match = { class = "(Alacritty|kitty)" }, scroll_touchpad = 1.5 })
 hl.window_rule({ name = "input-2", match = { class = "com.mitchellh.ghostty" }, scroll_touchpad = 0.2 })

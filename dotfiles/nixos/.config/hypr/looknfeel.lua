@@ -1,5 +1,6 @@
 -- Personal overrides are applied after the theme.
--- hl.config({ general = { gaps_in = 0, gaps_out = 0, border_size = 0, layout = "scrolling" } })
+hl.config({ general = { layout = "scrolling" } })
+-- hl.config({ general = { gaps_in = 0, gaps_out = 0, border_size = 0 } })
 -- hl.config({ decoration = { rounding = 8, dim_inactive = true, dim_strength = 0.15 } })
 -- hl.config({ animations = { enabled = false } })
 -- hl.config({ layout = { single_window_aspect_ratio = { 1, 1 } } })
