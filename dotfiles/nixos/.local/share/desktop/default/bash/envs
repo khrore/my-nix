@@ -1,0 +1,8 @@
+# Editor used by CLI
+export SUDO_EDITOR="$EDITOR"
+export BAT_THEME=ansi
+
+# Duplicated from .config/uwsm/env so SSH works too
+export DESKTOP_ROOT=${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}
+export LINUX_SESSION_ROOT=$DESKTOP_ROOT
+export PATH=$HOME/.local/share/desktop/bin:$PATH:$HOME/.local/bin

@@ -1,0 +1,1 @@
+for f in $HOME/.local/share/desktop/default/bash/fns/*; do source "$f"; done

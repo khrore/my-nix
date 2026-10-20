@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Reload btop configuration after a theme change.
+
+if pgrep -u "$(id -u)" -f '(^|/)btop([[:space:]]|$)' >/dev/null; then
+  pkill -u "$(id -u)" -USR2 -f '(^|/)btop([[:space:]]|$)'
+fi

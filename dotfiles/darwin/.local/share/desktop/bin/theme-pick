@@ -1,0 +1,37 @@
+#!/usr/bin/env theme-config-python
+"""Select a dark theme with a native dialog, leaving cancellation untouched."""
+
+import subprocess
+import sys
+
+script = """on run argv
+    set selectedTheme to choose from list argv with title "Desktop theme" with prompt "Choose a dark theme" without multiple selections allowed
+    if selectedTheme is false then return ""
+    return item 1 of selectedTheme
+end run"""
+
+themes = subprocess.run(
+    ["theme-list"], capture_output=True, text=True, check=True
+).stdout.splitlines()
+if themes:
+    selected = subprocess.run(
+        ["osascript", "-", *themes],
+        input=script,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    if selected:
+        result = subprocess.run(
+            ["theme-set", selected], capture_output=True, text=True, check=False
+        )
+        print(result.stdout, end="")
+        print(result.stderr, end="", file=sys.stderr)
+        if result.returncode:
+            subprocess.run(
+                ["osascript", "-", result.stderr or result.stdout],
+                input='on run argv\n display alert "Theme switch reported errors" message (item 1 of argv)\nend run',
+                text=True,
+                check=False,
+            )
+        sys.exit(result.returncode)

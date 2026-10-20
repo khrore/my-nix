@@ -13,7 +13,7 @@ function Linemode:size_and_mtime()
 end
 
 -- Desktop palette changes are broadcast by theme-set-yazi.
-if ya.target_os() == "linux" then
+if ya.target_os() == "linux" or ya.target_os() == "macos" then
 	ps.sub_remote("desktop-theme", function()
 		ya.emit("app:theme", {})
 	end)

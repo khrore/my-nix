@@ -1,9 +1,9 @@
 {
-  "name": "Linux Desktop",
+  "name": "Desktop",
   "author": "Local desktop",
   "themes": [
     {
-      "name": "Linux Desktop",
+      "name": "Desktop",
       "appearance": "dark",
       "style": {
         "background": "#282828",

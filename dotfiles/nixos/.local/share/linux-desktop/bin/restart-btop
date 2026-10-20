@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Reload btop configuration after a theme change.
-
-pkill -u "$(id -u)" -SIGUSR2 -f '(^|/)btop([[:space:]]|$)' || true

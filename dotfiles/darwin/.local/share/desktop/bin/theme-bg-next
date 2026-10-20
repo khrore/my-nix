@@ -1,0 +1,42 @@
+#!/usr/bin/env theme-config-python
+"""Cycle theme wallpapers; themes without images leave the desktop untouched."""
+
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+root = Path(
+    os.environ.get(
+        "DESKTOP_ROOT",
+        os.environ.get("LINUX_SESSION_ROOT", Path.home() / ".local/share/desktop"),
+    )
+)
+name = (root / "current/theme.name").read_text().strip()
+config = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+folders = [
+    config / "desktop/backgrounds" / name,
+    root / "current/theme/backgrounds",
+]
+images = sorted(
+    (
+        p
+        for folder in folders
+        if folder.is_dir()
+        for p in folder.iterdir()
+        if p.is_file()
+        and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".heic"}
+    ),
+    key=str,
+)
+if not images:
+    print("No wallpaper in this theme; keeping the current desktop.")
+    sys.exit(0)
+link = root / "current/background"
+current = link.resolve() if link.is_symlink() else None
+index = next((i for i, image in enumerate(images) if image.resolve() == current), -1)
+sys.exit(
+    subprocess.run(
+        ["theme-bg-set", str(images[(index + 1) % len(images)])], check=False
+    ).returncode
+)

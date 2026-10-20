@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Refresh the current theme from its templates.
+
+THEME_NAME_PATH="${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}/current/theme.name"
+
+if [[ -f $THEME_NAME_PATH ]]; then
+  theme-set "$(cat "$THEME_NAME_PATH")"
+fi

@@ -158,19 +158,19 @@
   },
   "custom/screenrecording-indicator": {
     "on-click": "screen-record",
-    "exec": "$HOME/.local/share/linux-desktop/default/waybar/indicators/screen-recording.sh",
+    "exec": "$HOME/.local/share/desktop/default/waybar/indicators/screen-recording.sh",
     "signal": 8,
     "return-type": "json"
   },
   "custom/idle-indicator": {
     "on-click": "toggle-idle",
-    "exec": "$HOME/.local/share/linux-desktop/default/waybar/indicators/idle.sh",
+    "exec": "$HOME/.local/share/desktop/default/waybar/indicators/idle.sh",
     "signal": 9,
     "return-type": "json"
   },
   "custom/notification-silencing-indicator": {
     "on-click": "toggle-notification-silencing",
-    "exec": "$HOME/.local/share/linux-desktop/default/waybar/indicators/notification-silencing.sh",
+    "exec": "$HOME/.local/share/desktop/default/waybar/indicators/notification-silencing.sh",
     "signal": 10,
     "return-type": "json"
   },

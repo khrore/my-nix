@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Launch one screensaver per output without racing asynchronous window creation.
+set -euo pipefail
+command -v tte >/dev/null || exit 1
+pgrep -f '[l]ocal.screensaver' >/dev/null && exit 0
+if [[ -f ${XDG_STATE_HOME:-$HOME/.local/state}/desktop/toggles/screensaver-off && ${1:-} != force ]]; then
+  exit 1
+fi
+walker -q || true
+terminal=$(xdg-terminal-exec --print-id)
+case $terminal in
+  *Alacritty*) terminal=alacritty ;;
+  *ghostty*) terminal=ghostty ;;
+  *kitty*) terminal=kitty ;;
+  *) echo "Screensaver requires Alacritty, Ghostty, or Kitty" >&2; exit 1 ;;
+esac
+hyprland-eval "desktop.launch_screensaver(\"$terminal\")"

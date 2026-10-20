@@ -1,1 +1,1 @@
-export PATH="$HOME/.local/share/linux-desktop/bin:$PATH"
+export PATH="$HOME/.local/share/desktop/bin:$PATH"

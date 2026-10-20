@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Run a named hook, such as theme-set, from the user hooks directory.
+
+set -e
+
+if (( $# < 1 )); then
+  echo "Usage: hook [name] [args...]"
+  exit 1
+fi
+
+HOOK_PATH="$HOME/.config/desktop/hooks/$1"
+shift
+
+if [[ -f $HOOK_PATH ]]; then
+  bash "$HOOK_PATH" "$@"
+fi

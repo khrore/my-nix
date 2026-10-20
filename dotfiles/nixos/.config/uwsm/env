@@ -1,8 +1,9 @@
 # Changes require a restart to take effect.
 
 # Ensure desktop helper bins are in the path
-export LINUX_SESSION_ROOT=$HOME/.local/share/linux-desktop
-export PATH=$HOME/.local/bin:$LINUX_SESSION_ROOT/bin:$PATH
+export DESKTOP_ROOT=${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}
+export LINUX_SESSION_ROOT=$DESKTOP_ROOT
+export PATH=$HOME/.local/bin:$DESKTOP_ROOT/bin:$PATH
 
 # Set default terminal and editor
 source ~/.config/uwsm/default

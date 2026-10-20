@@ -1,4 +1,4 @@
-general.import = [ "~/.local/share/linux-desktop/current/theme/alacritty.toml" ]
+general.import = [ "~/.local/share/desktop/current/theme/alacritty.toml" ]
 
 [env]
 TERM = "xterm-256color"

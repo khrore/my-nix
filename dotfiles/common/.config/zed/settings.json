@@ -99,7 +99,7 @@
     "show_parameter_hints": true,
     "show_other_hints": true,
   },
-  "theme": "Linux Desktop",
+  "theme": "Desktop",
   "lsp": {
     "rust-analyzer": {
       "initialization_options": {

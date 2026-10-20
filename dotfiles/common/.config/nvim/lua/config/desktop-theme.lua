@@ -1,7 +1,8 @@
 local M = {}
 local selected
 local timer
-local root = (vim.env.LINUX_SESSION_ROOT or (vim.fn.expand("~") .. "/.local/share/linux-desktop")) .. "/current/"
+local root = (vim.env.DESKTOP_ROOT or vim.env.LINUX_SESSION_ROOT or (vim.fn.expand("~") .. "/.local/share/desktop"))
+	.. "/current/"
 
 local function apply()
 	local name_file = io.open(root .. "theme.name", "r")
@@ -38,7 +39,7 @@ end
 
 function M.setup()
 	apply()
-	if vim.fn.has("linux") ~= 1 or timer then
+	if timer then
 		return
 	end
 	-- Poll the name rather than a file inode: theme-set replaces the theme directory.

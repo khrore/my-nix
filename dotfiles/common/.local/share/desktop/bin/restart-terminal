@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -f ~/.config/alacritty/alacritty.toml ]]; then
+  # Notify the watcher without touching the repository file behind a symlink.
+  touch -h ~/.config/alacritty/alacritty.toml
+fi
+
+if pgrep -u "$(id -u)" -if '(^|/)kitty([[:space:]]|$)' >/dev/null; then
+  pkill -u "$(id -u)" -USR1 -if '(^|/)kitty([[:space:]]|$)'
+fi
+
+# Ghostty reloads the palette in existing windows on SIGUSR2.
+if pgrep -u "$(id -u)" -if '(^|/)ghostty([[:space:]]|$)' >/dev/null; then
+  pkill -u "$(id -u)" -USR2 -if '(^|/)ghostty([[:space:]]|$)'
+  if [[ $(uname -s) == Darwin ]]; then
+    echo "Ghostty: if the focused window retains its palette, press Command-R to reload."
+  fi
+fi

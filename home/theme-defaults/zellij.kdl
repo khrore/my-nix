@@ -1,5 +1,5 @@
 themes {
-    linux-desktop {
+    desktop {
         fg "#d4be98"
         bg "#282828"
         black "#3c3836"

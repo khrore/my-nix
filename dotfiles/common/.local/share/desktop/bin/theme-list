@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+{
+  if [[ -d ${XDG_CONFIG_HOME:-$HOME/.config}/desktop/themes ]]; then
+    find "${XDG_CONFIG_HOME:-$HOME/.config}/desktop/themes" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n'
+  fi
+  find "${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
+} | sort -u | while read -r name; do
+  [[ ! -f ${XDG_CONFIG_HOME:-$HOME/.config}/desktop/themes/$name/light.mode ]] || continue
+  [[ ! -f ${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}/themes/$name/light.mode ]] || continue
+  # Ignore empty directories left after a managed theme was removed.
+  [[ -f ${XDG_CONFIG_HOME:-$HOME/.config}/desktop/themes/$name/colors.toml ||
+     -f ${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}/themes/$name/colors.toml ||
+     -f ${XDG_CONFIG_HOME:-$HOME/.config}/desktop/themes/$name/hyprland.lua ||
+     -f ${DESKTOP_ROOT:-${LINUX_SESSION_ROOT:-$HOME/.local/share/desktop}}/themes/$name/hyprland.lua ]] || continue
+  echo "$name" | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'
+done

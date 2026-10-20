@@ -125,7 +125,6 @@ link_dotfiles_runtime() {
 	local repo_root dotfiles_root common_dir platform_dir agents_skills agent_skill_root
 	local skill_source skill_name skill_target
 	local rel source target prefix source_dir target_prefix target_rel layer stale_link
-	local legacy_link legacy_target
 	local state_dir manifest_file manifest_tmp previous_rel theme_seed theme_current btop_theme
 	declare -A sources=()
 	declare -A agent_skill_sources=()
@@ -136,23 +135,6 @@ link_dotfiles_runtime() {
 	if [ -z "$repo_root" ]; then
 		echo "Dotfiles repo not found. Set NIXOS_CONFIG_ROOT to override automatic discovery."
 		return 0
-	fi
-
-	if [ "$platform" = "nixos" ] && [ -d "$homeDir/.config/omarchy" ] && [ ! -L "$homeDir/.config/omarchy" ]; then
-		if [ ! -e "$homeDir/.config/linux-desktop" ] && [ ! -L "$homeDir/.config/linux-desktop" ]; then
-			mv "$homeDir/.config/omarchy" "$homeDir/.config/linux-desktop"
-			while IFS= read -r -d "" legacy_link; do
-				legacy_target="$(readlink "$legacy_link")"
-				case "$legacy_target" in
-				"$homeDir/.config/omarchy/"*)
-					legacy_target="${legacy_target#"$homeDir/.config/omarchy/"}"
-					ln -sfn "$homeDir/.config/linux-desktop/$legacy_target" "$legacy_link"
-					;;
-				esac
-			done < <(find "$homeDir/.config/linux-desktop" -type l -print0)
-		else
-			echo "Warning: merge $homeDir/.config/omarchy into $homeDir/.config/linux-desktop manually."
-		fi
 	fi
 
 	dotfiles_root="$repo_root/dotfiles"
@@ -184,7 +166,7 @@ link_dotfiles_runtime() {
 			else
 				target_rel="$rel"
 			fi
-			if [ "$platform" = "nixos" ] && [[ "$target_rel" == .local/share/linux-desktop/current/* ]]; then
+			if [[ "$target_rel" == .local/share/desktop/current/* ]]; then
 				continue
 			fi
 			sources["$target_rel"]="$file"
@@ -226,18 +208,19 @@ link_dotfiles_runtime() {
 		done <"$manifest_file"
 	fi
 
-	if [ "$platform" = "nixos" ]; then
-		theme_seed="$platform_dir/.local/share/linux-desktop/current"
-		theme_current="$homeDir/.local/share/linux-desktop/current"
-		if [ -d "$theme_seed" ] && [ ! -e "$theme_current/theme.name" ]; then
-			mkdir -p "$theme_current"
-			cp -an "$theme_seed/." "$theme_current/"
-		fi
-		btop_theme="$homeDir/.config/btop/themes/current.theme"
-		if [ ! -e "$btop_theme" ] || [ -L "$btop_theme" ]; then
-			mkdir -p "$(dirname "$btop_theme")"
-			ln -sfn "$theme_current/theme/btop.theme" "$btop_theme"
-		fi
+	theme_current="$homeDir/.local/share/desktop/current"
+	if [ ! -e "$theme_current/theme.name" ]; then
+		for theme_seed in "$common_dir/.local/share/desktop/current" "$platform_dir/.local/share/desktop/current"; do
+			if [ -d "$theme_seed" ]; then
+				mkdir -p "$theme_current"
+				cp -an "$theme_seed/." "$theme_current/"
+			fi
+		done
+	fi
+	btop_theme="$homeDir/.config/btop/themes/current.theme"
+	if [ ! -e "$btop_theme" ] || [ -L "$btop_theme" ]; then
+		mkdir -p "$(dirname "$btop_theme")"
+		ln -sfn "$theme_current/theme/btop.theme" "$btop_theme"
 	fi
 
 	echo "Processing ${#sources[@]} dotfile entries from $repo_root..."

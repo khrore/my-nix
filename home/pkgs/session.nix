@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs-unstable,
   mylib,
@@ -9,24 +8,6 @@
 }:
 let
   isLinuxDesktop = mylib.isLinux system && isDisplay;
-  # Reuse Zed's pinned upstream asset; keep only the variant we actually use.
-  zedGruvbox =
-    pkgs-unstable.runCommand "zed-gruvbox-dark.json"
-      {
-        nativeBuildInputs = [ pkgs-unstable.jq ];
-      }
-      ''
-        jq '.themes |= map(select(.name == "Gruvbox Dark"))' \
-          ${pkgs-unstable.zed-editor.src}/assets/themes/gruvbox/gruvbox.json > "$out"
-      '';
-  themeSeeds = {
-    ".config/zed/themes/linux-desktop.json" = ../theme-defaults/zed.json;
-    ".config/zellij/themes/linux-desktop.kdl" = ../theme-defaults/zellij.kdl;
-  }
-  // lib.optionalAttrs (mylib.isLinux system) {
-    ".config/yazi/flavors/linux-desktop.yazi/flavor.toml" = ../theme-defaults/yazi.toml;
-    ".config/yazi/flavors/linux-desktop.yazi/tmtheme.xml" = ../theme-defaults/yazi.tmtheme;
-  };
   fileManager = pkgs-unstable.org-freedesktop-filemanager1-common;
   fileManagerLauncher = pkgs-unstable.writeShellScript "file-manager-yazi" ''
     export PATH=${
@@ -73,14 +54,6 @@ let
       # Tools referenced by session bindings and helpers
       dconf
       qt6Packages.qt6ct
-      (writeShellScriptBin "theme-config-python" ''
-        exec ${
-          python3.withPackages (ps: [
-            ps.tomlkit
-            ps.json5
-          ])
-        }/bin/python3 "$@"
-      '')
       netcat-openbsd
       pywalfox-native
       pam_u2f
@@ -89,29 +62,6 @@ let
 in
 {
   home.packages = sessionPkgs;
-
-  # Generated themes are mutable app state, not files owned by the dotfile linker.
-  home.activation.seedDesktopThemes = lib.mkIf isDisplay (
-    lib.hm.dag.entryAfter [ "linkDotfiles" ] (
-      lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          relative: source:
-          let
-            target = lib.escapeShellArg "${config.home.homeDirectory}/${relative}";
-          in
-          ''
-            if [[ ! -e ${target} && ! -L ${target} ]]; then
-              run ${pkgs-unstable.coreutils}/bin/install -D -m 600 ${source} ${target}
-            fi
-          ''
-        ) themeSeeds
-      )
-    )
-  );
-
-  xdg.dataFile."linux-desktop/default/zed-gruvbox.json" = lib.mkIf isLinuxDesktop {
-    source = zedGruvbox;
-  };
 
   # Publish a dark fallback even before the first desktop palette is selected.
   dconf.settings = lib.mkIf isLinuxDesktop {

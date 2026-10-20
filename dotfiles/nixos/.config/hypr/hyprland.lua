@@ -1,6 +1,8 @@
 -- Hyprland 0.56.2. Environment belongs to UWSM; these files only configure Hyprland.
 -- require() is Hyprland's protected, reload-aware loader.
-local root = os.getenv("LINUX_SESSION_ROOT") or (os.getenv("HOME") .. "/.local/share/linux-desktop")
+local root = os.getenv("DESKTOP_ROOT")
+	or os.getenv("LINUX_SESSION_ROOT")
+	or (os.getenv("HOME") .. "/.local/share/desktop")
 local config = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
 require(root .. "/default/hypr/runtime.lua")
 

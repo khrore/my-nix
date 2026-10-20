@@ -27,7 +27,7 @@ function GetEntries()
   local home = os.getenv("HOME")
 
   -- Read current theme name
-  local theme_name_file = io.open(home .. "/.local/share/linux-desktop/current/theme.name", "r")
+  local theme_name_file = io.open(home .. "/.local/share/desktop/current/theme.name", "r")
   local theme_name = theme_name_file and theme_name_file:read("*l") or nil
   if theme_name_file then
     theme_name_file:close()
@@ -35,10 +35,10 @@ function GetEntries()
 
   -- Directories to search
   local dirs = {
-    home .. "/.local/share/linux-desktop/current/theme/backgrounds",
+    home .. "/.local/share/desktop/current/theme/backgrounds",
   }
   if theme_name then
-    table.insert(dirs, home .. "/.config/linux-desktop/backgrounds/" .. theme_name)
+    table.insert(dirs, home .. "/.config/desktop/backgrounds/" .. theme_name)
   end
 
   -- Track added files to avoid duplicates

@@ -32,6 +32,7 @@ let
 
       # Browser
       ungoogled-chromium
+      qbittorrent
       vesktop
     ];
 
@@ -54,7 +55,6 @@ let
       mpv-unwrapped
 
       bitwarden-desktop
-      qbittorrent
 
       # DB
       dbeaver-bin

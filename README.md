@@ -111,3 +111,88 @@ Manual usage:
 ```bash
 link-dotfiles
 ```
+
+## macOS Desktop and Dark Themes
+
+Apply the configuration with `sudo darwin-rebuild switch --flake path:.#macix`, then
+run `link-dotfiles` from the checkout if needed. Run
+`aerospace reload-config --dry-run --warnings-as-errors` before reloading
+AeroSpace with `aerospace reload-config`. AeroSpace needs Accessibility access
+in System Settings. The launcher at `~/.local/bin/mac-desktop` is installed by
+Home Manager and supplies its own Nix runtime; it does not source shell startup
+files. Ordinary Ghostty windows retain the existing floating workaround.
+
+Command shortcuts stay available to applications. Desktop shortcuts use Option:
+
+| Shortcut | Action |
+| --- | --- |
+| Option-H/J/K/L | Focus left/down/up/right |
+| Option-Shift-H/J/K/L | Swap windows left/down/up/right |
+| Option-1…9/0 | Select workspace 1…10 |
+| Option-Shift-1…9/0 | Move window and follow it |
+| Option-Control-Shift-1…9/0 | Move window without following |
+| Option-T | Toggle floating/tiling |
+| Option-F | Toggle AeroSpace fullscreen |
+| Option-Control-Shift-F | Toggle native macOS fullscreen |
+| Option-W | Close window |
+| Option-Minus/Equal | Resize window |
+| Option-Slash/Comma | Tiles/accordion layout |
+| Option-R | Reload AeroSpace configuration |
+| Option-Return | Open Ghostty |
+| Option-Shift-Return or Option-Shift-B | Open Zen |
+| Option-Shift-F | Open Yazi in a new Ghostty instance |
+| Option-Shift-N/M/O | Open Zed/Spotify/Obsidian |
+| Option-Shift-Slash | Open Bitwarden |
+| Option-Control-Shift-Space | Choose a theme in a native list dialog |
+| Option-Control-Space | Cycle the selected theme's wallpaper |
+
+In System Settings → Keyboard → Text Input → Edit, add English and Russian
+input sources, then enable **Use the Caps Lock key to switch to and from the
+last used Latin input source**. Input sources remain user-managed; the rebuild
+does not overwrite them.
+
+The shared theme commands work on Linux and macOS:
+
+```bash
+theme-list
+theme-current
+theme-set kanagawa
+theme-refresh
+theme-bg-next
+theme-bg-set /absolute/path/to/image.jpg
+```
+
+On macOS, `theme-pick` opens the native selector; cancelling leaves the theme
+unchanged. Available palettes are Gruvbox, Kanagawa, Nord, Everforest,
+Catppuccin, and Tokyo Night. Themes marked with `light.mode` are hidden and
+rejected. macOS appearance remains Dark; no automatic light/dark scheduling is
+configured.
+
+Theme assets and commands live in the common dotfile layer. Linux compositor,
+service, and toolkit integrations remain Linux-only. The canonical runtime path is
+`~/.local/share/desktop`, with the `DESKTOP_ROOT` override and customizations
+under `~/.config/desktop`. User theme files
+overlay built-in assets; user templates override built-in templates unless the
+theme supplies that output directly. Rebuilds and relinking preserve the
+selected theme; Gruvbox is seeded only on first use. Generated app themes are
+mutable files, and existing user-owned dotfiles are left in place with a warning.
+
+The macOS switcher updates Ghostty, Kitty, Alacritty, Neovim, Zed, Yazi, Zellij,
+btop, Codex, and wallpaper on connected desktops. System Events may request
+Automation permission when first setting appearance or wallpaper. A theme
+without wallpapers leaves the current wallpaper unchanged. macOS window chrome
+keeps its native styling. Browser, Telegram, Obsidian, VS Code, and toolkit
+theme integrations remain Linux-only for this update.
+
+Zed watches its named theme, Neovim watches the selected theme, and Yazi receives
+a reload event. Terminal and btop reloads use their configuration reload signals.
+If a focused Ghostty window keeps its previous colors, press Command-R. Zellij
+may require reopening an existing session to display the new palette. Codex
+settings are saved while preserving unrelated settings and respecting
+`CODEX_HOME`; restart Codex Desktop to apply them. The switcher does not close
+applications. It reports failed integrations, continues with the others, and
+returns a nonzero status when an enabled integration fails.
+
+The shared app theme is named **Desktop** (`desktop` for Zellij and Yazi).
+`LINUX_SESSION_ROOT` remains a fallback for `DESKTOP_ROOT`. The dotfile linker
+does not migrate legacy directories or rewrite user-owned settings.

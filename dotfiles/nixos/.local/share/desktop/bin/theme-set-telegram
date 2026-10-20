@@ -1,0 +1,40 @@
+#!/usr/bin/env theme-config-python
+"""Export a Telegram theme without editing Telegram's private settings storage."""
+
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(
+    0,
+    str(
+        Path(
+            os.environ.get(
+                "DESKTOP_ROOT",
+                os.environ.get(
+                    "LINUX_SESSION_ROOT", Path.home() / ".local/share/desktop"
+                ),
+            )
+        )
+        / "lib"
+    ),
+)
+sys.dont_write_bytecode = True
+from theme_config import notify_once, run, write_text
+
+
+def apply_theme(config):
+    path = Path(config.settings["settings"]).expanduser()
+    write_text(path, (config.theme / "telegram.tdesktop-theme").read_text())
+    notify_once(
+        config.state,
+        "telegram",
+        str(path),
+        f"Telegram palette saved to {path}. Select it once in Settings → Chat Settings → Choose from file. "
+        "Later palette changes load when Telegram restarts; use Auto-Night Mode → Match the system settings for a dark fallback.",
+        config.notify,
+    )
+
+
+if __name__ == "__main__":
+    sys.exit(run("telegram", apply_theme))
