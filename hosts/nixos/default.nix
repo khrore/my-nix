@@ -7,5 +7,4 @@
     ./streaming.nix
     ./zapret.nix
   ];
-  programs.steam.enable = true;
 }
