@@ -1,6 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Read the selected monospace font, independently of the shell UI font.
+set -euo pipefail
+exec theme-config-python - <<'PY'
+import os
+from pathlib import Path
+import xml.etree.ElementTree as ET
 
-# Returns the name of the current monospace font being used by extracting it from the Waybar stylesheet.
-# This can be changed using font-set.
-
-grep -oP 'font-family:\s*["'\'']?\K[^;"'\'']+' ~/.config/waybar/style.css | head -n1
+config = Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+tree = ET.parse(config / "fontconfig/fonts.conf")
+node = next((match.find("edit/string") for match in tree.findall("match")
+             if match.findtext("test/string") == "monospace"), None)
+if node is None or not node.text:
+    raise SystemExit("No monospace font setting in fontconfig/fonts.conf")
+print(node.text)
+PY

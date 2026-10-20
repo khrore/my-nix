@@ -8,7 +8,7 @@ restart_services() {
   if systemctl --user is-enabled app-walker@autostart.service &>/dev/null; then
     systemctl --user restart app-walker@autostart.service
   else
-    echo -e "\e[31mUnable to restart Walker -- RESTART MANUALLY\e[0m"
+    restart-app walker --gapplication-service
   fi
 }
 

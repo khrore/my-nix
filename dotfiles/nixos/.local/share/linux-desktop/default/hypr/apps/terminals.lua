@@ -5,4 +5,4 @@ hl.window_rule({
 	tag = "+terminal",
 })
 hl.window_rule({ name = "terminals-2", match = { tag = "terminal" }, tag = "-default-opacity" })
-hl.window_rule({ name = "terminals-3", match = { tag = "terminal" }, opacity = "0.97 0.9" })
+hl.window_rule({ name = "terminals-3", match = { tag = "terminal" }, opacity = "1 1" })

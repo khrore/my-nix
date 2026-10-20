@@ -4,9 +4,9 @@ local inactiveBorderColor = "rgba(595959aa)"
 
 hl.config({
 	general = {
-		gaps_in = 5,
-		gaps_out = 10,
-		border_size = 2,
+		gaps_in = 4,
+		gaps_out = 6,
+		border_size = 1,
 		col = {
 			active_border = activeBorderColor,
 			inactive_border = inactiveBorderColor,
@@ -16,12 +16,12 @@ hl.config({
 		layout = "dwindle",
 	},
 	decoration = {
-		rounding = 0,
+		rounding = 10,
 		shadow = {
 			enabled = true,
-			range = 2,
+			range = 12,
 			render_power = 3,
-			color = "rgba(1a1a1aee)",
+			color = "rgba(00000030)",
 		},
 		blur = {
 			enabled = true,
@@ -39,8 +39,8 @@ hl.config({
 		},
 		groupbar = {
 			font_size = 12,
-			font_family = "monospace",
-			font_weight_active = "ultraheavy",
+			font_family = "Inter",
+			font_weight_active = "bold",
 			font_weight_inactive = "normal",
 			indicator_height = 0,
 			indicator_gap = 5,
@@ -54,7 +54,7 @@ hl.config({
 				inactive = "rgba(00000020)",
 			},
 			gradients = true,
-			gradient_rounding = 0,
+			gradient_rounding = 8,
 			gradient_round_only_edges = false,
 		},
 	},
@@ -88,9 +88,9 @@ hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
 
 hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
-hl.animation({ leaf = "windows", enabled = true, speed = 4.79, bezier = "easeOutQuint" })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, bezier = "easeOutQuint", style = "popin 87%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" })
+hl.animation({ leaf = "windows", enabled = true, speed = 2.5, bezier = "easeOutQuint" })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 2.5, bezier = "easeOutQuint", style = "popin 97%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 97%" })
 hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
 hl.animation({ leaf = "fade", enabled = true, speed = 3.03, bezier = "quick" })
@@ -101,3 +101,6 @@ hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "al
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
 hl.animation({ leaf = "workspaces", enabled = false })
 hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slidevert" })
+
+-- Subtle translucency belongs to shell surfaces, not application content.
+hl.layer_rule({ name = "shell-waybar", match = { namespace = "waybar" }, blur = true })

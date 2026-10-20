@@ -19,4 +19,11 @@ require(
 )
 
 -- Apply default opacity after apps have had a chance to opt out
-hl.window_rule({ name = "windows-4", match = { tag = "default-opacity" }, opacity = "0.97 0.9" })
+hl.window_rule({ name = "windows-4", match = { tag = "default-opacity" }, opacity = "1 1" })
+
+-- Explicit opt-in transparency, toggled by Super+Backspace.
+hl.window_rule({
+	name = "manual-transparency",
+	match = { tag = "manual-transparency" },
+	opacity = "0.9 0.9",
+})

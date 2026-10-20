@@ -2,15 +2,21 @@
 {
   fonts = {
     fontDir.enable = true;
-    packages = with pkgs-unstable.nerd-fonts; [
+    packages = [
+      pkgs-unstable.inter
+    ]
+    ++ (with pkgs-unstable.nerd-fonts; [
       jetbrains-mono
       ubuntu
       liberation
-    ];
+    ]);
     fontconfig = {
       defaultFonts = {
-        serif = [ "JetBrainsMono Nerd Font" ];
-        sansSerif = [ "JetBrainsMono Nerd Font" ];
+        serif = [ "Liberation Serif" ];
+        sansSerif = [
+          "Inter"
+          "Liberation Sans"
+        ];
         monospace = [ "JetBrainsMono Nerd Font" ];
       };
     };

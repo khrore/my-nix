@@ -42,7 +42,7 @@ hl.window_rule({
 })
 
 -- Popped window rounding
-hl.window_rule({ name = "system-12", match = { tag = "pop" }, rounding = 8 })
+hl.window_rule({ name = "system-12", match = { tag = "pop" }, rounding = 10 })
 
 -- Prevent idle while open
 hl.window_rule({ name = "system-13", match = { tag = "noidle" }, idle_inhibit = "always" })

@@ -16,7 +16,7 @@ hl.bind("SUPER + SHIFT + CTRL + SPACE", hl.dsp.exec_cmd("menu theme"), { descrip
 hl.bind(
 	"SUPER + BACKSPACE",
 	hl.dsp.exec_cmd(
-		'hyprland-eval \'local w = hl.get_active_window(); if w then desktop.dispatch(hl.dsp.window.set_prop({ window = w, prop = "opaque", value = "toggle" })) end\''
+		"hyprland-eval 'local w = hl.get_active_window(); if w then desktop.dispatch(hl.dsp.window.tag({ window = w, tag = \"manual-transparency\" })) end'"
 	),
 	{ description = "Toggle window transparency" }
 )

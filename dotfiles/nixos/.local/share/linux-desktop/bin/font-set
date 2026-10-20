@@ -1,46 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Set the monospace font used by terminals and fontconfig. Shell UI stays in Inter.
+set -euo pipefail
 
-# Set the system-wide monospace font that should be used by the terminal, hyprlock, waybar, swayosd, etc.
-# The font name must be one of the ones returned by font-list.
-
-font_name="$1"
-
-if [[ -n $font_name ]]; then
-  if fc-list | grep -iq "$font_name"; then
-    if [[ -f ~/.config/alacritty/alacritty.toml ]]; then
-      sed -i "s/family = \".*\"/family = \"$font_name\"/g" ~/.config/alacritty/alacritty.toml
-    fi
-
-    if [[ -f ~/.config/kitty/kitty.conf ]]; then
-      sed -i "s/^font_family .*/font_family $font_name/g" ~/.config/kitty/kitty.conf
-      pkill -USR1 kitty
-    fi
-
-    if [[ -f ~/.config/ghostty/config ]]; then
-      sed -i "s/font-family = \".*\"/font-family = \"$font_name\"/g" ~/.config/ghostty/config
-      pkill -SIGUSR2 ghostty
-    fi
-
-    sed -i "s/font_family = .*/font_family = $font_name/g" ~/.config/hypr/hyprlock.conf
-    sed -i "s/font-family: .*/font-family: '$font_name';/g" ~/.config/waybar/style.css
-    sed -i "s/font-family: .*/font-family: '$font_name';/g" ~/.config/swayosd/style.css
-    xmlstarlet ed -L \
-      -u '//match[@target="pattern"][test/string="monospace"]/edit[@name="family"]/string' \
-      -v "$font_name" \
-      ~/.config/fontconfig/fonts.conf
-
-    restart-waybar
-    restart-swayosd
-
-    if pgrep -x ghostty; then
-      notify-send "    You must restart Ghostty to see font change"
-    fi
-
-    hook font-set "$font_name"
-  else
-    echo "Font '$font_name' not found."
-    exit 1
-  fi
-else
-  echo "Usage: font-set <font-name>"
+if [[ $# != 1 || -z $1 ]]; then
+  echo "Usage: font-set <font-name>" >&2
+  exit 1
 fi
+font_name=$1
+if ! font-list | grep -Fxi -- "$font_name" >/dev/null; then
+  echo "Monospace font '$font_name' not found." >&2
+  exit 1
+fi
+
+theme-config-python - "$font_name" <<'PY'
+import os
+from pathlib import Path
+import re
+import sys
+import xml.etree.ElementTree as ET
+
+font = sys.argv[1]
+config = Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+fonts = config / "fontconfig/fonts.conf"
+tree = ET.parse(fonts)
+node = next((match.find("edit/string") for match in tree.findall("match")
+             if match.findtext("test/string") == "monospace"), None)
+if node is None:
+    raise SystemExit("No monospace font setting in fontconfig/fonts.conf")
+node.text = font
+
+# Keep each terminal's existing style/size settings and optional quotes intact.
+for name, pattern, replacement in (
+    ("alacritty/alacritty.toml", r'family\s*=\s*"[^"\n]*"', lambda m: 'family = "' + font + '"'),
+    ("kitty/kitty.conf", r'^font_family\s+.*$', lambda m: "font_family " + font),
+    ("ghostty/config", r'^font-family\s*=\s*.*$', lambda m: "font-family = " + font),
+):
+    path = config / name
+    if path.is_file():
+        path.write_text(re.sub(pattern, replacement, path.read_text(), flags=re.MULTILINE))
+tree.write(fonts, encoding="unicode", xml_declaration=True)
+PY
+
+pkill -USR1 -u "$(id -u)" -x kitty || true
+pkill -SIGUSR2 -u "$(id -u)" -x ghostty || true
+if pgrep -u "$(id -u)" -x ghostty >/dev/null; then
+  notify-send "You must restart Ghostty to see font change"
+fi
+hook font-set "$font_name"

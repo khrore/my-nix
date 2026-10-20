@@ -1,17 +1,15 @@
 @import "../../.local/share/linux-desktop/current/theme/swayosd.css";
 
 window {
-  border-radius: 0;
-  opacity: 0.97;
-  border: 2px solid @border-color;
-
+  border-radius: 12px;
+  opacity: 1;
+  border: 1px solid alpha(@border-color, 0.2);
   background-color: @background-color;
 }
 
 label {
-  font-family: 'JetBrainsMono Nerd Font';
-  font-size: 11pt;
-
+  font-family: 'Inter', 'JetBrainsMono Nerd Font';
+  font-size: 14px;
   color: @label;
 }
 
@@ -19,8 +17,14 @@ image {
   color: @image;
 }
 
-progressbar {
-  border-radius: 0;
+progressbar,
+progressbar trough,
+progress {
+  border-radius: 8px;
+}
+
+progressbar trough {
+  background-color: alpha(@label, 0.12);
 }
 
 progress {
