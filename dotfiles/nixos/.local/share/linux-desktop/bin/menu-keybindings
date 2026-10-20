@@ -125,7 +125,9 @@ parse_bindings() {
   awk -F, '
 {
     # Combine the modifier and key (first two fields)
-    key_combo = $1 " + " $2;
+    modifiers = $1;
+    gsub(/[ \t]+/, " + ", modifiers);
+    key_combo = modifiers " + " $2;
 
     # Clean up: strip leading "+" if present, trim spaces
     gsub(/^[ \t]*\+?[ \t]*/, "", key_combo);
@@ -167,7 +169,7 @@ prioritize_entries() {
     prio = 50
     if (match(line, /Terminal/)) prio = 0
     if (match(line, /Zellij/)) prio = 1
-    if (match(line, /Browser/) && !match(line, /Browser[[:space:]]*\(/) && !match(line, /SUPER SHIFT.*\+.*B.*→.*Browser/)) prio = 2
+    if (match(line, /Browser/) && !match(line, /Browser[[:space:]]*\(/) && !match(line, /SUPER [+] SHIFT.*\+.*B.*→.*Browser/)) prio = 2
     if (match(line, /File manager/) && !match(line, /File manager \(cwd\)/))  prio = 3
     if (match(line, /Launch apps/))  prio = 4
     if (match(line, /Main menu/))  prio = 5
@@ -190,7 +192,7 @@ prioritize_entries() {
     if (match(line, /Color picker/))  prio = 22
     if (match(line, /Screenshot/))  prio = 23
     if (match(line, /Screenrecording/))  prio = 24
-    if (match(line, /SUPER SHIFT.*\+.*B.*→.*Browser/)) prio = 25
+    if (match(line, /SUPER [+] SHIFT.*\+.*B.*→.*Browser/)) prio = 25
     if (match(line, /File manager \(cwd\)/))  prio = 26
     if (match(line, /(Switch|Next|Former|Previous).*workspace/))  prio = 27
     if (match(line, /Move window to workspace/))  prio = 28
