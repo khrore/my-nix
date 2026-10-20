@@ -9,6 +9,9 @@ hide_action_hints = true                                                    # gl
 
 [keybinds]
 quick_activate = []
+# Keep letters available for searching while navigating results.
+next = ["Down", "ctrl j"]
+previous = ["Up", "ctrl k"]
 
 [columns]
 symbols = 1 # providers to be queried by default

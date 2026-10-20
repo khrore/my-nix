@@ -47,15 +47,21 @@
       "cmd-k": "editor::MoveLineUp",
     },
   },
-  // Agent panel navigation menu: Vim-style j/k movement
-  // {
-  //   "context": "AgentPanel > NavigationMenu",
-  //   "use_key_equivalents": true,
-  //   "bindings": {
-  //     "j": "menu::SelectNext",
-  //     "k": "menu::SelectPrevious",
-  //   },
-  // },
+  // Searchable pickers and menus keep bare letters available for typing.
+  {
+    "context": "Picker || menu",
+    "bindings": {
+      "ctrl-j": "menu::SelectNext",
+      "ctrl-k": "menu::SelectPrevious",
+    },
+  },
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "bindings": {
+      "ctrl-j": "editor::ContextMenuNext",
+      "ctrl-k": "editor::ContextMenuPrevious",
+    },
+  },
   // Project panel: Yazi-style file operations (copy, paste, delete, rename, etc.)
   {
     "context": "ProjectPanel && not_editing",

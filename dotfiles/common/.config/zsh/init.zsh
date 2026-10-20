@@ -14,4 +14,14 @@ source "$_zsh_config_dir/terminal.zsh"
 source "$_zsh_config_dir/env.zsh"
 source "$_zsh_config_dir/platform.zsh"
 
+# Vim movement applies only while selecting completion results.
+zmodload zsh/complist
+zstyle ':completion:*' menu select
+bindkey -M menuselect 'h' backward-char
+bindkey -M menuselect 'j' down-line-or-history
+bindkey -M menuselect 'k' up-line-or-history
+bindkey -M menuselect 'l' forward-char
+bindkey -M menuselect '^J' down-line-or-history
+bindkey -M menuselect '^K' up-line-or-history
+
 unset _zsh_config_dir
