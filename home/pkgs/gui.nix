@@ -34,6 +34,7 @@ let
       ungoogled-chromium
       qbittorrent
       vesktop
+      telegram-desktop
     ];
 
   linuxFlakePkgs = lib.optionals (mylib.isLinux system && isDisplay) [
@@ -50,7 +51,6 @@ let
 
       # Applications
       obsidian
-      telegram-desktop
       spotify
       mpv-unwrapped
 

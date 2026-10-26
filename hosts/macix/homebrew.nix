@@ -30,6 +30,8 @@
       "chatgpt-atlas"
       "ungoogled-chromium"
       "nikitabobko/tap/aerospace"
+      "loop-messenger"
+      "telegram-desktop"
     ];
   };
 }
