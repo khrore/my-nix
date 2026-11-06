@@ -113,6 +113,7 @@ in
       # Make
       gnumake
       checkmake
+      just
 
       # JSON
       formatjson5

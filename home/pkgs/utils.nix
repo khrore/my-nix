@@ -44,6 +44,7 @@ let
     # Git
     git
     gh
+    glab
 
     # Media tools
     ffmpeg

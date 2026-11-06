@@ -15,7 +15,7 @@ The Linux desktop is inspired by [Omarchy](https://github.com/omacom/omarchy).
 - Configure a macOS machine with `nix-darwin` defaults and Homebrew apps
 - Install packages and root-related system configuration
 - Link shared dotfiles into `$HOME` independently
-- Provide AI and agent tooling such as `opencode`, `qwen-code`, and runtime
+- Provide AI and agent tooling such as `opencode` and runtime
   config files
 
 ## Repo Structure
@@ -124,27 +124,27 @@ files. Ordinary Ghostty windows retain the existing floating workaround.
 
 Command shortcuts stay available to applications. Desktop shortcuts use Option:
 
-| Shortcut | Action |
-| --- | --- |
-| Option-H/J/K/L | Focus left/down/up/right |
-| Option-Shift-H/J/K/L | Swap windows left/down/up/right |
-| Option-1…9/0 | Select workspace 1…10 |
-| Option-Shift-1…9/0 | Move window and follow it |
-| Option-Control-Shift-1…9/0 | Move window without following |
-| Option-T | Toggle floating/tiling |
-| Option-F | Toggle AeroSpace fullscreen |
-| Option-Control-Shift-F | Toggle native macOS fullscreen |
-| Option-W | Close window |
-| Option-Minus/Equal | Resize window |
-| Option-Slash/Comma | Tiles/accordion layout |
-| Option-R | Reload AeroSpace configuration |
-| Option-Return | Open Ghostty |
-| Option-Shift-Return or Option-Shift-B | Open Zen |
-| Option-Shift-F | Open Yazi in a new Ghostty instance |
-| Option-Shift-N/M/O | Open Zed/Spotify/Obsidian |
-| Option-Shift-Slash | Open Bitwarden |
-| Option-Control-Shift-Space | Choose a theme in a native list dialog |
-| Option-Control-Space | Cycle the selected theme's wallpaper |
+| Shortcut                              | Action                                 |
+| ------------------------------------- | -------------------------------------- |
+| Option-H/J/K/L                        | Focus left/down/up/right               |
+| Option-Shift-H/J/K/L                  | Swap windows left/down/up/right        |
+| Option-1…9/0                          | Select workspace 1…10                  |
+| Option-Shift-1…9/0                    | Move window and follow it              |
+| Option-Control-Shift-1…9/0            | Move window without following          |
+| Option-T                              | Toggle floating/tiling                 |
+| Option-F                              | Toggle AeroSpace fullscreen            |
+| Option-Control-Shift-F                | Toggle native macOS fullscreen         |
+| Option-W                              | Close window                           |
+| Option-Minus/Equal                    | Resize window                          |
+| Option-Slash/Comma                    | Tiles/accordion layout                 |
+| Option-R                              | Reload AeroSpace configuration         |
+| Option-Return                         | Open Ghostty                           |
+| Option-Shift-Return or Option-Shift-B | Open Zen                               |
+| Option-Shift-F                        | Open Yazi in a new Ghostty instance    |
+| Option-Shift-N/M/O                    | Open Zed/Spotify/Obsidian              |
+| Option-Shift-Slash                    | Open Bitwarden                         |
+| Option-Control-Shift-Space            | Choose a theme in a native list dialog |
+| Option-Control-Space                  | Cycle the selected theme's wallpaper   |
 
 In System Settings → Keyboard → Text Input → Edit, add English and Russian
 input sources, then enable **Use the Caps Lock key to switch to and from the
