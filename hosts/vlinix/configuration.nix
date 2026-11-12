@@ -38,11 +38,16 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  # Codex Desktop calls /bin/cp when preparing the diff for commit messages.
-  system.activationScripts.codexBinCp = ''
-    if [ ! -e /bin/cp ] && [ ! -L /bin/cp ]; then
-      ${pkgs.coreutils}/bin/ln -s /run/current-system/sw/bin/cp /bin/cp
-    fi
+  # Some programs, invoke commands by absolute /bin paths.
+  system.activationScripts.compatibilityBin = lib.stringAfter [ "binsh" ] ''
+    for commandPath in "$systemConfig"/sw/bin/*; do
+      [ -f "$commandPath" ] && [ -x "$commandPath" ] || continue
+      commandName="''${commandPath##*/}"
+      destination="/bin/$commandName"
+      if [ ! -e "$destination" ] && [ ! -L "$destination" ]; then
+        ${pkgs.coreutils}/bin/ln -sT "/run/current-system/sw/bin/$commandName" "$destination"
+      fi
+    done
   '';
 
   # This being `true` leads to a few nasty bugs, change at your own risk!
