@@ -38,6 +38,13 @@
 
   security.sudo.wheelNeedsPassword = false;
 
+  # Codex Desktop calls /bin/cp when preparing the diff for commit messages.
+  system.activationScripts.codexBinCp = ''
+    if [ ! -e /bin/cp ] && [ ! -L /bin/cp ]; then
+      ${pkgs.coreutils}/bin/ln -s /run/current-system/sw/bin/cp /bin/cp
+    fi
+  '';
+
   # This being `true` leads to a few nasty bugs, change at your own risk!
   users.mutableUsers = false;
 
