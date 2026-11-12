@@ -4,7 +4,8 @@ description: >-
   Choose or review a named software design pattern when implementation or
   refactoring has a concrete recurring pressure such as variation, construction,
   integration, state, events, commands, composition, persistence, or dependency
-  boundaries. Do not use merely because a familiar pattern could fit.
+  boundaries, or input invariants. Do not use merely because a familiar pattern
+  could fit.
 ---
 
 <!-- markdownlint-disable MD013 -->
@@ -28,6 +29,8 @@ unclear.
 - Construction and related object families: [Builder](references/pattern-builder.md),
   [Simple Factory](references/pattern-simple-factory.md), [Factory Method](references/pattern-factory-method.md),
   [Abstract Factory](references/pattern-abstract-factory.md), or [Prototype](references/pattern-prototype.md)
+- When downstream code relies on invariants checked at input boundaries, use
+  [Parse, don’t validate](references/pattern-parse-dont-validate.md).
 - External systems and dependency boundaries: [Adapter](references/pattern-adapter.md),
   [Facade](references/pattern-facade.md), [Proxy](references/pattern-proxy.md),
   [Dependency Injection](references/pattern-dependency-injection.md), or
