@@ -84,7 +84,6 @@ let
     texliveSmall
     # xpdf # insecure
     poppler-utils
-    mupdf
     imagemagick
     qpdf
   ];

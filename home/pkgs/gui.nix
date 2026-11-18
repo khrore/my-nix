@@ -53,6 +53,7 @@ let
       obsidian
       spotify
       mpv-unwrapped
+      mupdf
 
       bitwarden-desktop
 
