@@ -159,6 +159,7 @@ link_dotfiles_runtime() {
 		target_prefix="${layer#*:}"
 
 		while IFS= read -r -d "" file; do
+			[ -f "$file" ] || continue
 			prefix="$source_dir/"
 			rel="${file#"$prefix"}"
 			if [ -n "$target_prefix" ]; then
@@ -171,7 +172,10 @@ link_dotfiles_runtime() {
 			fi
 			sources["$target_rel"]="$file"
 			current_targets["$target_rel"]=1
-		done < <(find "$source_dir" -type f ! -name ".gitkeep" ! -path "$source_dir/.agents/skills/*" -print0)
+		done < <(
+			find "$source_dir" \( -type f -o \( -type l -name "AGENTS.md" \) \) \
+				! -name ".gitkeep" ! -path "$source_dir/.agents/skills/*" -print0
+		)
 
 		agent_skill_root="$source_dir/.agents/skills"
 		if [ -d "$agent_skill_root" ]; then
