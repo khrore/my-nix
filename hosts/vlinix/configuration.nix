@@ -74,10 +74,6 @@
     };
   };
   services = {
-    mysql = {
-      enable = true;
-      package = pkgs.mysql84;
-    };
     postgresql.enable = true;
   };
   # Extra certificates from OrbStack.
