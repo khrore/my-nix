@@ -1,3 +1,3 @@
-export PATH="$PATH":/Users/khrore/.orbstack/bin
+export PATH="$PATH:$HOME/.orbstack/bin"
 
-fpath+=/Users/khrore/.orbstack/shell/completions/zsh
+fpath+=("$HOME/.orbstack/shell/completions/zsh")

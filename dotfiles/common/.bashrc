@@ -1,26 +1,42 @@
 # bashrc
 
-# Add this lines at the top of .bashrc:
-source -- "$(blesh-share)"/ble.sh --noattach
+export PATH="/opt/homebrew/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:/Applications/LibreOffice.app/Contents/MacOS:$PATH"
+
+if command -v blesh-share >/dev/null 2>&1; then
+  source -- "$(blesh-share)"/ble.sh --noattach
+fi
 
 # Vi mode
 set -o vi
 
-eval "$(atuin init bash)"
-eval "$(starship init bash)"
-eval "$(zoxide init bash)"
-eval "$(fzf --bash)"
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init bash)"
+fi
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+fi
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
+  alias -- ..='z ..'
+  alias -- ...='z ../..'
+else
+  alias -- ..='cd ..'
+  alias -- ...='cd ../..'
+fi
+if command -v fzf >/dev/null 2>&1; then
+  eval "$(fzf --bash)"
+fi
 
 # Alias
-alias -- ..='z ..'
-alias -- ...='z ../..'
-alias -- eza='eza --icons auto --color auto --git'
-alias -- l='eza'
-alias -- ls='eza'
-alias -- la='eza -a'
-alias -- ll='eza -l'
-alias -- lla='eza -la'
-alias -- lt='eza --tree'
+if command -v eza >/dev/null 2>&1; then
+  alias -- eza='eza --icons auto --color auto --git'
+  alias -- l='eza'
+  alias -- ls='eza'
+  alias -- la='eza -a'
+  alias -- ll='eza -l'
+  alias -- lla='eza -la'
+  alias -- lt='eza --tree'
+fi
 
 alias -- gs='git status'
 alias -- ga='git add'
@@ -46,8 +62,6 @@ function y() {
   [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
   rm -f -- "$tmp"
 }
-
-export PATH="/opt/homebrew/bin:~/.cargo/bin:$HOME/.npm-global/bin:/Applications/LibreOffice.app/Contents/MacOS:$PATH"
 
 export EDITOR="nvim"
 export NIX_BUILD_SHELL="zsh"

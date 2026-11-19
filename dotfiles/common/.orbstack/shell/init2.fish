@@ -1,1 +1,1 @@
-fish_add_path -aP /Users/khrore/.orbstack/bin
+fish_add_path -aP "$HOME/.orbstack/bin"
