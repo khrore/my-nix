@@ -30,6 +30,11 @@
 
     codex-desktop-linux.url = "github:ilysenko/codex-desktop-linux";
 
+    delta = {
+      url = "github:zed-industries/delta-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
