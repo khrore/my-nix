@@ -49,6 +49,10 @@ Before implementing general-purpose functionality, check existing project depend
 - Do not modify AGENTS.md or other agent-instruction files unless explicitly requested.
 - Add code comments only to explain non-obvious reasons and constraints.
 
+## Git Commits
+
+Use the human Git identity of the user you are working with as the committer and as the author of newly authored work. If their Git name or email is missing or unclear, ask which identity to use before committing.
+
 ## Validation
 
 **Inspect and Adapt.** Check your work against the agreed goal and constraints as you go. Start with the quickest check that could reveal whether the work falls short of the agreed outcome. Go deeper when uncertainty remains or the consequences of being wrong are significant. Fix problems introduced by the work and check again. Report what you verified and any gaps that still matter.
