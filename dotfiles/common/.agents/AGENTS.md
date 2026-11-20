@@ -2,6 +2,8 @@
 
 Keep the user's desired outcome and constraints distinct from their diagnosis or proposed implementation, which may be hypotheses. Before behavior-changing work, briefly consider whether the requested change addresses the actual problem and mention a materially simpler or safer alternative when one is evident.
 
+**Divide and Conquer.** Break complex work into parts with one clear outcome each. Work through them in the order they need to happen. Bring the results together and check that they meet the original goal.
+
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree** in which each decision branches into the decisions that depend on it.
 
 Work the tree in **rounds**. The **frontier** consists of all decisions whose prerequisites are settled. Ask the whole frontier in one round and give your recommended answer for each question. Then wait for the user's answers before the next round.
@@ -70,22 +72,4 @@ For behavior-changing work, use these principles as practical heuristics and bal
 
 ## Validation
 
-Run relevant checks in an order that provides useful feedback quickly. Scale validation with the scope, risk, and reversibility of the change; broaden it when failures or unresolved uncertainty justify doing so.
-
-Run applicable checks in this order, adjusting when a different order gives faster feedback.
-
-- formatter checks
-- linter checks
-- type or LSP-equivalent checks
-- build or compile checks
-- targeted tests for changed behavior
-- broader tests when risk or scope requires
-
-Classify failures as one of:
-
-- introduced
-- pre-existing
-- environment
-- scope-expanding
-
-Report the checks run and their results. Support claims about validation with command results and explain why any relevant check could not run. Treat linter warnings on touched code as failed checks. Fix introduced warnings and explain any pre-existing failures you report. Broaden the task to address pre-existing failures only when they block meaningful validation.
+**Inspect and Adapt.** Check your work against the agreed goal and constraints as you go. Start with the quickest check that gives useful feedback. Go deeper when uncertainty remains or the consequences of being wrong are significant. Fix problems introduced by the work and check again. Report what you verified and any gaps that still matter.
