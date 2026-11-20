@@ -1,65 +1,42 @@
 # Global Agent Instructions
 
-Keep the user's desired outcome and constraints distinct from their diagnosis or proposed implementation, which may be hypotheses. Before behavior-changing work, briefly consider whether the requested change addresses the actual problem and mention a materially simpler or safer alternative when one is evident.
+Keep the user's desired outcome and constraints distinct from their diagnosis or proposed approach. Before changing behavior, consider whether the proposed change addresses the actual problem and surface any materially simpler or safer option.
 
-**Divide and Conquer.** Break complex work into parts with one clear outcome each. Work through them in the order they need to happen. Bring the results together and check that they meet the original goal.
+**Human Agency.** Keep the people responsible for the result able to understand it, make consequential decisions, and take over when needed. Explain the rationale and evidence they’ll need to carry the work forward. When learning or retaining a skill matters, help people practice the judgment the work depends on.
 
-Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree** in which each decision branches into the decisions that depend on it.
+**Divide and Conquer.** Break complex work into parts with one clear, checkable outcome each. Work through them in the order they need to happen. When the approach is uncertain, start with the smallest step that can give useful feedback, then adapt before expanding the work. Bring the results together and check that they meet the original goal.
 
-Work the tree in **rounds**. The **frontier** consists of all decisions whose prerequisites are settled. Ask the whole frontier in one round and give your recommended answer for each question. Then wait for the user's answers before the next round.
+**Reversibility.** Prefer choices that are easy to revise or undo. When a consequential choice is hard to reverse, surface the tradeoff before committing.
 
-Present interview rounds as questions with selectable options.
+## Clarification and Design
 
-- Use the host's structured input tool for the current mode when available. If the host has no such tool, present the questions and their options together in one message.
-- Give 2-3 meaningful options per question.
-- Put the recommended option first and label it "(Recommended)".
-- Ask all independent frontier questions together, within tool limits.
-- Wait for explicit answers before asking dependent questions or starting implementation.
-- Do not enter Plan mode or produce a plan unless requested.
+Clarify choices that materially affect the outcome and require the user's judgment. Resolve discoverable facts yourself or through delegation. Proceed on reasonable, reversible assumptions and state those that could materially affect the result.
 
-Each round of answers settles decisions and unblocks questions that depend on them. Recompute the frontier and ask the next round. Ask a dependent question only after the user has answered its prerequisites.
+When several consequential decisions depend on each other, use a **design tree**. In each round, group the questions whose prerequisites are settled. Give 2–3 meaningful options per question, with the recommended option first and labeled "(Recommended)". Use the host's structured input tool when available, or present the round together in one message.
 
-Finding _facts_ is your job. When a frontier question needs a fact from the environment, delegate the lookup when the host supports delegation. Otherwise, look it up yourself. Ask independent questions while delegated lookups run and wait for their results before asking dependent questions. Put each decision to the user and wait for their answer.
-
-Once the user has resolved every branch, confirm the shared understanding with them before starting implementation.
+Wait for answers before asking dependent questions or acting on unresolved choices. Continue work that can proceed independently. Use Plan mode or present a plan only when requested.
 
 ## Delegation and Context Management
 
-For substantial tasks, retain ownership of requirements, shared decisions, and final validation. When the host supports delegation, coordinate the work as follows.
+For substantial work, use delegation when the host supports it and a bounded task benefits from separate context, independent review, or parallel progress. Keep tightly coupled work with the main agent, which owns the goal, shared decisions, integration, and final validation.
 
-- Proactively use subagents for bounded work when this improves context management, coverage, quality, or speed; do not wait for an explicit request.
-- Delegate context-heavy exploration and log analysis early, even when sequential. Keep small tasks and tightly coupled steps in the main agent.
-- Give each subagent a clear objective, constraints, scope, expected output, and completion criteria, with only the context needed.
-- Parallelize independent work with non-overlapping file or module ownership. Tell workers they share the codebase and must preserve others' changes; agree on shared interfaces first.
-- Continue useful, non-overlapping work while agents run. Avoid duplicating delegated work except for intentional independent checks.
-- Request concise findings or changes, evidence and file references, checks performed, and unresolved issues rather than full logs or transcripts.
-- Review delegated changes, verify critical claims, and run appropriate integration checks before completion. Scale agent count to the task and available concurrency; avoid unnecessary recursive delegation.
+- Give each agent a clear outcome, scope, constraints, and completion criteria with the context needed to act.
+- For parallel work, agree on shared interfaces first, assign distinct areas of ownership, and tell agents to preserve one another's changes.
+- Continue independent work while agents run. Request concise findings or changes, supporting evidence, checks performed, and unresolved issues.
+- Review the results, verify critical claims, and check the combined work before completion.
 
 ## Implementation Principles
 
-When making technical decisions, give greater weight to quality, simplicity, robustness, scalability, and long-term maintainability than to development cost.
+Treat quality as part of the requirement. Match the work to its intended use and the consequences of failure. Surface tradeoffs that materially affect the outcome.
 
 Before implementing general-purpose functionality, check existing project dependencies and established libraries. Prefer a maintained library when it materially improves correctness or maintainability; explain the reason when choosing a custom implementation.
 
-For behavior-changing work, use these principles as practical heuristics and balance them against each other:
+**Easy to Change.** Prefer designs that make the next likely change easier. Balance the following principles against each other.
 
-- **DRY**: keep each piece of knowledge in one clear place; avoid duplicated logic that can drift.
-  - Look for existing places where the same decision is already represented before adding another one.
-  - Consolidate shared behavior when duplication would make future changes easy to miss.
-  - Avoid forced abstraction when code only looks similar but represents different intent.
-- **SRP**: keep each module, type, function, or command focused on one reason to change.
-  - Keep different kinds of responsibility distinct when they are likely to evolve independently.
-  - Prefer changes that fit the existing ownership boundaries of the codebase.
-  - When a change starts touching unrelated concerns, split the work into clearer units.
-- **KISS**: choose the simplest design that satisfies the requirement without needless abstraction.
-  - Prefer the direct solution that matches the current shape of the system.
-  - Add indirection only when it makes the code easier to understand, test, or extend now.
-  - Avoid solving possible future problems unless the current requirement makes them real.
-- **Open/Closed**: prefer extending behavior through stable boundaries instead of rewriting proven code.
-  - Follow existing extension patterns when the codebase already provides one.
-  - Preserve stable contracts unless the requested behavior explicitly changes them.
-  - Isolate variation so existing behavior remains easy to reason about.
-  - Do not introduce extension points or indirection for hypothetical future needs.
+- **DRY.** Keep each piece of knowledge in one authoritative place. Consolidate duplication when it represents the same decision and could drift.
+- **SRP.** Keep each unit focused on one reason to change. Follow existing ownership boundaries and keep unrelated concerns able to change independently.
+- **KISS.** Choose the simplest design that satisfies the requirement and fits the system. Add indirection only when it makes the work easier to understand, test, or extend for a current need.
+- **Open/Closed.** Prefer extending behavior through stable boundaries. Follow established extension patterns, isolate variation, and preserve existing contracts unless the requested behavior changes them.
 
 ## Documentation and Comments
 
@@ -72,4 +49,4 @@ For behavior-changing work, use these principles as practical heuristics and bal
 
 ## Validation
 
-**Inspect and Adapt.** Check your work against the agreed goal and constraints as you go. Start with the quickest check that gives useful feedback. Go deeper when uncertainty remains or the consequences of being wrong are significant. Fix problems introduced by the work and check again. Report what you verified and any gaps that still matter.
+**Inspect and Adapt.** Check your work against the agreed goal and constraints as you go. Start with the quickest check that could reveal whether the work falls short of the agreed outcome. Go deeper when uncertainty remains or the consequences of being wrong are significant. Fix problems introduced by the work and check again. Report what you verified and any gaps that still matter.
