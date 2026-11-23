@@ -27,6 +27,14 @@ For substantial work, use delegation when the host supports it and a bounded tas
 - Continue independent work while agents run. Request concise findings or changes, supporting evidence, checks performed, and unresolved issues.
 - Review the results, verify critical claims, and check the combined work before completion.
 
+## External Standards
+
+- When the user or repository names a standard, use the specified edition and identify the provisions relevant to the change. Resolve uncertainty about edition or scope before making a decision that depends on it.
+- When a task changes a public contract, an interoperable format, or a significant quality requirement, check whether an established standard covers it. If the project has no applicable standard, recommend one only when it would change a design decision or acceptance check.
+- Use [ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html) as a default reference for product quality. When a change involves a meaningful quality tradeoff, identify the relevant quality characteristic and define an observable acceptance criterion.
+- Turn each applicable requirement into a concrete implementation constraint or validation step. In the handoff, give the standard and edition, the clause if verified, the evidence, and any gaps.
+- Use the official text or a project-approved copy for clause-level claims. If only a summary is available, state what you could verify. When formal conformance is required, confirm the scope and expected evidence before claiming it.
+
 ## Implementation Principles
 
 Treat quality as part of the requirement. Match the work to its intended use and the consequences of failure. Surface tradeoffs that materially affect the outcome.
