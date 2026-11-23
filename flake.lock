@@ -224,11 +224,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795426802,
-        "narHash": "sha256-aZ8HwMbUU1q1039UWWe5Zw7o9OGZVF6+DMaSVnAy5Aw=",
+        "lastModified": 1795427653,
+        "narHash": "sha256-rdHJ6MA4Tl3b6ucj3XxLcCeOBAfbG59tKn8bjDyYo5A=",
         "ref": "refs/heads/main",
-        "rev": "70115654f52c50762835ea9fa5e1f9e9c14b4f1d",
-        "revCount": 36,
+        "rev": "0dabc3b26990ff700fb6b32e2057cf8ca36d259e",
+        "revCount": 37,
         "type": "git",
         "url": "ssh://git@github.com/khrore/nixrets.git"
       },
