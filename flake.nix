@@ -43,6 +43,7 @@
     secrets = {
       # Private repo over SSH (requires working SSH agent/key access for nix).
       url = "git+ssh://git@github.com/khrore/nixrets.git";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

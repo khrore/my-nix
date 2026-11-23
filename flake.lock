@@ -202,22 +202,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1792210252,
-        "narHash": "sha256-Mh0PUaIv4nFY+8wAGonaEh8iBzwsmdNlwjVHmFg1Biw=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "09063bd1f2b36fd9fd793c36dfade7bd40a93dfc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -235,14 +219,16 @@
     },
     "secrets": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1775074534,
-        "narHash": "sha256-/8Ji9nOS+9As3T2COIvzVZGZ1D5I9oDw7f/L4ChRS6M=",
+        "lastModified": 1795426802,
+        "narHash": "sha256-aZ8HwMbUU1q1039UWWe5Zw7o9OGZVF6+DMaSVnAy5Aw=",
         "ref": "refs/heads/main",
-        "rev": "99092aa290b86b0a6c0498b6cc014bcb82c6dc85",
-        "revCount": 33,
+        "rev": "70115654f52c50762835ea9fa5e1f9e9c14b4f1d",
+        "revCount": 36,
         "type": "git",
         "url": "ssh://git@github.com/khrore/nixrets.git"
       },
