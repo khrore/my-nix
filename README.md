@@ -1,24 +1,112 @@
-# Nix Config
+# Nix desktop
 
-Personal multi-host Nix flake for Linux and macOS. It uses Nix for
-system-level state and package installation, while keeping dotfiles linkable as
-a separate user-level layer instead of tightly coupling them to Home Manager.
+Personal NixOS and macOS configurations with coordinated dark themes, tiling
+desktops, and shared developer tools.
 
-The Linux desktop is inspired by [Omarchy](https://github.com/omacom/omarchy).
+**Hyprland on Linux · AeroSpace on macOS · One flake for multiple machines**
 
-## Main Tasks This Config Covers
+Nix manages system settings and packages. Home Manager installs the user
+environment and links dotfiles from this checkout, so you can edit them directly
+and relink them without rebuilding the system.
 
-- Bootstrap a new workstation
-- Manage Linux and macOS machines from one flake
-- Install shells, editors, formatters, linters, and language servers
-- Configure a Linux desktop around Hyprland and Wayland tools
-- Configure a macOS machine with `nix-darwin` defaults and Homebrew apps
-- Install packages and root-related system configuration
-- Link shared dotfiles into `$HOME` independently
-- Provide AI and agent tooling such as `opencode` and runtime
-  config files
+[Highlights](#highlights) · [Themes](#themes) · [Explore the config](#explore-the-config) ·
+[Get started](#get-started) · [Reference](#reference)
 
-## Repo Structure
+## Highlights
+
+- **Coordinated themes.** Switch palettes across terminals, editors, and desktop
+  tools, with wallpaper controls and platform-specific integrations.
+- **Keyboard-driven desktops.** Hyprland and Wayland tools on Linux; AeroSpace
+  workspaces and application shortcuts on macOS.
+- **Multiple machines, shared configuration.** NixOS and nix-darwin hosts share
+  modules, package bundles, and a common dotfile layer.
+- **Editable dotfiles.** Platform-specific overrides and a standalone
+  `link-dotfiles` command keep everyday config changes close at hand.
+
+## Themes
+
+The shared theme commands work on Linux and macOS once the environment is installed:
+
+```bash
+theme-list
+theme-current
+theme-set kanagawa
+theme-refresh
+theme-bg-next
+theme-bg-set /absolute/path/to/image.jpg
+```
+
+Available palettes are **Gruvbox**, **Kanagawa**, **Nord**, **Everforest**,
+**Catppuccin**, and **Tokyo Night**. On macOS, `theme-pick` opens a native
+selector; cancelling leaves the theme unchanged.
+
+## Explore the config
+
+Looking for ideas for your own setup? Start with a specific part:
+
+| Area                | Configuration                                                                                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Linux desktop       | [Hyprland](./dotfiles/nixos/.config/hypr), [Wayland tools and desktop configs](./dotfiles/nixos/.config)                                                                 |
+| macOS desktop       | [AeroSpace shortcuts and workspaces](./dotfiles/darwin/.config/aerospace/aerospace.toml)                                                                                 |
+| Themes              | [Shared palettes and assets](./dotfiles/common/.local/share/desktop/themes), [theme commands](./dotfiles/common/.local/share/desktop/bin)                                |
+| Terminals and shell | [Ghostty](./dotfiles/common/.config/ghostty), [Kitty](./dotfiles/common/.config/kitty), [Zsh](./dotfiles/common/.config/zsh), [Zellij](./dotfiles/common/.config/zellij) |
+| Editors             | [Neovim](./dotfiles/common/.config/nvim), [Zed](./dotfiles/common/.config/zed)                                                                                           |
+| Nix environment     | [Host definitions](./flake.nix), [shared system modules](./hosts/common), [package bundles](./home/pkgs)                                                                 |
+
+These configs share theme files, commands, and installed packages. Review those
+dependencies when adapting an individual piece.
+
+## Get started
+
+This is a personal configuration to adapt, with host-specific hardware, disk
+layouts, usernames, and a private secrets input. Review the steps below before
+applying it to your machine.
+
+### Adapt it to your machine
+
+1. Fork or copy the repository.
+1. Update the host map in [flake.nix](./flake.nix) with your own host name,
+   username, and target system.
+1. Remove or replace the private `secrets` input and its
+   `inputs.secrets.nixosModules.default` / `inputs.secrets.darwinModules.default`
+   references in [flake.nix](./flake.nix). The input points to
+   `git@github.com/khrore/nixrets.git`, which requires private access.
+1. Replace Linux hardware files and `disko` definitions under your host
+   directory.
+1. Review shared modules in [hosts/common](./hosts/common) and disable anything
+   you do not want globally, especially Hyprland, Docker, `localsend`,
+   `throne`, SSH, and age secret paths.
+1. Trim or replace package bundles in [home/pkgs](./home/pkgs) to match your
+   workload.
+1. Add or replace files in [dotfiles](./dotfiles) with your own configs.
+
+### NixOS
+
+After adapting the configuration, run this from the checkout, replacing
+`your-host` with the host name you defined in `flake.nix`:
+
+```bash
+sudo nixos-rebuild switch --flake .#your-host
+```
+
+For first install on bare metal, you will also need your own hardware config
+and, if you keep it, a matching `disko` layout.
+
+### macOS
+
+Install Nix and `nix-darwin`, then apply:
+
+```bash
+sudo darwin-rebuild switch --flake .#your-host
+```
+
+The Darwin host in this repo also enables Homebrew integration, so the initial
+activation expects Homebrew-compatible settings and a valid primary user.
+
+## Reference
+
+<details>
+<summary><strong>Repository layout and composition</strong></summary>
 
 - [hosts](./hosts): host entrypoints and shared system modules
 - [home](./home): Home Manager entrypoint, package bundles, and dotfile
@@ -37,55 +125,10 @@ Composition flow:
 1. Dotfiles are linked from `dotfiles/common` and the active platform directory
    when activation runs or when `link-dotfiles` is called manually.
 
-## Using This In Your Own Environment
+</details>
 
-This repo is personal, so using it unchanged on another machine will usually
-fail unless you adapt it. The main blockers are the private `secrets` input,
-host-specific hardware modules, usernames, disk layout, and some
-machine-specific assumptions.
-
-Recommended path:
-
-1. Fork or copy the repository.
-1. Update the host map in [flake.nix](./flake.nix) with your own host name,
-   username, and target system.
-1. Remove or replace the private `secrets` input if you do not have access to
-   `git@github.com/khrore/nixrets.git`.
-1. Replace Linux hardware files and `disko` definitions under your host
-   directory.
-1. Review shared modules in [hosts/common](./hosts/common) and disable anything
-   you do not want globally, especially Hyprland, Docker, `localsend`,
-   `throne`, SSH, and age secret paths.
-1. Trim or replace package bundles in [home/pkgs](./home/pkgs) to match your
-   workload.
-1. Add or replace files in [dotfiles](./dotfiles) with your own configs.
-
-## Bootstrap Commands
-
-### NixOS
-
-After cloning the repo and entering it, or setting `NIXOS_CONFIG_ROOT` to the
-checkout path:
-
-```bash
-sudo nixos-rebuild switch --flake .#your-host
-```
-
-For first install on bare metal, you will also need your own hardware config
-and, if you keep it, a matching `disko` layout.
-
-### macOS
-
-Install Nix and `nix-darwin`, then apply:
-
-```bash
-darwin-rebuild switch --flake .#your-host
-```
-
-The Darwin host in this repo also enables Homebrew integration, so the initial
-activation expects Homebrew-compatible settings and a valid primary user.
-
-## Dotfiles Behavior
+<details>
+<summary><strong>Dotfile linking and existing files</strong></summary>
 
 [home/link-dotfiles.nix](./home/link-dotfiles.nix) installs a `link-dotfiles`
 command and also hooks it into Home Manager activation. The dotfiles are not
@@ -96,6 +139,7 @@ configuration.
 At runtime the script searches upward from:
 
 - `$NIXOS_CONFIG_ROOT`
+- `$NIXOS_CONFIG`
 - the current working directory (`$PWD`)
 - `$XDG_CONFIG_HOME`, falling back to `$HOME/.config`
 - `$HOME`
@@ -112,10 +156,13 @@ Manual usage:
 link-dotfiles
 ```
 
-## macOS Desktop and Dark Themes
+</details>
 
-Apply the configuration with `sudo darwin-rebuild switch --flake path:.#macix`, then
-run `link-dotfiles` from the checkout if needed. Run
+<details>
+<summary><strong>macOS setup and keyboard shortcuts</strong></summary>
+
+After applying your adapted macOS configuration, run `link-dotfiles` from the
+checkout if needed. Run
 `aerospace reload-config --dry-run --warnings-as-errors` before reloading
 AeroSpace with `aerospace reload-config`. AeroSpace needs Accessibility access
 in System Settings. The launcher at `~/.local/bin/mac-desktop` is installed by
@@ -151,22 +198,13 @@ input sources, then enable **Use the Caps Lock key to switch to and from the
 last used Latin input source**. Input sources remain user-managed; the rebuild
 does not overwrite them.
 
-The shared theme commands work on Linux and macOS:
+</details>
 
-```bash
-theme-list
-theme-current
-theme-set kanagawa
-theme-refresh
-theme-bg-next
-theme-bg-set /absolute/path/to/image.jpg
-```
+<details>
+<summary><strong>Theme customization, app reloads, and platform differences</strong></summary>
 
-On macOS, `theme-pick` opens the native selector; cancelling leaves the theme
-unchanged. Available palettes are Gruvbox, Kanagawa, Nord, Everforest,
-Catppuccin, and Tokyo Night. Themes marked with `light.mode` are hidden and
-rejected. macOS appearance remains Dark; no automatic light/dark scheduling is
-configured.
+Themes marked with `light.mode` are hidden and rejected. macOS appearance
+remains Dark; no automatic light/dark scheduling is configured.
 
 Theme assets and commands live in the common dotfile layer. Linux compositor,
 service, and toolkit integrations remain Linux-only. The canonical runtime path is
@@ -196,3 +234,20 @@ returns a nonzero status when an enabled integration fails.
 The shared app theme is named **Desktop** (`desktop` for Zellij and Yazi).
 `LINUX_SESSION_ROOT` remains a fallback for `DESKTOP_ROOT`. The dotfile linker
 does not migrate legacy directories or rewrite user-owned settings.
+
+</details>
+
+## Credits
+
+The Linux desktop is inspired by [Omarchy](https://github.com/omacom/omarchy).
+The setup builds on [NixOS](https://nixos.org/),
+[nix-darwin](https://github.com/nix-darwin/nix-darwin),
+[Home Manager](https://github.com/nix-community/home-manager),
+[Hyprland](https://hypr.land/), and
+[AeroSpace](https://github.com/nikitabobko/AeroSpace).
+
+## License
+
+Original code by khrore is available under the [MIT License](./LICENSE).
+Third-party code, themes, wallpapers, and other assets retain their respective
+licenses and attributions; the MIT license does not relicense those materials.
